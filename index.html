@@ -422,6 +422,12 @@ html.wp input,html.wp select,html.wp textarea{backdrop-filter:blur(var(--glass-b
 #mate{position:fixed;left:12px;bottom:calc(78px + env(safe-area-inset-bottom));z-index:46;
   display:flex;flex-direction:column;align-items:flex-start;gap:6px;pointer-events:none}
 #mate.off{display:none}
+#mate{transition:opacity .25s,transform .25s}
+/* Il s'efface complètement quand une modale ou la palette est ouverte */
+#ov.on ~ #mate,#palov.on ~ #mate{opacity:0;pointer-events:none;transform:translateY(8px)}
+/* Il s'estompe pendant le défilement, puis revient tout seul */
+#mate.shy{opacity:.22;pointer-events:none}
+#mate.shy:hover{opacity:.9;pointer-events:auto}
 .mrow{display:flex;align-items:flex-end;gap:4px}
 /* Replié : il glisse hors champ, il n'en reste qu'un liseré cliquable */
 #mate.peek .masc{transform:translateX(-64%);opacity:.42;filter:none}
@@ -435,12 +441,12 @@ html.wp .mtalk{backdrop-filter:blur(var(--glass-blur))}
 @media(min-width:960px){#mate{left:calc(var(--sb) + 16px);bottom:24px}}
 @media(max-width:400px){#mate{left:6px;bottom:calc(74px + env(safe-area-inset-bottom))}}
 
-.masc{width:132px;height:auto;pointer-events:auto;cursor:pointer;
-  filter:drop-shadow(0 8px 16px rgba(0,0,0,.45));transition:transform .18s cubic-bezier(.34,1.4,.6,1)}
+.masc{width:104px;height:auto;pointer-events:auto;cursor:pointer;
+  filter:drop-shadow(0 6px 12px rgba(0,0,0,.32));transition:transform .18s cubic-bezier(.34,1.4,.6,1)}
 .masc:hover{transform:translateY(-4px) scale(1.04)}
 .masc:active{transform:scale(.97)}
-@media(max-width:520px){.masc{width:96px}}
-@media(max-width:360px){.masc{width:80px}}
+@media(max-width:520px){.masc{width:78px}}
+@media(max-width:360px){.masc{width:66px}}
 
 .mbub{pointer-events:auto;max-width:min(280px,72vw);background:var(--card);border:1px solid var(--line2);
   border-radius:14px 14px 14px 4px;padding:11px 13px;box-shadow:var(--sh-lg);position:relative;
@@ -766,10 +772,13 @@ html.wp .hero{backdrop-filter:blur(var(--glass-blur)) saturate(1.4);-webkit-back
 .lbl{font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--dim);font-weight:700;margin:12px 0 5px;display:block}
 /* Saisie épurée : le montant occupe la place, le reste s'efface */
 .amtwrap{display:flex;align-items:baseline;gap:8px;border-bottom:2px solid var(--line2);padding-bottom:6px;margin-top:4px}
-.amtwrap input{border:none!important;background:none!important;padding:0!important;box-shadow:none!important;
-  font-size:38px!important;font-weight:780;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
-.amtwrap input:focus{box-shadow:none!important}
-.amtwrap .cur{font-size:20px;font-weight:700;color:var(--dim)}
+.amtwrap input,.amtwrap input:focus,.amtwrap input:hover{
+  border:0!important;outline:0!important;background:transparent!important;
+  padding:0!important;margin:0!important;box-shadow:none!important;border-radius:0!important;
+  width:100%;min-width:0;font-size:40px;font-weight:780;letter-spacing:-.035em;
+  font-variant-numeric:tabular-nums;color:var(--txt);line-height:1.1}
+.amtwrap input::placeholder{color:var(--line2)}
+.amtwrap .cur{font-size:22px;font-weight:700;color:var(--dim);flex-shrink:0}
 .amtwrap:focus-within{border-bottom-color:var(--ind)}
 .crow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:12px}
 .crow input,.crow select{width:auto;flex:1;min-width:120px;padding:9px 11px;font-size:13px}
@@ -814,14 +823,20 @@ nav.bottom{position:fixed;bottom:0;left:0;right:0;background:var(--topbar);borde
 .sh h3{font-size:18px;font-weight:750;letter-spacing:-.015em}
 .sh .sub{font-size:12.5px;color:var(--dim);margin-top:3px}
 .big-in{font-size:30px!important;font-weight:750;letter-spacing:-.02em}
-.cats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
-@media(min-width:640px){.cats{grid-template-columns:repeat(6,1fr)}}
-.cat{border:1px solid transparent;border-radius:var(--r-m);padding:8px 2px;font-size:9.5px;font-weight:650;color:var(--dim);
-  display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;background:var(--bg2)}
-.cat .e{font-size:21px;line-height:1}
+/* Rangée unique, défilement horizontal : plus de grille de pavés */
+.cats{display:flex;gap:6px;overflow-x:auto;padding:2px 2px 8px;scroll-snap-type:x proximity;
+  -webkit-overflow-scrolling:touch;scrollbar-width:thin}
+.cats::-webkit-scrollbar{height:5px}
+.cats::-webkit-scrollbar-thumb{background:var(--line2);border-radius:99px}
+.cats::-webkit-scrollbar-track{background:transparent}
+.cat{border:1px solid transparent;border-radius:var(--r-m);padding:7px 4px;font-size:9.5px;font-weight:650;
+  color:var(--dim);display:flex;flex-direction:column;align-items:center;gap:3px;text-align:center;
+  background:transparent;flex:0 0 62px;scroll-snap-align:start;transition:background var(--tr),color var(--tr)}
+.cat .e{font-size:24px;line-height:1;transition:transform .14s cubic-bezier(.34,1.4,.6,1)}
 .cat .n{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
-.cat:hover{border-color:var(--line2);background:var(--card2)}
-.cat.on{border-color:var(--ind);background:var(--ind-soft);color:var(--txt);box-shadow:0 0 0 3px var(--ind-soft)}
+.cat:hover{background:var(--bg2);color:var(--mut)}
+.cat.on{background:var(--ind-soft);color:var(--txt);border-color:var(--ind)}
+.cat.on .e{transform:scale(1.12)}
 .two{display:flex;gap:10px}
 .two>*{flex:1;min-width:0}
 .seg{display:flex;background:var(--bg2);border:1px solid var(--line);border-radius:var(--r-m);padding:4px;gap:4px;margin-top:10px}
@@ -898,9 +913,6 @@ svg{display:block}
 
 <div class="toast" id="toast"></div>
 <div id="reward" aria-live="polite"></div>
-<div id="mate"><div class="mbub" id="mbub"></div>
-  <div class="mrow"><div id="mfig"></div>
-  <button class="mtalk" id="mtalk" onclick="App.mateSpeak()" onmouseenter="App.mateHover()" aria-label="Parler au compagnon">💬</button></div></div>
 
 <div class="pal-ov" id="palov" onclick="if(event.target===this)App.closePal()">
   <div class="pal" role="dialog" aria-label="Palette de commandes">
@@ -910,6 +922,10 @@ svg{display:block}
     <div class="pal-foot"><span><b>↑↓</b> naviguer</span><span><b>Entrée</b> exécuter</span><span><b>Échap</b> fermer</span></div>
   </div>
 </div>
+
+<div id="mate"><div class="mbub" id="mbub"></div>
+  <div class="mrow"><div id="mfig"></div>
+  <button class="mtalk" id="mtalk" onclick="App.mateSpeak()" onmouseenter="App.mateHover()" aria-label="Parler au compagnon">💬</button></div></div>
 
 <script>
 "use strict";
@@ -1359,6 +1375,17 @@ function mateLine(m) {
 }
 
 var mateT = null;
+/* Il s'estompe pendant que tu fais défiler la page, et revient une fois
+   que tu t'arrêtes. C'est le moment où il gênait le plus. */
+var shyT = null;
+function mateShy() {
+  var el = document.getElementById("mate");
+  if (!el || AP.mate === false) return;
+  el.classList.add("shy");
+  clearTimeout(shyT);
+  shyT = setTimeout(function () { el.classList.remove("shy"); }, 900);
+}
+
 function brandHtml() {
   return '<span class="lg" aria-hidden="true"><svg viewBox="0 0 28 28">' +
     '<path d="M9 7.5 q5 -3 10 0 l-1.7 2.6 q-3.3 -1.7 -6.6 0 z" fill="var(--ind2)"/>' +
@@ -2723,7 +2750,7 @@ function sheetTx() {
     '<span class="cur">' + S.settings.currency + '</span></div>' +
     '<div class="err" id="e_amt"></div>';
 
-  h += '<label class="lbl">Catégorie</label><div class="cats">' +
+  h += '<label class="lbl">Catégorie</label><div class="cats" id="f_cats">' +
     cats.map(function (c) {
       return '<button class="cat' + (t.categoryId === c.id ? " on" : "") + '" title="' + c.n + '" ' +
         'onclick="App.setCat(\'' + c.id + '\')"><span class="e">' + catE(c) + '</span>' +
@@ -2745,7 +2772,12 @@ function sheetTx() {
 
   h += sheetFoot(t.id ? "Enregistrer" : "Ajouter", "App.saveTx()");
   openSheet(h, { submit: function () { App.saveTx(); } });
-  setTimeout(function () { var a = document.getElementById("f_amt"); if (a && !t.id) a.focus(); }, 120);
+  setTimeout(function () {
+    var a = document.getElementById("f_amt");
+    if (a && !t.id) a.focus();
+    var on = document.querySelector("#f_cats .cat.on");
+    if (on && on.scrollIntoView) on.scrollIntoView({ block: "nearest", inline: "center" });
+  }, 120);
 }
 
 function sheetBudget(catId) {
@@ -3506,7 +3538,11 @@ function boot() {
   document.addEventListener("keydown", function (e) {
     var ov = document.getElementById("ov").classList.contains("on");
     var pal = document.getElementById("palov").classList.contains("on");
-    /* Palette : Ctrl+K / Cmd+K partout */
+    window.addEventListener("scroll", mateShy, { passive: true });
+  var wv = document.getElementById("view");
+  if (wv) wv.addEventListener("scroll", mateShy, { passive: true });
+
+  /* Palette : Ctrl+K / Cmd+K partout */
     if ((e.ctrlKey || e.metaKey) && (e.key === "k" || e.key === "K")) {
       e.preventDefault();
       if (pal) App.closePal(); else { if (ov) App.closeSheet(true); App.openPal(); }
