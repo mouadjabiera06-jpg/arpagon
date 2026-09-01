@@ -580,7 +580,7 @@ html[data-theme="clair"],html[data-theme="creme"]{--trim-lg:#FFFFFF}
   .side .foot{margin-top:auto;border-top:1px solid var(--line);padding:12px 6px 2px}
   .pchip{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:var(--r-s);width:100%;text-align:left}
   .pchip:hover{background:var(--card)}
-  .pavatar{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#6366F1,#A78BFA);
+  .pavatar{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,var(--ind),var(--ind2));
     display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;flex-shrink:0}
   .pchip .n{font-size:12.5px;font-weight:650}
   .pchip .d{font-size:10.5px;color:var(--dim)}
@@ -738,7 +738,7 @@ html.wp .hero{backdrop-filter:blur(var(--glass-blur)) saturate(1.4);-webkit-back
 .dash:hover{border-color:var(--ind);color:var(--ind2);background:var(--ind-soft)}
 .btn{background:linear-gradient(180deg,var(--ind2),var(--ind));color:#fff;font-weight:700;border-radius:var(--r-m);
   padding:12px 16px;width:100%;font-size:14.5px;box-shadow:0 1px 2px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.12)}
-.btn:hover{background:linear-gradient(180deg,#7B7EF6,#6366F1);box-shadow:0 4px 14px rgba(99,102,241,.35),inset 0 1px 0 rgba(255,255,255,.14)}
+.btn:hover{background:linear-gradient(180deg,var(--ind2),var(--ind));box-shadow:0 4px 14px var(--ind-soft),inset 0 1px 0 rgba(255,255,255,.14)}
 .btn.danger{background:linear-gradient(180deg,#F87A93,#EF5C79);color:#26060E}
 .btn.danger:hover{box-shadow:0 4px 14px rgba(251,113,133,.3)}
 .btn.ghost{background:var(--card2);border:1px solid var(--line2);color:var(--mut);box-shadow:none}
@@ -1841,7 +1841,7 @@ function chartMonths(n) {
   });
   g += '<text x="2" y="12" font-size="9" fill="#84848F">' + money(max).replace(",00", "") + '</text>';
   return '<svg viewBox="0 0 ' + W + ' ' + H + '" style="width:100%;height:auto">' + g +
-    '<polyline points="' + pts.join(" ") + '" fill="none" stroke="#818CF8" stroke-width="2.2"/></svg>' +
+    '<polyline points="' + pts.join(" ") + '" fill="none" stroke="var(--ind2)" stroke-width="2.2"/></svg>' +
     '<div style="display:flex;gap:16px;justify-content:center;font-size:11px;margin-top:8px" class="dim">' +
     '<span><b style="color:#34D399">▬</b> Revenus</span><span><b style="color:#FB7185">▬</b> Dépenses</span><span><b style="color:#818CF8">▬</b> Reste</span></div>';
 }
@@ -1867,7 +1867,7 @@ function render() {
     '<button class="nb' + (inMore ? " on" : "") + '" onclick="App.more()" aria-label="Plus d\'options">' + ic("dots") + 'Plus</button>';
   var prof = (PROFILES.filter(function (p) { return p.id === PID; })[0] || {}).name || "";
   document.getElementById("side").innerHTML =
-    '<div class="brand">Budget<b>Pro</b></div><div class="tagline">Gestion financière personnelle</div>' +
+    '<div class="brand">' + brandHtml() + '</div><div class="tagline">Reprends la main, niveau par niveau</div>' +
     '<div class="sgrp">Ton aventure</div>' +
     sideBtn("dash") + sideBtn("tx") + sideBtn("stat") +
     '<div class="sgrp">Tes quêtes</div>' +
@@ -2242,7 +2242,7 @@ function vGoal() {
         '<button class="mini" onclick="App.delGoal(\'' + g.id + '\')" aria-label="Supprimer">' + ic("trash") + '</button></div>' +
         '<div class="dim" style="font-size:13px;margin-top:3px"><b style="color:' + (g.done ? "var(--grn)" : "var(--txt)") + '">' + money(g.saved) + '</b> / ' + money(g.target) +
         (g.deadline ? ' · ' + frDate(g.deadline) : "") + '</div>' +
-        '<div class="bar" style="height:8px"><i style="width:' + pct + '%;background:' + (g.done ? "var(--grn)" : "linear-gradient(90deg,#6366F1,#A78BFA)") + '"></i></div>' +
+        '<div class="bar" style="height:8px"><i style="width:' + pct + '%;background:' + (g.done ? "var(--grn)" : "linear-gradient(90deg,var(--ind),var(--ind2))") + '"></i></div>' +
         '<div style="display:flex;justify-content:space-between;align-items:center;margin-top:9px">' +
         '<span class="dim" style="font-size:12px">' + pct.toFixed(0) + ' %</span>' +
         (g.done ? "" : '<button class="link" onclick="App.fundGoal(\'' + g.id + '\')">+ Alimenter</button>') + '</div></div>';
