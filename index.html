@@ -396,6 +396,26 @@ html.wp input,html.wp select,html.wp textarea{backdrop-filter:blur(var(--glass-b
 .sech b{font-size:16px;font-weight:780;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
 .mb{margin-bottom:14px}
 
+/* ===================== PLAN D'ACHATS ===================== */
+.secban{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:0 0 10px;padding:0 2px}
+.secban b{font-size:15px;font-weight:780;letter-spacing:-.015em}
+.secban span{font-size:12px;color:var(--dim)}
+.planline{display:flex;justify-content:space-between;align-items:center;gap:12px;
+  padding:11px 13px;border-radius:var(--r-m);background:var(--bg2);border:1px solid var(--line);margin-bottom:12px}
+.planline span{font-size:12.5px;color:var(--mut)}
+.planline b{font-size:17px;font-weight:780;font-variant-numeric:tabular-nums}
+.pmonth{border:1px solid var(--line);border-radius:var(--r-m);padding:10px 12px;margin-bottom:9px}
+.pmonth.now{border-color:var(--ind);box-shadow:0 0 0 3px var(--ind-soft)}
+.pmonth.past{opacity:.55}
+.pmh{display:flex;justify-content:space-between;align-items:center;font-size:13px;margin-bottom:6px}
+.pmh b{font-weight:750;font-variant-numeric:tabular-nums}
+.pnow{font-size:9.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ind2);background:var(--ind-soft);border-radius:999px;padding:2px 7px;vertical-align:middle}
+.pitem{display:flex;align-items:baseline;gap:10px;padding:5px 0;border-top:1px solid var(--line)}
+.pitem .pn{font-size:13px;font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pitem .pd{font-size:11px;color:var(--dim);margin-left:auto;white-space:nowrap}
+.pitem b{font-size:13px;font-variant-numeric:tabular-nums;min-width:64px;text-align:right}
+
 /* ===================== COMPAGNON ===================== */
 /* Fixé en bas à gauche sur toutes les vues. Il donne les quêtes,
    parle dans une bulle et annonce les récompenses en haut de l'écran. */
@@ -739,11 +759,24 @@ html.wp .hero{backdrop-filter:blur(var(--glass-blur)) saturate(1.4);-webkit-back
 .btn{background:linear-gradient(180deg,var(--ind2),var(--ind));color:#fff;font-weight:700;border-radius:var(--r-m);
   padding:12px 16px;width:100%;font-size:14.5px;box-shadow:0 1px 2px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.12)}
 .btn:hover{background:linear-gradient(180deg,var(--ind2),var(--ind));box-shadow:0 4px 14px var(--ind-soft),inset 0 1px 0 rgba(255,255,255,.14)}
-.btn.danger{background:linear-gradient(180deg,#F87A93,#EF5C79);color:#26060E}
+.btn.danger{background:var(--red);color:#fff}
 .btn.danger:hover{box-shadow:0 4px 14px rgba(251,113,133,.3)}
 .btn.ghost{background:var(--card2);border:1px solid var(--line2);color:var(--mut);box-shadow:none}
 .btn.ghost:hover{border-color:var(--dim);color:var(--txt);background:var(--card3)}
-.lbl{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);font-weight:700;margin:14px 0 6px;display:block}
+.lbl{font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--dim);font-weight:700;margin:12px 0 5px;display:block}
+/* Saisie épurée : le montant occupe la place, le reste s'efface */
+.amtwrap{display:flex;align-items:baseline;gap:8px;border-bottom:2px solid var(--line2);padding-bottom:6px;margin-top:4px}
+.amtwrap input{border:none!important;background:none!important;padding:0!important;box-shadow:none!important;
+  font-size:38px!important;font-weight:780;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.amtwrap input:focus{box-shadow:none!important}
+.amtwrap .cur{font-size:20px;font-weight:700;color:var(--dim)}
+.amtwrap:focus-within{border-bottom-color:var(--ind)}
+.crow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:12px}
+.crow input,.crow select{width:auto;flex:1;min-width:120px;padding:9px 11px;font-size:13px}
+.pillseg{display:inline-flex;gap:4px;background:var(--bg2);border:1px solid var(--line);border-radius:999px;padding:3px}
+.pillseg button{border-radius:999px;padding:6px 14px;font-size:12.5px;font-weight:700;color:var(--mut)}
+.pillseg button.on{background:var(--card);color:var(--txt);box-shadow:var(--sh)}
+.pillseg button.on.g{color:var(--grn)}.pillseg button.on.a{color:var(--amb)}
 .err{color:var(--red);font-size:12px;margin-top:5px}
 .tag{font-size:10.5px;font-weight:700;border-radius:999px;padding:4px 11px;border:1px solid var(--line2);color:var(--mut);white-space:nowrap}
 button.tag:hover{border-color:var(--dim);color:var(--txt)}
@@ -754,7 +787,7 @@ button.tag:hover{border-color:var(--dim);color:var(--txt)}
 .tag.v{color:var(--vio);border-color:rgba(167,139,250,.45);background:rgba(167,139,250,.12)}
 
 .fab{position:fixed;bottom:86px;right:16px;width:56px;height:56px;border-radius:var(--r-l);
-  background:linear-gradient(180deg,#6D70F3,#5B5EE8);color:#fff;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(180deg,var(--ind2),var(--ind));color:#fff;display:flex;align-items:center;justify-content:center;
   z-index:45;box-shadow:0 10px 30px var(--ind-soft),0 6px 18px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.15);transition:transform .15s,box-shadow var(--tr)}
 .fab:hover{transform:translateY(-2px);box-shadow:0 14px 36px var(--ind-soft),0 8px 22px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.15)}
 .fab svg{width:23px;height:23px}
@@ -770,7 +803,7 @@ nav.bottom{position:fixed;bottom:0;left:0;right:0;background:var(--topbar);borde
   opacity:0;pointer-events:none;transition:opacity .2s;backdrop-filter:blur(6px)}
 .ov.on{opacity:1;pointer-events:auto}
 @media(min-width:640px){.ov{align-items:center;padding:28px}}
-.sheet{background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid var(--line2);
+.sheet{background:var(--card);border:1px solid var(--line2);
   border-radius:var(--r-xl) var(--r-xl) 0 0;width:100%;max-width:540px;
   padding:22px 22px calc(22px + env(safe-area-inset-bottom));max-height:92vh;overflow-y:auto;
   box-shadow:var(--sh-lg),inset 0 1px 0 rgba(255,255,255,.05);
@@ -781,11 +814,12 @@ nav.bottom{position:fixed;bottom:0;left:0;right:0;background:var(--topbar);borde
 .sh h3{font-size:18px;font-weight:750;letter-spacing:-.015em}
 .sh .sub{font-size:12.5px;color:var(--dim);margin-top:3px}
 .big-in{font-size:30px!important;font-weight:750;letter-spacing:-.02em}
-.cats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-@media(min-width:640px){.cats{grid-template-columns:repeat(4,1fr)}}
-.cat{border:1px solid var(--line);border-radius:var(--r-m);padding:10px 4px;font-size:11px;font-weight:650;color:var(--mut);
+.cats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+@media(min-width:640px){.cats{grid-template-columns:repeat(6,1fr)}}
+.cat{border:1px solid transparent;border-radius:var(--r-m);padding:8px 2px;font-size:9.5px;font-weight:650;color:var(--dim);
   display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;background:var(--bg2)}
-.cat .e{font-size:18px}
+.cat .e{font-size:21px;line-height:1}
+.cat .n{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
 .cat:hover{border-color:var(--line2);background:var(--card2)}
 .cat.on{border-color:var(--ind);background:var(--ind-soft);color:var(--txt);box-shadow:0 0 0 3px var(--ind-soft)}
 .two{display:flex;gap:10px}
@@ -949,6 +983,33 @@ var LYS_D = "M12 2c-1.6 3.1-3.1 4.6-3.1 7 0 2 1.4 3.1 3.1 3.1s3.1-1.1 3.1-3.1c0-
 function lys(x, y, sc, fill, op) {
   return '<g transform="translate(' + x + ' ' + y + ') scale(' + sc + ')" fill="' + fill + '"' +
     (op ? ' opacity="' + op + '"' : "") + '><path d="' + LYS_D + '"/></g>';
+}
+
+/* ---------- ICÔNES SELON L'UNIVERS ---------- */
+/* Chaque univers rhabille les catégories : une calèche pour le transport
+   chez Arpagon, une navette en Cyberpunk. Les données ne bougent pas,
+   seule l'icône affichée change. */
+var CAT_SKINS = {
+  taverne: { logement: "🏰", nourriture: "🍞", transport: "🐎", sante: "🌿", loisirs: "🎻",
+    shopping: "🧵", abonnements: "📜", epargne: "🏺", remboursement: "⚖️", divers: "🕯️",
+    salaire: "💰", bourse: "📜", freelance: "✒️", "autres-rev": "🪙" },
+  france: { logement: "🏰", nourriture: "🥖", transport: "🐎", sante: "⚕️", loisirs: "🎭",
+    shopping: "🧵", abonnements: "📜", epargne: "⚜️", remboursement: "⚖️", divers: "🕯️",
+    salaire: "💰", bourse: "📜", freelance: "✒️", "autres-rev": "🪙" },
+  boise: { logement: "🏕️", nourriture: "🍖", transport: "🐴", sante: "🧪", loisirs: "🎲",
+    shopping: "🎒", abonnements: "📯", epargne: "💎", remboursement: "⚒️", divers: "🪵",
+    salaire: "🪙", bourse: "📜", freelance: "🗡️", "autres-rev": "🍄" },
+  synthwave: { logement: "🌆", nourriture: "🍕", transport: "🏎️", sante: "💊", loisirs: "🕹️",
+    shopping: "🕶️", abonnements: "📼", epargne: "💾", remboursement: "📟", divers: "🎞️",
+    salaire: "💵", bourse: "📼", freelance: "🎚️", "autres-rev": "✨" },
+  cyberpunk: { logement: "🏢", nourriture: "🍜", transport: "🛸", sante: "💉", loisirs: "🎮",
+    shopping: "🛒", abonnements: "📡", epargne: "🔋", remboursement: "⚡", divers: "🔧",
+    salaire: "💳", bourse: "📊", freelance: "⌨️", "autres-rev": "🔌" }
+};
+function catE(c) {
+  if (!c) return "❓";
+  var sk = CAT_SKINS[AP.theme];
+  return (sk && sk[c.id]) || c.e;
 }
 
 /* ---------- SONS ---------- */
@@ -1783,7 +1844,7 @@ function migrateV1() {
 /* ---------- GRAPHIQUES ---------- */
 function donut(byCat, total) {
   var items = [];
-  for (var k in byCat) { var c = cat(k); items.push({ n: c ? c.n : k, e: c ? c.e : "", c: c ? c.c : "#666", v: byCat[k] }); }
+  for (var k in byCat) { var c = cat(k); items.push({ n: c ? c.n : k, e: catE(c), c: c ? c.c : "#666", v: byCat[k] }); }
   items.sort(function (a, b) { return b.v - a.v; });
   if (items.length > 6) {
     var rest = items.slice(5), sum = 0;
@@ -2010,7 +2071,7 @@ function vDash() {
   items.slice(0, 6).forEach(function (it) {
     var b = budgetOf(month, it.c.id);
     var share = s.expenses > 0 ? it.v / s.expenses * 100 : 0;
-    spH += '<div class="spend"><span class="sic" style="background:' + it.c.c + '22;color:' + it.c.c + '">' + it.c.e + '</span>' +
+    spH += '<div class="spend"><span class="sic" style="background:' + it.c.c + '22;color:' + it.c.c + '">' + catE(it.c) + '</span>' +
       '<span class="sg"><span class="sn">' + it.c.n + '<b>' + money(it.v) + '</b></span>' +
       '<span class="sb"><i style="width:' + (it.v / maxv * 100) + '%;background:' + it.c.c + '"></i></span>' +
       '<span class="ss">' + share.toFixed(0) + ' % des dépenses' +
@@ -2034,7 +2095,7 @@ function vDash() {
     var c = cat(b.categoryId); if (!c) return;
     var sp = s.byCat[b.categoryId] || 0, pct = Math.min(100, sp / b.amount * 100), over = sp > b.amount;
     bH += '<div style="margin-bottom:11px"><div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:3px">' +
-      '<span class="dim">' + c.e + ' ' + c.n + '</span><span><b class="' + (over ? "red" : "") + '">' + money(sp) +
+      '<span class="dim">' + catE(c) + ' ' + c.n + '</span><span><b class="' + (over ? "red" : "") + '">' + money(sp) +
       '</b> <span class="dim">/ ' + money(b.amount) + '</span></span></div>' +
       '<div class="bar" style="margin-top:0"><i style="width:' + pct + '%;background:' +
       (over ? "var(--red)" : pct > 80 ? "var(--amb)" : "var(--grn)") + '"></i></div></div>';
@@ -2065,7 +2126,7 @@ function vDash() {
 
 function txRow(t, actions) {
   var c = cat(t.categoryId);
-  return '<div class="row"><div class="av" style="background:' + (c ? c.c : "#666") + '22">' + (c ? c.e : "❓") + '</div>' +
+  return '<div class="row"><div class="av" style="background:' + (c ? c.c : "#666") + '22">' + catE(c) + '</div>' +
     '<div class="gr"><div class="t">' + esc(t.note || (c ? c.n : "—")) + (t.useful === "useless" ? ' <span class="amb">🍿</span>' : "") + '</div>' +
     '<div class="s">' + (c ? c.n : "") + ' · ' + t.date.slice(8, 10) + "/" + t.date.slice(5, 7) + (t.payMethod ? " · " + t.payMethod : "") + '</div></div>' +
     '<div class="amt ' + (t.type === "income" ? "grn" : "") + '">' + (t.type === "income" ? "+" : "−") + money(t.amount) + '</div>' +
@@ -2083,7 +2144,7 @@ function txHead() {
 }
 function txLine(t) {
   var c = cat(t.categoryId);
-  return '<div class="trow"><div class="av" style="width:34px;height:34px;font-size:15px;background:' + (c ? c.c : "#666") + '22">' + (c ? c.e : "❓") + '</div>' +
+  return '<div class="trow"><div class="av" style="width:34px;height:34px;font-size:15px;background:' + (c ? c.c : "#666") + '22">' + catE(c) + '</div>' +
     '<span class="tcell" style="font-weight:550">' + esc(t.note || (c ? c.n : "—")) + (t.useful === "useless" ? ' <span class="amb">🍿</span>' : "") + '</span>' +
     '<span class="tcell dim">' + (c ? c.n : "") + '</span>' +
     '<span class="tcell dim">' + frDate(t.date) + '</span>' +
@@ -2142,6 +2203,57 @@ function vTx() {
     filter === "income" ? "grn" : "red");
 }
 
+/* ---------- PLAN D'ACHATS DE L'ANNÉE ---------- */
+/* Deux budgets distincts et volontairement séparés :
+   - l'enveloppe du mois, qui ne couvre QUE les dépenses courantes ;
+   - le plan de l'année, qui couvre les achats datés (vélo en décembre,
+     running en mars). Le mois où un achat tombe à échéance, son montant
+     s'ajoute à l'allocation de ce mois-là — sans polluer les autres. */
+function planYear(m) { return String(m).slice(0, 4); }
+function planItems(year) {
+  return (S.wishlist || []).filter(function (w) {
+    return w.status !== "achete" && w.targetMonth && planYear(w.targetMonth) === String(year);
+  });
+}
+/* Achats arrivant à échéance sur le mois donné */
+function planDue(m) {
+  return (S.wishlist || []).filter(function (w) {
+    return w.status !== "achete" && w.targetMonth === m;
+  });
+}
+function planDueTotal(m) {
+  return planDue(m).reduce(function (a, w) { return a + w.amount; }, 0);
+}
+/* Nombre de mois entre deux YYYY-MM (négatif si déjà passé) */
+function monthsBetween(from, to) {
+  var a = from.split("-"), b = to.split("-");
+  return (+b[0] - +a[0]) * 12 + (+b[1] - +a[1]);
+}
+/* Ce qu'il faut mettre de côté ce mois-ci pour tenir tout le plan à venir.
+   Chaque achat est lissé sur les mois qui restent jusqu'à son échéance. */
+function planMonthlySetAside(m) {
+  var total = 0;
+  (S.wishlist || []).forEach(function (w) {
+    if (w.status === "achete" || !w.targetMonth) return;
+    var left = monthsBetween(m, w.targetMonth);
+    if (left < 0) return;
+    total += w.amount / Math.max(1, left + 1);
+  });
+  return total;
+}
+function planSummary(m) {
+  var year = planYear(m);
+  var items = planItems(year);
+  var due = planDue(m), dueTot = planDueTotal(m);
+  return {
+    year: year,
+    items: items,
+    yearTotal: items.reduce(function (a, w) { return a + w.amount; }, 0),
+    due: due, dueTotal: dueTot,
+    setAside: planMonthlySetAside(m)
+  };
+}
+
 var BGROUPS = [
   { n: "Essentiels",   ids: ["logement", "nourriture", "transport", "sante"] },
   { n: "Vie courante", ids: ["loisirs", "shopping", "abonnements"] },
@@ -2156,7 +2268,12 @@ function budgetTotals(m) {
     if (!b) return;
     tb += b.amount; tc += carryFor(c.id); ts += st.byCat[c.id] || 0;
   });
-  return { budgeted: tb, spent: ts, carry: tc, income: st.income, toBudget: st.income - tb, stats: st };
+  var P = planSummary(m);
+  /* L'allocation du mois = enveloppes courantes + achats datés de ce mois. */
+  var plan = P.dueTotal, aside = P.setAside - plan > 0 ? P.setAside - plan : 0;
+  return { budgeted: tb, spent: ts, carry: tc, income: st.income,
+    plan: plan, aside: aside, allocation: tb + plan,
+    toBudget: st.income - tb - plan - aside, stats: st, planInfo: P };
 }
 function budRow(c, st) {
   var b = budgetOf(month, c.id), sp = st.byCat[c.id] || 0;
@@ -2166,7 +2283,7 @@ function budRow(c, st) {
   var cls = !b ? "none" : rest < 0 ? "bad" : pct > 85 ? "warn" : "ok";
   var col = rest < 0 ? "var(--red)" : pct > 85 ? "var(--amb)" : "var(--grn)";
   return '<div class="br">' +
-    '<div class="cn"><span class="e">' + c.e + '</span><span class="nm">' + c.n + '</span>' +
+    '<div class="cn"><span class="e">' + catE(c) + '</span><span class="nm">' + c.n + '</span>' +
     (carry > 0 ? '<span class="cy" title="Reporté des mois précédents">+' + money(carry) + '</span>' : "") + '</div>' +
     '<div class="bwrap"><input class="bin' + (b ? "" : " z") + '" inputmode="decimal" aria-label="Budget ' + c.n + '" ' +
     'value="' + (b ? b.amount : "") + '" placeholder="0" ' +
@@ -2185,14 +2302,18 @@ function vBud() {
   /* Bandeau « Prêt à budgéter » — logique enveloppe : chaque euro reçoit une mission */
   var tb = T.toBudget;
   var col = Math.abs(tb) < 0.01 ? "var(--grn)" : tb > 0 ? "var(--ind2)" : "var(--red)";
-  var msg = T.income === 0 ? "Ajoute tes revenus du mois pour répartir"
+  var msg = T.income === 0 ? "Ajoute tes recettes du mois pour répartir"
+    : T.plan > 0 ? "Mois chargé : " + planDue(month).length + " achat(s) prévu(s) s'ajoutent à ton courant"
     : Math.abs(tb) < 0.01 ? "Tout est affecté — budget à l'équilibre ✓"
     : tb > 0 ? "Reste à répartir dans tes enveloppes"
-    : "Tu as budgété plus que tes revenus";
+    : "Tu as engagé plus que tes recettes";
+  var P = T.planInfo;
   var h = '<div class="tobud"><div class="lft"><div class="k">Prêt à budgéter — ' + mLabel(month) + '</div>' +
     '<div class="amt" style="color:' + col + '">' + money(tb) + '</div>' +
-    '<div class="brk"><span>Revenus <b style="color:var(--txt)">' + money(T.income) + '</b></span>' +
-    '<span>Budgété <b style="color:var(--txt)">' + money(T.budgeted) + '</b></span>' +
+    '<div class="brk"><span>Recettes <b style="color:var(--txt)">' + money(T.income) + '</b></span>' +
+    '<span>Courant <b style="color:var(--txt)">' + money(T.budgeted) + '</b></span>' +
+    (T.plan > 0 ? '<span>Achats du mois <b class="vio">' + money(T.plan) + '</b></span>' : "") +
+    (T.aside > 0 ? '<span>Mise de côté plan <b class="tea">' + money(T.aside) + '</b></span>' : "") +
     '<span>Dépensé <b style="color:var(--txt)">' + money(T.spent) + '</b></span></div>' +
     '<div class="dim" style="font-size:11.5px;margin-top:5px">' + msg + '</div></div>' +
     '<div class="acts">' +
@@ -2202,6 +2323,8 @@ function vBud() {
     '</div></div>';
 
   /* Table d'enveloppes groupées */
+  h += '<div class="secban"><b>Budget du mois</b><span>Dépenses courantes uniquement — ' +
+    money(T.budgeted) + '</span></div>';
   h += '<div class="btab"><div class="bh"><span>Catégorie</span><span>Budgété</span><span>Dépensé</span><span>Reste</span></div>';
   var seen = {};
   BGROUPS.forEach(function (g) {
@@ -2219,10 +2342,44 @@ function vBud() {
   }
   h += '</div>';
 
+  /* ---- Plan d'achats de l'année, nettement séparé ---- */
+  h += '<div class="secban" style="margin-top:18px"><b>Plan d\'achats ' + P.year + '</b>' +
+    '<span>Achats datés — ' + money(P.yearTotal) + ' sur l\'année</span></div>';
+  h += '<div class="card">';
+  if (!P.items.length) {
+    h += '<div class="empty" style="padding:22px">Aucun achat planifié en ' + P.year + '.<br>' +
+      '<span class="dim" style="font-size:12px">Un vélo en décembre, des running en mars…</span><br>' +
+      '<button class="cta" onclick="App.newWish()">+ Planifier un achat</button></div>';
+  } else {
+    h += '<div class="planline"><span>À mettre de côté ce mois-ci pour tenir le plan</span>' +
+      '<b class="tea">' + money(P.setAside) + '</b></div>';
+    var byM = {};
+    P.items.forEach(function (w) { (byM[w.targetMonth] = byM[w.targetMonth] || []).push(w); });
+    Object.keys(byM).sort().forEach(function (mk) {
+      var tot = byM[mk].reduce(function (a, w) { return a + w.amount; }, 0);
+      var isNow = mk === month, past = monthsBetween(month, mk) < 0;
+      h += '<div class="pmonth' + (isNow ? " now" : "") + (past ? " past" : "") + '">' +
+        '<div class="pmh"><b>' + mLabel(mk) + (isNow ? ' <span class="pnow">ce mois</span>' : "") + '</b>' +
+        '<b>' + money(tot) + '</b></div>';
+      byM[mk].forEach(function (w) {
+        var left = monthsBetween(month, mk);
+        h += '<div class="pitem"><span class="pn">' + esc(w.name) + '</span>' +
+          '<span class="pd">' + (left > 0 ? left + " mois — " + money(w.amount / (left + 1)) + " /mois"
+            : left === 0 ? "à payer maintenant" : "échéance passée") + '</span>' +
+          '<b>' + money(w.amount) + '</b></div>';
+      });
+      h += '</div>';
+    });
+    h += '<button class="dash" style="margin-top:12px" onclick="App.newWish()">' + ic("plus") + 'Planifier un achat</button>';
+  }
+  h += '</div>';
+
   h += '<div class="card" style="margin-top:14px"><div class="set" style="border:none;padding:2px 0">' +
     '<div><div class="n">Report du non-utilisé</div><div class="d">Ce qui reste d\'un mois s\'ajoute à l\'enveloppe du suivant</div></div>' +
     '<button class="sw' + (S.settings.rollover ? " on" : "") + '" onclick="App.toggleRollover()" role="switch" aria-checked="' + S.settings.rollover + '"><i></i></button></div></div>';
   h += '<div class="dim" style="font-size:11.5px;margin-top:10px;line-height:1.7">' +
+    'Les deux budgets restent séparés : l\'enveloppe du mois ne couvre que le quotidien, ' +
+    'le plan de l\'année couvre les achats datés. Le mois de l\'échéance, l\'achat s\'ajoute automatiquement à ton allocation.<br>' +
     'Tape directement un montant dans la colonne <b>Budgété</b> — c\'est enregistré à la validation. ' +
     'Laisse vide pour supprimer l\'enveloppe.</div>';
   return h;
@@ -2333,7 +2490,7 @@ function vDebt() {
 
 function vStat() {
   var s = stats(month), items = [];
-  for (var k in s.byCat) { var c = cat(k); items.push({ label: (c ? c.e + " " + c.n : k), value: s.byCat[k], color: c ? c.c : "#666" }); }
+  for (var k in s.byCat) { var c = cat(k); items.push({ label: (c ? catE(c) + " " + c.n : k), value: s.byCat[k], color: c ? c.c : "#666" }); }
   items.sort(function (a, b) { return b.value - a.value; });
   var uH = "";
   var u6 = [], t6 = [];
@@ -2359,7 +2516,7 @@ function histResults() {
   if (!res.length) h += '<div class="empty">Aucun résultat pour cette recherche</div>';
   res.forEach(function (t) {
     var c = cat(t.categoryId);
-    h += '<div class="row"><span style="font-size:17px">' + (c ? c.e : "") + '</span>' +
+    h += '<div class="row"><span style="font-size:17px">' + (c ? catE(c) : "") + '</span>' +
       '<div class="gr"><div class="t">' + esc(t.note || (c ? c.n : "")) + '</div><div class="s">' + frDate(t.date) + (t.payMethod ? " · " + t.payMethod : "") + '</div></div>' +
       '<div class="amt ' + (t.type === "income" ? "grn" : "") + '">' + (t.type === "income" ? "+" : "−") + money(t.amount) + '</div></div>';
   });
@@ -2549,23 +2706,43 @@ function sheetTx() {
   var t = tmp, freq = catFreq();
   var cats = CATS.filter(function (c) { return c.t === t.type; })
     .slice().sort(function (a, b) { return (freq[b.id] || 0) - (freq[a.id] || 0); });
-  var h = sheetHead(t.id ? "Modifier l'opération" : t.type === "income" ? "Nouveau revenu" : "Nouvelle dépense", mLabel(monthOf(t.date || month + "-01")));
-  if (!t.id) h += '<div class="seg">' +
+
+  /* Une seule colonne, du plus important au moins important :
+     type, montant, catégorie, puis les détails ramassés sur une ligne. */
+  var h = sheetHead(t.id ? "Modifier" : t.type === "income" ? "Recette" : "Dépense",
+    mLabel(monthOf(t.date || month + "-01")));
+
+  if (!t.id) h += '<div style="display:flex;justify-content:center;margin-top:2px">' +
+    '<div class="pillseg">' +
     '<button class="' + (t.type === "expense" ? "on a" : "") + '" onclick="App.setType(\'expense\')">Dépense</button>' +
-    '<button class="' + (t.type === "income" ? "on g" : "") + '" onclick="App.setType(\'income\')">Revenu</button></div>';
-  h += '<label class="lbl">Montant (' + S.settings.currency + ')</label>' +
-    '<input id="f_amt" class="big-in" inputmode="decimal" placeholder="0,00" value="' + (t.amount || "") + '">' +
-    '<div class="err" id="e_amt"></div>' +
-    '<label class="lbl">Catégorie</label><div class="cats">' +
-    cats.map(function (c) { return '<button class="cat' + (t.categoryId === c.id ? " on" : "") + '" onclick="App.setCat(\'' + c.id + '\')"><span class="e">' + c.e + '</span>' + c.n + '</button>'; }).join("") +
-    '</div><div class="err" id="e_cat"></div>' +
-    '<div class="two"><div><label class="lbl">Date</label><input type="date" id="f_date" value="' + t.date + '"></div>' +
-    (t.type === "expense" ? '<div><label class="lbl">Paiement</label><select id="f_pay">' +
-      PAYS.map(function (p) { return '<option' + (t.payMethod === p ? " selected" : "") + '>' + p + '</option>'; }).join("") + '</select></div>' : "") + '</div>' +
-    '<label class="lbl">Note</label><input id="f_note" placeholder="Courses, resto avec Théo…" value="' + esc(t.note || "") + '">';
-  if (t.type === "expense") h += '<div class="seg">' +
-    '<button class="' + (t.useful === "useful" ? "on g" : "") + '" onclick="App.setUseful(\'useful\')">✅ Achat utile</button>' +
-    '<button class="' + (t.useful === "useless" ? "on a" : "") + '" onclick="App.setUseful(\'useless\')">🍿 Achat inutile</button></div>';
+    '<button class="' + (t.type === "income" ? "on g" : "") + '" onclick="App.setType(\'income\')">Recette</button>' +
+    '</div></div>';
+
+  h += '<div class="amtwrap"><input id="f_amt" inputmode="decimal" placeholder="0,00" ' +
+    'aria-label="Montant" value="' + (t.amount || "") + '">' +
+    '<span class="cur">' + S.settings.currency + '</span></div>' +
+    '<div class="err" id="e_amt"></div>';
+
+  h += '<label class="lbl">Catégorie</label><div class="cats">' +
+    cats.map(function (c) {
+      return '<button class="cat' + (t.categoryId === c.id ? " on" : "") + '" title="' + c.n + '" ' +
+        'onclick="App.setCat(\'' + c.id + '\')"><span class="e">' + catE(c) + '</span>' +
+        '<span class="n">' + c.n + '</span></button>';
+    }).join("") + '</div><div class="err" id="e_cat"></div>';
+
+  h += '<div class="crow"><input type="date" id="f_date" aria-label="Date" value="' + t.date + '">' +
+    (t.type === "expense" ? '<select id="f_pay" aria-label="Moyen de paiement">' +
+      PAYS.map(function (p) { return '<option' + (t.payMethod === p ? " selected" : "") + '>' + p + '</option>'; }).join("") +
+      '</select>' : "") + '</div>';
+
+  h += '<input id="f_note" style="margin-top:8px" placeholder="Note (facultatif)" value="' + esc(t.note || "") + '">';
+
+  if (t.type === "expense") h += '<div style="display:flex;justify-content:center;margin-top:12px">' +
+    '<div class="pillseg">' +
+    '<button class="' + (t.useful === "useful" ? "on g" : "") + '" onclick="App.setUseful(\'useful\')">Utile</button>' +
+    '<button class="' + (t.useful === "useless" ? "on a" : "") + '" onclick="App.setUseful(\'useless\')">Superflu</button>' +
+    '</div></div>';
+
   h += sheetFoot(t.id ? "Enregistrer" : "Ajouter", "App.saveTx()");
   openSheet(h, { submit: function () { App.saveTx(); } });
   setTimeout(function () { var a = document.getElementById("f_amt"); if (a && !t.id) a.focus(); }, 120);
@@ -2573,7 +2750,7 @@ function sheetTx() {
 
 function sheetBudget(catId) {
   var c = cat(catId), b = budgetOf(month, catId);
-  openSheet(sheetHead(c.e + " Budget " + c.n, mLabel(month)) +
+  openSheet(sheetHead(catE(c) + " Budget " + c.n, mLabel(month)) +
     '<label class="lbl">Enveloppe mensuelle (' + S.settings.currency + ')</label>' +
     '<input id="f_bud" class="big-in" inputmode="decimal" placeholder="0,00" value="' + (b ? b.amount : "") + '">' +
     '<div class="dim" style="font-size:12px;margin-top:8px">Laisse vide et enregistre pour supprimer l\'enveloppe.</div>' +
