@@ -287,7 +287,7 @@ html.wp input,html.wp select,html.wp textarea{backdrop-filter:blur(var(--glass-b
   border-radius:var(--r-l);padding:16px 18px;margin-bottom:14px;box-shadow:var(--sh-md);
   display:flex;align-items:center;gap:18px;flex-wrap:wrap}
 .tobud .lft{min-width:0}
-.tobud .k{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);font-weight:700}
+.tobud .k{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);font-weight:700}
 .tobud .amt{font-size:30px;font-weight:780;letter-spacing:-.025em;line-height:1.15;margin-top:2px}
 .tobud .brk{font-size:12px;color:var(--mut);margin-top:3px;display:flex;gap:12px;flex-wrap:wrap}
 .tobud .acts{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
@@ -298,7 +298,7 @@ html.wp input,html.wp select,html.wp textarea{backdrop-filter:blur(var(--glass-b
 .btab{border:1px solid var(--line);border-radius:var(--r-l);overflow:hidden;background:var(--card)}
 .btab .bh,.btab .br{display:grid;grid-template-columns:minmax(0,1fr) 96px 96px 104px;align-items:center;gap:8px}
 .btab .bh{padding:10px 16px;background:var(--card2);border-bottom:1px solid var(--line);
-  font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);font-weight:700}
+  font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);font-weight:700}
 .btab .bh span:not(:first-child),.btab .br .n{text-align:right}
 .bgrp{display:flex;align-items:center;gap:9px;padding:11px 16px;background:var(--bg2);
   border-bottom:1px solid var(--line);font-size:11.5px;font-weight:750;color:var(--mut);
@@ -310,7 +310,7 @@ html.wp input,html.wp select,html.wp textarea{backdrop-filter:blur(var(--glass-b
 .btab .cn{display:flex;align-items:center;gap:9px;min-width:0;font-size:14px;font-weight:600}
 .btab .cn .e{font-size:17px;flex-shrink:0}
 .btab .cn .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.btab .cn .cy{font-size:10px;font-weight:700;color:var(--tea);background:rgba(45,212,191,.12);
+.btab .cn .cy{font-size:11px;font-weight:700;color:var(--tea);background:rgba(45,212,191,.12);
   border-radius:999px;padding:2px 7px;flex-shrink:0}
 .bin{width:100%;text-align:right;padding:6px 9px;font-size:13.5px;font-weight:650;
   background:transparent;border:1px solid transparent;border-radius:var(--r-s);font-variant-numeric:tabular-nums}
@@ -338,7 +338,7 @@ html.wp input,html.wp select,html.wp textarea{backdrop-filter:blur(var(--glass-b
 /* Toutes les surfaces passent par les tokens (--card, --bg2, --line) :
    le mode fond d'écran transparent continue de fonctionner tel quel. */
 .chap{display:flex;align-items:center;gap:10px;margin-bottom:12px}
-.chap .rn{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);font-weight:800}
+.chap .rn{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);font-weight:800}
 .chap .ln{flex:1;height:1px;background:var(--line2)}
 
 .qhead{background:var(--card);border:1px solid var(--line2);border-radius:var(--r-xl);
@@ -354,12 +354,12 @@ html.wp input,html.wp select,html.wp textarea{backdrop-filter:blur(var(--glass-b
 .qmeta{flex:1;min-width:0}
 .qrank{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .qrank .rk{font-size:17px;font-weight:800;letter-spacing:-.02em}
-.qrank .lv{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;
+.qrank .lv{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;
   color:var(--ind2);background:var(--ind-soft);border-radius:999px;padding:3px 9px}
 .qmeta .qd{font-size:12px;color:var(--mut);margin-top:3px}
 .qxp{height:6px;border-radius:99px;background:var(--bg2);border:1px solid var(--line);overflow:hidden;margin-top:10px}
 .qxp i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--ind),var(--ind2));transition:width .6s cubic-bezier(.4,0,.2,1)}
-.qxpi{display:flex;justify-content:space-between;font-size:10.5px;color:var(--dim);margin-top:4px;font-weight:600}
+.qxpi{display:flex;justify-content:space-between;font-size:11px;color:var(--dim);margin-top:4px;font-weight:600}
 
 .qlist{display:grid;gap:10px}
 .quest{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);
@@ -376,6 +376,44 @@ html.wp input,html.wp select,html.wp textarea{backdrop-filter:blur(var(--glass-b
 .qtx .qs{font-size:11.5px;color:var(--dim);margin-top:1px}
 .qtx .qb{height:4px;border-radius:99px;background:var(--bg2);overflow:hidden;margin-top:7px}
 .qtx .qb i{display:block;height:100%;border-radius:99px;background:var(--ind2);transition:width .4s}
+.quest{align-items:flex-start}
+.quest .qic svg{width:18px;height:18px}
+.quest:not(.on) .qic{color:var(--ind2)}
+.qtx .qt,.qtx .qs{display:block}
+.qtx .qw{display:block;font-size:12px;color:var(--mut);margin-top:6px;line-height:1.5;max-width:68ch}
+.qtx .qw b{color:var(--txt);font-weight:700}
+.qbr{display:flex;align-items:center;gap:10px;margin-top:9px}
+.qbr .qb{flex:1;margin-top:0}
+.qn{font-size:11px;color:var(--dim);font-weight:650;white-space:nowrap;font-variant-numeric:tabular-nums}
+.qact{display:flex;align-items:center;gap:10px;margin-top:11px;flex-wrap:wrap}
+.qh{font-size:11px;color:var(--dim);font-style:italic}
+.qgo{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;border-radius:var(--r-s);
+  padding:7px 12px;background:var(--ind);color:#fff;border:1px solid transparent;transition:filter var(--tr),background var(--tr)}
+.qgo:hover{filter:brightness(1.07)}
+.qgo svg{width:14px;height:14px}
+.qgo.ghost{background:transparent;color:var(--txt);border-color:var(--line2)}
+.qgo.ghost:hover{background:var(--card2);filter:none}
+.qgo:focus-visible,.defi .icb:focus-visible{outline:2px solid var(--ind2);outline-offset:2px}
+.defi .qgo{background:var(--amb);color:var(--s-card)}
+.quest.honor .qic{border-style:dashed}
+.quest.full{box-shadow:none;background:var(--card2)}
+.defi{position:relative;background:var(--card);border:1px dashed var(--line2);border-radius:var(--r-l);
+  padding:16px 16px 14px;display:flex;flex-direction:column}
+.defi .dic{width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+  background:var(--amb-soft);color:var(--amb)}
+.defi .dic svg{width:19px;height:19px}
+.defi .dt{font-size:15px;font-weight:700;letter-spacing:-.01em;line-height:1.35;margin-top:12px;text-wrap:balance}
+.defi .dw{font-size:12px;color:var(--mut);margin-top:5px;line-height:1.5}
+.defi .da{display:flex;align-items:center;gap:6px;margin-top:auto;padding-top:14px}
+.defi .dxp{margin-left:auto;font-size:11px;font-weight:800;color:var(--amb)}
+.defi .dok{font-size:12.5px;font-weight:700;color:var(--grn)}
+.defi.on{border-style:solid;border-color:rgba(92,127,63,.45);background:var(--grn-soft)}
+.defi.on .dic{background:var(--grn);color:var(--s-card)}
+@@END
+@@OLD
+  .cdefi{grid-column:span 12}.defi{height:auto}
+@@NEW
+  .cdefi{grid-column:span 12}
 .qxpc{font-size:11px;font-weight:800;color:var(--ind2);background:var(--ind-soft);
   border-radius:999px;padding:5px 10px;flex-shrink:0;white-space:nowrap}
 .quest.on .qxpc{color:var(--grn);background:transparent;border:1px solid rgba(52,211,153,.4)}
@@ -412,7 +450,7 @@ html.wp input,html.wp select,html.wp textarea{backdrop-filter:blur(var(--glass-b
 .pmonth.past{opacity:.55}
 .pmh{display:flex;justify-content:space-between;align-items:center;font-size:13px;margin-bottom:6px}
 .pmh b{font-weight:750;font-variant-numeric:tabular-nums}
-.pnow{font-size:9.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;
+.pnow{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;
   color:var(--ind2);background:var(--ind-soft);border-radius:999px;padding:2px 7px;vertical-align:middle}
 .pitem{display:flex;align-items:baseline;gap:10px;padding:5px 0;border-top:1px solid var(--line)}
 .pitem .pn{font-size:13px;font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -441,11 +479,12 @@ html.wp input,html.wp select,html.wp textarea{backdrop-filter:blur(var(--glass-b
   font-size:14px;line-height:1;margin-bottom:6px;transition:transform .15s,border-color var(--tr)}
 .mtalk:hover{transform:scale(1.12);border-color:var(--ind)}
 html.wp .mtalk{backdrop-filter:blur(var(--glass-blur))}
-@media(min-width:960px){#mate{left:calc(var(--sb) + 16px);bottom:24px}}
+/* Sur PC il habite le bas de la barre latérale, au lieu de recouvrir les cartes */
+@media(min-width:960px){#mate{left:18px;bottom:112px}}
 @media(max-width:400px){#mate{left:6px;bottom:calc(74px + env(safe-area-inset-bottom))}}
 
 .masc{width:104px;height:auto;pointer-events:auto;cursor:pointer;
-  filter:drop-shadow(0 6px 12px rgba(0,0,0,.32));transition:transform .18s cubic-bezier(.34,1.4,.6,1)}
+  filter:drop-shadow(0 6px 12px rgba(0,0,0,.32));transition:transform .18s cubic-bezier(.16,1,.3,1)}
 .masc:hover{transform:translateY(-4px) scale(1.04)}
 .masc:active{transform:scale(.97)}
 @media(max-width:520px){.masc{width:78px}}
@@ -454,7 +493,7 @@ html.wp .mtalk{backdrop-filter:blur(var(--glass-blur))}
 .mbub{pointer-events:auto;max-width:min(280px,72vw);background:var(--card);border:1px solid var(--line2);
   border-radius:14px 14px 14px 4px;padding:11px 13px;box-shadow:var(--sh-lg);position:relative;
   font-size:13px;line-height:1.5;opacity:0;transform:translateY(6px) scale(.96);
-  transition:opacity .22s,transform .22s cubic-bezier(.34,1.3,.6,1)}
+  transition:opacity .22s,transform .22s cubic-bezier(.16,1,.3,1)}
 html.wp .mbub{backdrop-filter:blur(var(--glass-blur)) saturate(1.4);-webkit-backdrop-filter:blur(var(--glass-blur)) saturate(1.4)}
 .mbub.on{opacity:1;transform:none}
 .mbub b{color:var(--ind2)}
@@ -468,7 +507,7 @@ html.wp .mbub{backdrop-filter:blur(var(--glass-blur)) saturate(1.4);-webkit-back
 #reward{position:fixed;top:0;left:50%;transform:translateX(-50%) translateY(-130%);z-index:80;
   margin-top:calc(10px + env(safe-area-inset-top));display:flex;align-items:center;gap:11px;
   background:var(--card2);border:1px solid var(--ind);border-radius:999px;padding:9px 16px 9px 11px;
-  box-shadow:var(--sh-lg),0 0 26px var(--ind-soft);transition:transform .42s cubic-bezier(.34,1.35,.6,1);
+  box-shadow:var(--sh-lg),0 0 26px var(--ind-soft);transition:transform .42s cubic-bezier(.16,1,.3,1);
   max-width:calc(100vw - 24px)}
 #reward.on{transform:translateX(-50%) translateY(0)}
 html.wp #reward{backdrop-filter:blur(var(--glass-blur)) saturate(1.4);-webkit-backdrop-filter:blur(var(--glass-blur)) saturate(1.4)}
@@ -479,7 +518,7 @@ html.wp #reward{backdrop-filter:blur(var(--glass-blur)) saturate(1.4);-webkit-ba
 #reward .rt b{display:block;font-size:13.5px;font-weight:750;letter-spacing:-.01em}
 #reward .rt span{display:block;font-size:11.5px;color:var(--mut);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 @keyframes rpop{0%{transform:scale(.6);opacity:0}60%{transform:scale(1.18)}100%{transform:scale(1);opacity:1}}
-#reward.on .rx{animation:rpop .5s cubic-bezier(.34,1.5,.6,1)}
+#reward.on .rx{animation:rpop .5s cubic-bezier(.16,1,.3,1)}
 
 /* Animations du personnage */
 .masc .mbody{animation:mbob 3.6s ease-in-out infinite;transform-origin:60px 145px}
@@ -528,7 +567,7 @@ html.wp #reward{backdrop-filter:blur(var(--glass-blur)) saturate(1.4);-webkit-ba
 .thc .sw{height:34px;border-radius:8px;border:1px solid rgba(128,128,140,.28);display:flex;overflow:hidden;margin-bottom:6px}
 .thc .sw i{flex:1}
 .thc .nm{font-size:12px;font-weight:650;color:var(--txt);display:block}
-.thc .uv{display:block;font-size:10px;color:var(--dim);line-height:1.35;margin-top:2px}
+.thc .uv{display:block;font-size:11px;color:var(--dim);line-height:1.35;margin-top:2px}
 .acrow{display:flex;flex-wrap:wrap;gap:9px;margin-top:10px}
 .acc{width:32px;height:32px;border-radius:50%;border:2px solid transparent;position:relative;transition:transform .1s}
 .acc:hover{transform:scale(1.08)}
@@ -598,21 +637,21 @@ html[data-theme="clair"],html[data-theme="creme"]{--trim-lg:#FFFFFF}
     background:var(--bg2);border-right:1px solid var(--line);padding:16px 12px}
   .side .brand{font-size:19px;padding:8px 12px 6px}
   .side .tagline{font-size:11px;color:var(--dim);padding:0 12px 18px}
-  .sgrp{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);font-weight:700;padding:14px 12px 6px}
+  .sgrp{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);font-weight:700;padding:14px 12px 6px}
   .sbtn{display:flex;align-items:center;gap:11px;padding:9px 12px;border-radius:var(--r-s);
     font-size:13.5px;font-weight:600;color:var(--mut);width:100%;text-align:left;margin-bottom:1px;position:relative}
   .sbtn svg{width:17px;height:17px;flex-shrink:0}
   .sbtn:hover{background:var(--card);color:var(--txt)}
   .sbtn.on{background:var(--ind-soft);color:var(--ind2)}
   .sbtn.on::before{content:"";position:absolute;left:-12px;top:8px;bottom:8px;width:3px;border-radius:2px;background:var(--ind)}
-  .sbtn .kbd{margin-left:auto;font-size:10px;color:var(--dim);border:1px solid var(--line);border-radius:5px;padding:1px 5px}
+  .sbtn .kbd{margin-left:auto;font-size:11px;color:var(--dim);border:1px solid var(--line);border-radius:5px;padding:1px 5px}
   .side .foot{margin-top:auto;border-top:1px solid var(--line);padding:12px 6px 2px}
   .pchip{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:var(--r-s);width:100%;text-align:left}
   .pchip:hover{background:var(--card)}
   .pavatar{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,var(--ind),var(--ind2));
     display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;flex-shrink:0}
   .pchip .n{font-size:12.5px;font-weight:650}
-  .pchip .d{font-size:10.5px;color:var(--dim)}
+  .pchip .d{font-size:11px;color:var(--dim)}
   .main{padding-bottom:40px}
   .topbar .brand{display:none}
   .vtitle{display:block}
@@ -628,6 +667,7 @@ html[data-theme="clair"],html[data-theme="creme"]{--trim-lg:#FFFFFF}
 /* Zone 960-1199 : la grille dashboard se réorganise pour éviter les colonnes trop étroites */
 @media(min-width:960px) and (max-width:1199px){
   .c8{grid-column:span 12}.c5{grid-column:span 6}.c4{grid-column:span 6}.c3{grid-column:span 12}
+  .cdefi{grid-column:span 12}.defi{height:auto}
 }
 /* Petits mobiles : la topbar reste intacte */
 @media(max-width:420px){
@@ -666,16 +706,16 @@ html[data-theme="clair"],html[data-theme="creme"]{--trim-lg:#FFFFFF}
 .pal input{border:none;background:none;border-bottom:1px solid var(--line);border-radius:0;padding:15px 18px;font-size:15px}
 .pal input:focus{box-shadow:none;border-color:var(--line2)}
 .pal-list{overflow-y:auto;padding:7px}
-.pal-grp{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);font-weight:700;padding:8px 11px 4px}
+.pal-grp{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);font-weight:700;padding:8px 11px 4px}
 .pal-it{display:flex;align-items:center;gap:11px;padding:9px 11px;border-radius:var(--r-s);font-size:13.5px;
   color:var(--mut);cursor:pointer;width:100%;text-align:left}
 .pal-it svg{width:16px;height:16px;flex-shrink:0}
 .pal-it .sub{margin-left:auto;font-size:11.5px;color:var(--dim)}
-.pal-it .kbd{margin-left:auto;font-size:10px;color:var(--dim);border:1px solid var(--line2);border-radius:5px;padding:1px 6px}
+.pal-it .kbd{margin-left:auto;font-size:11px;color:var(--dim);border:1px solid var(--line2);border-radius:5px;padding:1px 6px}
 .pal-it.sel{background:var(--ind-soft);color:var(--txt)}
 .pal-it.sel svg{color:var(--ind2)}
 .pal-foot{border-top:1px solid var(--line);padding:8px 14px;font-size:11px;color:var(--dim);display:flex;gap:14px}
-.pal-foot b{border:1px solid var(--line2);border-radius:5px;padding:0 5px;font-size:10px;color:var(--mut)}
+.pal-foot b{border:1px solid var(--line2);border-radius:5px;padding:0 5px;font-size:11px;color:var(--mut)}
 
 /* ===================== COMPOSANTS ===================== */
 .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-l);padding:16px;box-shadow:var(--sh)}
@@ -684,10 +724,10 @@ html[data-theme="clair"],html[data-theme="creme"]{--trim-lg:#FFFFFF}
 .mb{margin-bottom:14px}
 .hero{position:relative;overflow:hidden;background:var(--card);border:1px solid var(--line2);
   border-radius:var(--r-xl);padding:20px 22px;box-shadow:var(--sh-md)}
-.hero::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
-  background:linear-gradient(180deg,var(--ind2),var(--ind));opacity:.85}
+/* le liseré tricolore reste propre au thème France */
+html[data-theme="france"] .hero::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;opacity:.85}
 html.wp .hero{backdrop-filter:blur(var(--glass-blur)) saturate(1.4);-webkit-backdrop-filter:blur(var(--glass-blur)) saturate(1.4)}
-.hero .k{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);font-weight:800}
+.hero .k{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);font-weight:800}
 .hero .big{font-size:44px;font-weight:800;letter-spacing:-.035em;margin-top:1px;
   font-variant-numeric:tabular-nums;line-height:1.05}
 .hero .sub{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;align-items:center}
@@ -705,11 +745,11 @@ html.wp .hero{backdrop-filter:blur(var(--glass-blur)) saturate(1.4);-webkit-back
 .hero .burn{height:6px;border-radius:99px;background:var(--bg2);border:1px solid var(--line);
   overflow:hidden;margin-top:14px}
 .hero .burn i{display:block;height:100%;border-radius:99px;transition:width .5s cubic-bezier(.4,0,.2,1)}
-.hero .bl{display:flex;justify-content:space-between;font-size:10.5px;color:var(--dim);
+.hero .bl{display:flex;justify-content:space-between;font-size:11px;color:var(--dim);
   margin-top:5px;font-weight:600}
 .statgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px}
 .stat{background:var(--card);border:1px solid var(--line);border-radius:var(--r-l);padding:14px 16px;box-shadow:var(--sh);min-width:0}
-.stat .k{font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--mut);font-weight:700}
+.stat .k{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--mut);font-weight:700}
 .stat .v{font-size:22px;font-weight:750;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-.01em}
 .stat .s{font-size:11.5px;color:var(--dim);margin-top:2px}
 .ttl{font-size:12.5px;font-weight:700;color:var(--mut);letter-spacing:.03em;text-transform:uppercase;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;gap:8px}
@@ -738,7 +778,7 @@ html.wp .hero{backdrop-filter:blur(var(--glass-blur)) saturate(1.4);-webkit-back
 .thead{display:none}
 @media(min-width:960px){
   .thead{display:grid;grid-template-columns:46px 1.6fr 110px 120px 110px 130px 84px;gap:10px;
-    padding:8px 0;border-bottom:1px solid var(--line);font-size:10.5px;letter-spacing:.08em;
+    padding:8px 0;border-bottom:1px solid var(--line);font-size:11px;letter-spacing:.08em;
     text-transform:uppercase;color:var(--dim);font-weight:700}
   .trow{display:grid;grid-template-columns:46px 1.6fr 110px 120px 110px 130px 84px;gap:10px;align-items:center;
     padding:9px 0;border-bottom:1px solid var(--line)}
@@ -772,7 +812,7 @@ html.wp .hero{backdrop-filter:blur(var(--glass-blur)) saturate(1.4);-webkit-back
 .btn.danger:hover{box-shadow:0 4px 14px rgba(251,113,133,.3)}
 .btn.ghost{background:var(--card2);border:1px solid var(--line2);color:var(--mut);box-shadow:none}
 .btn.ghost:hover{border-color:var(--dim);color:var(--txt);background:var(--card3)}
-.lbl{font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--dim);font-weight:700;margin:12px 0 5px;display:block}
+.lbl{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--dim);font-weight:700;margin:12px 0 5px;display:block}
 /* Saisie épurée : le montant occupe la place, le reste s'efface */
 .amtwrap{display:flex;align-items:baseline;gap:8px;border-bottom:2px solid var(--line2);padding-bottom:6px;margin-top:4px}
 .amtwrap input,.amtwrap input:focus,.amtwrap input:hover{
@@ -790,7 +830,7 @@ html.wp .hero{backdrop-filter:blur(var(--glass-blur)) saturate(1.4);-webkit-back
 .pillseg button.on{background:var(--card);color:var(--txt);box-shadow:var(--sh)}
 .pillseg button.on.g{color:var(--grn)}.pillseg button.on.a{color:var(--amb)}
 .err{color:var(--red);font-size:12px;margin-top:5px}
-.tag{font-size:10.5px;font-weight:700;border-radius:999px;padding:4px 11px;border:1px solid var(--line2);color:var(--mut);white-space:nowrap}
+.tag{font-size:11px;font-weight:700;border-radius:999px;padding:4px 11px;border:1px solid var(--line2);color:var(--mut);white-space:nowrap}
 button.tag:hover{border-color:var(--dim);color:var(--txt)}
 .tag.h{color:var(--red);border-color:rgba(251,113,133,.45);background:var(--red-soft)}
 .tag.m{color:var(--amb);border-color:rgba(251,191,36,.45);background:var(--amb-soft)}
@@ -806,7 +846,7 @@ button.tag:hover{border-color:var(--dim);color:var(--txt)}
 nav.bottom{position:fixed;bottom:0;left:0;right:0;background:var(--topbar);border-top:1px solid var(--line);
   z-index:45;backdrop-filter:blur(16px) saturate(1.3);-webkit-backdrop-filter:blur(16px) saturate(1.3);padding-bottom:env(safe-area-inset-bottom)}
 .nrow{display:flex}
-.nb{flex:1;padding:8px 2px 7px;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:9.5px;font-weight:650;color:var(--dim)}
+.nb{flex:1;padding:8px 2px 7px;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;font-weight:650;color:var(--dim)}
 .nb svg{width:18px;height:18px}
 .nb.on{color:var(--ind2)}
 
@@ -819,7 +859,7 @@ nav.bottom{position:fixed;bottom:0;left:0;right:0;background:var(--topbar);borde
   border-radius:var(--r-xl) var(--r-xl) 0 0;width:100%;max-width:540px;
   padding:22px 22px calc(22px + env(safe-area-inset-bottom));max-height:92vh;overflow-y:auto;
   box-shadow:var(--sh-lg),inset 0 1px 0 rgba(255,255,255,.05);
-  transform:translateY(36px) scale(.99);opacity:.6;transition:transform .24s cubic-bezier(.32,1.15,.5,1),opacity .2s}
+  transform:translateY(36px) scale(.99);opacity:.6;transition:transform .24s cubic-bezier(.16,1,.3,1),opacity .2s}
 .ov.on .sheet{transform:none;opacity:1}
 @media(min-width:640px){.sheet{border-radius:var(--r-xl)}}
 .sh{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:2px}
@@ -832,10 +872,10 @@ nav.bottom{position:fixed;bottom:0;left:0;right:0;background:var(--topbar);borde
 .cats::-webkit-scrollbar{height:5px}
 .cats::-webkit-scrollbar-thumb{background:var(--line2);border-radius:99px}
 .cats::-webkit-scrollbar-track{background:transparent}
-.cat{border:1px solid transparent;border-radius:var(--r-m);padding:7px 4px;font-size:9.5px;font-weight:650;
+.cat{border:1px solid transparent;border-radius:var(--r-m);padding:7px 4px;font-size:11px;font-weight:650;
   color:var(--dim);display:flex;flex-direction:column;align-items:center;gap:3px;text-align:center;
   background:transparent;flex:0 0 62px;scroll-snap-align:start;transition:background var(--tr),color var(--tr)}
-.cat .e{font-size:24px;line-height:1;transition:transform .14s cubic-bezier(.34,1.4,.6,1)}
+.cat .e{font-size:24px;line-height:1;transition:transform .14s cubic-bezier(.16,1,.3,1)}
 .cat .n{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
 .cat:hover{background:var(--bg2);color:var(--mut)}
 .cat.on{background:var(--ind-soft);color:var(--txt);border-color:var(--ind)}
@@ -849,14 +889,14 @@ nav.bottom{position:fixed;bottom:0;left:0;right:0;background:var(--topbar);borde
 .seg button.on.g{color:var(--grn)}.seg button.on.a{color:var(--amb)}.seg button.on.i{color:var(--ind2)}
 .sfoot{display:flex;align-items:center;justify-content:space-between;margin-top:18px;gap:12px}
 .sfoot .hint{font-size:11px;color:var(--dim)}
-.sfoot .hint b{border:1px solid var(--line2);border-radius:5px;padding:1px 6px;font-size:10px;color:var(--mut)}
+.sfoot .hint b{border:1px solid var(--line2);border-radius:5px;padding:1px 6px;font-size:11px;color:var(--mut)}
 .sfoot .btn{width:auto;min-width:150px}
 
 /* ===================== TOAST ===================== */
 .toast{position:fixed;bottom:96px;left:50%;transform:translateX(-50%) translateY(160%);
   background:var(--card3);border:1px solid var(--line2);color:var(--txt);box-shadow:var(--sh-lg);
   font-size:13.5px;font-weight:600;padding:11px 12px 11px 18px;border-radius:var(--r-m);z-index:70;
-  transition:transform .26s cubic-bezier(.34,1.3,.5,1),opacity .2s;max-width:min(92%,440px);
+  transition:transform .26s cubic-bezier(.16,1,.3,1),opacity .2s;max-width:min(92%,440px);
   display:flex;align-items:center;gap:12px;pointer-events:none;opacity:0}
 .toast.on{transform:translateX(-50%);pointer-events:auto;opacity:1}
 .toast .tact{color:var(--ind2);font-weight:750;font-size:13px;white-space:nowrap;padding:6px 8px;border-radius:8px}
@@ -954,7 +994,12 @@ function ic(n, s) {
     coins: '<circle cx="9" cy="9" r="6"/><path d="M14.5 5.5a6 6 0 11-9 7.9M6.5 9h5M9 6.5v5"/>',
     dots: '<circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/>',
     check: '<path d="M4 12.5l5 5L20 6.5"/>',
-    search: '<circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>'
+    search: '<circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>',
+    brake: '<path d="M3 7l6 6 4-4 8 8"/><path d="M15 17h6v-6"/>',
+    scissors: '<circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M8.6 7.6L20 18M8.6 16.4L20 6"/>',
+    msg: '<path d="M4 5h16v11H9l-5 4V5z"/>',
+    spark: '<path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5L18 18M18 6l-2.5 2.5M8.5 15.5L6 18"/>',
+    shuffle: '<path d="M4 7h3c5 0 5 10 10 10h3M4 17h3c1.6 0 2.7-1 3.6-2.4M13.4 9.4C14.3 8 15.4 7 17 7h3M18 4l3 3-3 3M18 14l3 3-3 3"/>'
   };
   return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="' + (s || 2) + '" stroke-linecap="round" stroke-linejoin="round">' + P[n] + '</svg>';
 }
@@ -994,7 +1039,7 @@ var TABS = [
 ];
 var VTITLES = { dash: "Ton aventure", tx: "Opérations", bud: "Budgets", goal: "Objectifs & achats", debt: "Dettes & prêts", stat: "Statistiques", hist: "Historique", set: "Paramètres" };
 var DEF = { version: 4, transactions: [], budgets: [], goals: [], wishlist: [], debts: [],
-  game: { xp: 0, claimed: {}, seen: {} },
+  game: { xp: 0, claimed: {}, seen: {}, skip: {} },
   settings: { currency: "€", monthlyGoal: 300, alertThreshold: 100, rollover: false, onboard: true } };
 
 /* Fleur de lys réutilisable (viewBox 24x24 d'origine, remise à l'échelle) */
@@ -1371,7 +1416,7 @@ function mateLine(m) {
   if (activeDays(m) < 3)
     return { t: "Trois jours de suivi, c'est le minimum pour que le score veuille dire quelque chose.", a: "Noter une dépense", f: "App.newTx()" };
   if (open_.length)
-    return { t: "Quête en cours : <b>" + open_[0].t + "</b>. " + open_[0].d + ".", a: "Voir mes quêtes", f: "App.openProgress()" };
+    return { t: "Quête en cours : <b>" + esc(open_[0].t) + "</b>. " + open_[0].why, a: open_[0].cta ? open_[0].cta[0] : "Voir mes quêtes", f: open_[0].cta ? open_[0].cta[1] : "App.openProgress()" };
   if (ms.length && !open_.length)
     return { t: "Toutes les quêtes du mois sont bouclées. Beau travail.", a: "Voir ma progression", f: "App.openProgress()" };
   return { t: "Score du mois : <b>" + DS.score + "/100</b>. On garde le cap.", a: "Voir le détail", f: "App.openProgress()" };
@@ -1511,103 +1556,252 @@ function discipline(m) {
 }
 
 /* ----- Missions ----- */
-/* Chaque mission sait s'évaluer seule. Le catalogue est filtré par palier :
-   on ne demande pas d'épargner 20 % à quelqu'un qui n'a pas encore
-   trois enveloppes. */
-var MISSIONS = [
-  { id: "log5", min: 1, xp: 20, t: "Tenir le carnet",
-    d: "Saisir des opérations 5 jours différents ce mois",
-    ev: function (m) { return { cur: activeDays(m), goal: 5 }; } },
-  { id: "env3", min: 1, xp: 25, t: "Poser trois enveloppes",
-    d: "Définir au moins 3 budgets sur le mois",
-    ev: function (m) { return { cur: S.budgets.filter(function (b) { return b.month === m; }).length, goal: 3 }; } },
-  { id: "income", min: 1, xp: 15, t: "Déclarer ses revenus",
-    d: "Enregistrer au moins un revenu",
-    ev: function (m) { return { cur: stats(m).income > 0 ? 1 : 0, goal: 1 }; } },
-  { id: "log12", min: 2, xp: 35, t: "Le réflexe quotidien",
-    d: "Saisir des opérations 12 jours différents",
-    ev: function (m) { return { cur: activeDays(m), goal: 12 }; } },
-  { id: "balance", min: 2, xp: 40, t: "Budget à l'équilibre",
-    d: "Affecter tes revenus à moins de 20 € près",
-    ev: function (m) { var T = budgetTotals(m); return { cur: T.income > 0 && Math.abs(T.toBudget) <= 20 ? 1 : 0, goal: 1 }; } },
-  { id: "hold3", min: 2, xp: 35, t: "Trois enveloppes tenues",
-    d: "Finir le mois sans dépasser 3 budgets",
-    ev: function (m) {
-      var st = stats(m), n = 0;
-      S.budgets.filter(function (b) { return b.month === m; })
-        .forEach(function (b) { if ((st.byCat[b.categoryId] || 0) <= b.amount) n++; });
-      return { cur: n, goal: 3 };
-    } },
-  { id: "save10", min: 3, xp: 45, t: "Un dixième de côté",
-    d: "Épargner au moins 10 % de tes revenus",
-    ev: function (m) { var st = stats(m); return { cur: Math.round(st.rate), goal: 10 }; } },
-  { id: "useless5", min: 3, xp: 40, t: "Garder la tête froide",
-    d: "Moins de 5 % de dépenses marquées inutiles",
-    ev: function (m) {
-      var st = stats(m);
-      if (st.expenses <= 0) return { cur: 0, goal: 1 };
-      return { cur: st.useless / st.expenses <= 0.05 ? 1 : 0, goal: 1 };
-    } },
-  { id: "goalfund", min: 3, xp: 35, t: "Nourrir un projet",
-    d: "Alimenter un objectif ce mois-ci",
-    ev: function (m) {
-      var n = S.transactions.filter(function (t) {
-        return monthOf(t.date) === m && t.categoryId === "epargne";
-      }).length;
-      return { cur: n, goal: 1 };
-    } },
-  { id: "holdall", min: 4, xp: 60, t: "Aucun dépassement",
-    d: "Terminer le mois sans dépasser une seule enveloppe",
-    ev: function (m) {
-      var st = stats(m), bs = S.budgets.filter(function (b) { return b.month === m; });
-      if (!bs.length) return { cur: 0, goal: 1 };
-      var over = bs.filter(function (b) { return (st.byCat[b.categoryId] || 0) > b.amount; }).length;
-      return { cur: over === 0 ? 1 : 0, goal: 1 };
-    } },
-  { id: "save20", min: 5, xp: 70, t: "Un cinquième de côté",
-    d: "Épargner au moins 20 % de tes revenus",
-    ev: function (m) { var st = stats(m); return { cur: Math.round(st.rate), goal: 20 }; } },
-  { id: "debtdown", min: 4, xp: 50, t: "Faire reculer la dette",
-    d: "Enregistrer un remboursement ce mois",
-    ev: function (m) {
-      var n = S.transactions.filter(function (t) {
-        return monthOf(t.date) === m && t.categoryId === "remboursement";
-      }).length;
-      return { cur: n, goal: 1 };
-    } },
-  { id: "log20", min: 5, xp: 55, t: "Suivi sans trou",
-    d: "Saisir des opérations 20 jours différents",
-    ev: function (m) { return { cur: activeDays(m), goal: 20 }; } }
-];
+/* Les quêtes ne sortent plus d'un catalogue fixe : chacune lit tes chiffres,
+   décide si elle te concerne, et dit pourquoi en une phrase. Deux natures :
+   - « vérifiée » : se valide seule à partir des opérations, impossible à tricher ;
+   - « action » : un geste concret hors de l'app (résilier, relancer, comparer),
+     validé sur l'honneur. Elle rapporte moins et ne compte pas dans le score.
+   Une quête déjà validée reste affichée tout le mois, même si la situation
+   qui l'a fait naître a changé entre-temps. */
 
-function missionsFor(m) {
-  var lv = levelOf(S.game.xp).lvl.n;
-  return MISSIONS.filter(function (x) { return x.min <= lv; })
-    .slice(-5) /* les 5 plus avancées accessibles à ce niveau */
-    .map(function (x) {
-      var e = x.ev(m);
-      var done = e.cur >= e.goal;
-      return {
-        id: x.id, t: x.t, d: x.d, xp: x.xp,
-        cur: e.cur, goal: e.goal, done: done,
-        pct: Math.min(100, e.goal ? e.cur / e.goal * 100 : 0),
-        key: m + ":" + x.id
-      };
-    });
+function monthEnded(m) { return m < curMonth(); }
+function monthLen(m) { var p = m.split("-"); return new Date(+p[0], +p[1], 0).getDate(); }
+/* Moyenne mensuelle d'un poste sur les n mois précédents qui en ont */
+function avgSpend(c, m, n) {
+  var tot = 0, k = 0;
+  for (var i = 1; i <= n; i++) {
+    var v = stats(shiftM(m, -i)).byCat[c] || 0;
+    if (v > 0) { tot += v; k++; }
+  }
+  return k ? tot / k : 0;
+}
+/* Jours écoulés depuis la dernière opération notée (mois en cours seulement) */
+function logGap() {
+  var last = "";
+  S.transactions.forEach(function (t) { if (t.date <= todayISO() && t.date > last) last = t.date; });
+  if (!last) return 99;
+  return Math.round((new Date(todayISO()) - new Date(last)) / 864e5);
+}
+function txSum(m, catId) {
+  return S.transactions.reduce(function (a, t) {
+    return a + (monthOf(t.date) === m && t.categoryId === catId ? t.amount : 0);
+  }, 0);
+}
+function goalFunded(g, m) {
+  return (g.hist || []).reduce(function (a, h) { return a + (monthOf(h.d) === m ? h.v : 0); }, 0);
+}
+function listFr(a) { return a.length < 2 ? a.join("") : a.slice(0, -1).join(", ") + " et " + a[a.length - 1]; }
+
+function missionPool(m) {
+  var st = stats(m), T = budgetTotals(m), lv = levelOf(S.game.xp).lvl.n, now = m === curMonth();
+  var bs = S.budgets.filter(function (b) { return b.month === m; });
+  var over = bs.filter(function (b) { return (st.byCat[b.categoryId] || 0) > b.amount; });
+  var P = [];
+  function add(o) { o.kind = o.kind || "auto"; P.push(o); }
+
+  /* Revenus : sans eux, rien ne se calcule */
+  add({ id: "income", ico: "coins", xp: 15, prio: 100, rel: st.income === 0,
+    t: "Déclarer tes revenus", d: "Enregistrer au moins un revenu ce mois",
+    why: "Sans revenu noté, ni le reste à vivre ni le taux d'épargne ne veulent dire quoi que ce soit.",
+    cur: st.income > 0 ? 1 : 0, goal: 1, cta: ["Ajouter un revenu", "App.newTx()"] });
+
+  /* Carnet : l'objectif grandit avec toi */
+  var ad = activeDays(m), gap = now ? logGap() : 0;
+  var lg = Math.min(monthLen(m), lv < 2 ? 5 : lv < 4 ? 12 : 20);
+  add({ id: "log", ico: "edit", xp: lg <= 5 ? 20 : lg <= 12 ? 35 : 55, prio: gap >= 3 ? 90 : 50, rel: true,
+    t: lg <= 5 ? "Tenir le carnet" : lg <= 12 ? "Le réflexe quotidien" : "Suivi sans trou",
+    d: "Noter des opérations " + lg + " jours différents ce mois",
+    why: now && gap >= 3 && gap < 99 ? "Rien de noté depuis <b>" + gap + " jours</b> : ce sont les petites dépenses oubliées qui font dériver un mois."
+      : "Un budget n'est juste que s'il est à jour. " + ad + " jour" + (ad > 1 ? "s" : "") + " noté" + (ad > 1 ? "s" : "") + " jusqu'ici.",
+    cur: ad, goal: lg, cta: ["Noter une dépense", "App.newTx()"] });
+
+  /* Enveloppes : on vise tes vrais gros postes, pas une liste générique */
+  var ref = Object.keys(st.byCat).length ? st.byCat : stats(shiftM(m, -1)).byCat;
+  var top = Object.keys(ref).filter(function (k) { return k !== "epargne" && k !== "remboursement" && !budgetOf(m, k); })
+    .sort(function (a, b) { return ref[b] - ref[a]; }).slice(0, 3)
+    .map(function (k) { var c = cat(k); return c ? c.n : k; });
+  add({ id: "env", ico: "wallet", xp: 25, prio: 80, rel: bs.length < 3,
+    t: "Poser tes enveloppes", d: "Définir un budget sur au moins 3 postes",
+    why: top.length ? "Tes plus gros postes : <b>" + listFr(top) + "</b>. Commence par eux."
+      : "Une enveloppe par poste qui compte : logement, nourriture, transport.",
+    cur: bs.length, goal: 3, cta: ["Créer les enveloppes", "App.go('bud')"] });
+
+  /* Équilibre : chaque euro reçoit une mission */
+  add({ id: "balance", ico: "scale", xp: 40, prio: 70, rel: T.income > 0 && T.toBudget > 20,
+    t: "Donner une mission à chaque euro", d: "Répartir tes revenus à 20 € près",
+    why: "Il reste <b>" + money(Math.max(0, T.toBudget)) + "</b> sans affectation : sans plan, ils partiront au fil de l'eau.",
+    cur: T.income > 0 && Math.abs(T.toBudget) <= 20 ? 1 : 0, goal: 1, cta: ["Répartir", "App.go('bud')"] });
+
+  /* Freiner : le poste qui dérape par rapport à TA moyenne */
+  var day = now ? new Date().getDate() : monthLen(m), brake = null;
+  Object.keys(st.byCat).forEach(function (k) {
+    if (k === "epargne" || k === "remboursement" || k === "logement") return;
+    var avg = avgSpend(k, m, 3), sp = st.byCat[k];
+    if (avg < 30) return;
+    var proj = sp / Math.max(1, day) * monthLen(m), drift = proj / avg;
+    if (drift > 1.15 && (!brake || drift > brake.drift)) brake = { k: k, avg: avg, sp: sp, drift: drift };
+  });
+  if (brake) {
+    var bc = cat(brake.k), cap = Math.max(5, Math.round(brake.avg / 5) * 5);
+    add({ id: "brake-" + brake.k, ico: "brake", xp: 45, prio: 75, rel: true, ceil: true,
+      t: "Freiner sur " + (bc ? bc.n : brake.k), d: "Finir le mois sous " + money(cap) + " en " + (bc ? bc.n : brake.k),
+      why: "Déjà <b>" + money(brake.sp) + "</b> ; d'habitude tu tournes autour de " + money(brake.avg) + " par mois.",
+      cur: brake.sp, goal: cap, done: monthEnded(m) && brake.sp <= cap, cta: ["Voir les opérations", "App.go('tx')"] });
+  }
+
+  /* Enveloppes tenues jusqu'au bout */
+  add({ id: "holdall", ico: "wallet", xp: 60, prio: over.length ? 72 : 45, rel: bs.length >= 3,
+    t: "Tenir toutes tes enveloppes", d: "Finir le mois sans dépasser un seul budget",
+    why: over.length ? "<b>" + esc((cat(over[0].categoryId) || {}).n || "?") + "</b> est déjà dépassée : réaffecte depuis une enveloppe qui a de la marge."
+      : bs.length + " enveloppes posées, aucune dépassée pour l'instant.",
+    cur: bs.length - over.length, goal: bs.length || 1, done: monthEnded(m) && bs.length > 0 && !over.length,
+    cta: ["Voir mes enveloppes", "App.go('bud')"] });
+
+  /* Épargne : un cran au-dessus du mois dernier, pas un chiffre magique */
+  var prev = stats(shiftM(m, -1)), pr = prev.income > 0 ? prev.rate : -1;
+  var tgt = pr < 0 ? (lv < 3 ? 5 : 10) : pr < 5 ? 5 : pr < 10 ? 10 : pr < 15 ? 15 : 20;
+  var need = Math.round(st.income * tgt / 100);
+  add({ id: "save" + tgt, ico: "coins", xp: tgt >= 15 ? 70 : 45, prio: 55, rel: st.income > 0,
+    t: "Mettre " + tgt + " % de côté", d: "Épargner " + money(need) + " sur tes " + money(st.income) + " de revenus",
+    why: pr >= 0 ? "Le mois dernier : <b>" + pr.toFixed(0) + " %</b>. Un cran de plus suffit."
+      : "Mise de côté dès la paie, l'épargne ne se négocie plus en fin de mois.",
+    cur: Math.round(st.saved), goal: Math.max(1, need), cta: ["Noter un virement épargne", "App.newTx()"] });
+
+  /* Objectifs : la mensualité qui tient l'échéance */
+  var gs = (S.goals || []).filter(function (g) { return !g.done && g.target > g.saved; });
+  gs.sort(function (a, b) { return (a.deadline || "9999").localeCompare(b.deadline || "9999"); });
+  if (gs.length) {
+    var g = gs[0], rem = g.target - g.saved;
+    var left = g.deadline ? Math.max(1, monthsBetween(m, monthOf(g.deadline)) + 1) : 6;
+    var gn = Math.max(10, Math.ceil(rem / left / 5) * 5);
+    add({ id: "goal-" + g.id, ico: "target", xp: 35, prio: 65, rel: true,
+      t: "Nourrir « " + g.name + " »", d: "Verser " + money(gn) + " ce mois",
+      why: "Il manque <b>" + money(rem) + "</b>" + (g.deadline ? " d'ici le " + frDate(g.deadline) : "") +
+        " : " + money(gn) + " par mois tiennent le rythme.",
+      cur: Math.round(goalFunded(g, m)), goal: gn, cta: ["Alimenter", "App.fundGoal('" + g.id + "')"] });
+  } else {
+    add({ id: "goalset", ico: "target", xp: 20, prio: 30, rel: lv >= 2,
+      t: "Fixer un cap", d: "Créer un objectif d'épargne",
+      why: "Épargner sans but, c'est épargner jusqu'au premier imprévu. Donne un nom à ce que tu mets de côté.",
+      cur: (S.goals || []).length ? 1 : 0, goal: 1, cta: ["Créer un objectif", "App.go('goal')"] });
+  }
+
+  /* Dettes : l'échéance du mois */
+  var ds = debtStats();
+  if (ds.monthly > 0) {
+    var paid = txSum(m, "remboursement");
+    add({ id: "debt", ico: "scale", xp: 50, prio: 70, rel: true,
+      t: "Honorer tes échéances", d: "Rembourser " + money(ds.monthly) + " ce mois",
+      why: "Encore <b>" + money(ds.owed) + "</b> à rembourser. Chaque échéance tenue raccourcit la route.",
+      cur: Math.round(paid), goal: Math.round(ds.monthly), cta: ["Enregistrer un remboursement", "App.go('debt')"] });
+  }
+
+  /* Achats inutiles : seulement si tu en marques */
+  var share = st.expenses > 0 ? st.useless / st.expenses : 0;
+  add({ id: "useless", ico: "brake", xp: 40, prio: 50, rel: share > 0.05,
+    t: "Garder la tête froide", d: "Moins de 5 % d'achats inutiles à la fin du mois",
+    why: "<b>" + money(st.useless) + "</b> d'achats marqués inutiles, soit " + (share * 100).toFixed(0) + " % de tes dépenses.",
+    cur: share <= 0.05 ? 1 : 0, goal: 1, done: monthEnded(m) && st.expenses > 0 && share <= 0.05, ceil: true,
+    cta: ["Voir les opérations", "App.go('tx')"] });
+
+  /* --- Actions concrètes, hors de l'app --- */
+  if (now) {
+    var abo = st.byCat.abonnements || prev.byCat.abonnements || 0;
+    add({ id: "subs", kind: "act", ico: "scissors", xp: 20, prio: 45, rel: abo > 0,
+      t: "Faire le tri dans tes abonnements", d: "Résilier ou suspendre celui que tu n'as pas utilisé ce mois",
+      why: "<b>" + money(abo) + "</b> par mois, soit " + money(abo * 12) + " par an." });
+    var lent = (S.debts || []).filter(function (x) { return x.kind === "lent" && x.remaining > 0; })
+      .sort(function (a, b) { return b.remaining - a.remaining; })[0];
+    if (lent) add({ id: "chase-" + lent.id, kind: "act", ico: "msg", xp: 15, prio: 40, rel: true,
+      t: "Relancer " + (lent.party || lent.name), d: "Demander le remboursement de " + money(lent.remaining),
+      why: "C'est ton argent : une relance polie maintenant vaut mieux qu'un oubli dans six mois." });
+  }
+  return P;
 }
 
-/* Crédite l'XP des missions nouvellement accomplies. Une mission déjà
+function missionsFor(m) {
+  var cl = S.game.claimed;
+  var all = missionPool(m).map(function (x) {
+    var key = m + ":" + x.id, done = x.kind === "act" ? !!cl[key] : x.done != null ? x.done : x.cur >= x.goal;
+    if (x.kind === "auto" && cl[key]) done = true;
+    return {
+      id: x.id, kind: x.kind, ico: x.ico, t: x.t, d: x.d, why: x.why, xp: x.xp, prio: x.prio, rel: x.rel,
+      cur: x.cur, goal: x.goal, ceil: !!x.ceil, cta: x.cta, done: done, key: key,
+      pct: x.kind === "act" ? 0 : Math.min(100, x.goal ? x.cur / x.goal * 100 : 0)
+    };
+  }).filter(function (x) { return x.rel || cl[x.key]; })
+    .sort(function (a, b) { return b.prio - a.prio; });
+  /* Au plus 5 quêtes ouvertes : 4 mesurées et un geste concret, glissé en
+     troisième position pour qu'il apparaisse aussi sur l'accueil. */
+  var open_ = all.filter(function (x) { return !x.done; });
+  var autos = open_.filter(function (x) { return x.kind === "auto"; }).slice(0, 4);
+  var acts = open_.filter(function (x) { return x.kind === "act"; }).slice(0, 5 - autos.length);
+  var pick = autos.slice(0, 2).concat(acts.slice(0, 1), autos.slice(2), acts.slice(1));
+  return pick.concat(all.filter(function (x) { return x.done; }));
+}
+
+/* Ligne de progression lisible : « 3 / 5 jours », « reste 40 € »… */
+function questProgress(x) {
+  if (x.kind === "act") return "Sur l'honneur";
+  if (x.ceil && x.goal > 1) return x.cur > x.goal ? "dépassé de " + money(x.cur - x.goal) : "marge : " + money(x.goal - x.cur);
+  if (x.goal === 1) return x.done ? "fait" : "à faire";
+  if (x.goal > 50) return money(x.cur) + " / " + money(x.goal);
+  return x.cur + " / " + x.goal;
+}
+
+/* Crédite l'XP des quêtes vérifiées nouvellement accomplies. Une quête déjà
    créditée pour un mois donné ne peut pas l'être deux fois. */
 function grantXp(m) {
   var ms = missionsFor(m), gained = 0, names = [];
   ms.forEach(function (x) {
-    if (x.done && !S.game.claimed[x.key]) {
+    if (x.kind === "auto" && x.done && !S.game.claimed[x.key]) {
       S.game.claimed[x.key] = 1;
       S.game.xp += x.xp; gained += x.xp; names.push(x.t);
     }
   });
   if (gained) { saveNow(); }
   return { gained: gained, names: names };
+}
+
+/* ----- Défi de la semaine ----- */
+/* Un geste concret, tiré de tes postes de dépense du moment. Même tirage
+   toute la semaine, avec une seule relance possible si le défi ne colle pas. */
+var DEFIS = [
+  { c: "nourriture", t: "Faire tes courses avec une liste, et t'y tenir" },
+  { c: "nourriture", t: "Préparer ton déjeuner trois jours cette semaine" },
+  { c: "nourriture", t: "Cuisiner un plat en grande quantité pour plusieurs repas" },
+  { c: "loisirs", t: "Organiser une sortie gratuite ce week-end" },
+  { c: "loisirs", t: "Vérifier les réductions auxquelles tu as droit (étudiant, jeune, carte)" },
+  { c: "shopping", t: "Attendre 48 h avant ton prochain achat non prévu" },
+  { c: "shopping", t: "Revendre un objet dont tu ne te sers plus" },
+  { c: "abonnements", t: "Passer un abonnement en formule moins chère ou partagée" },
+  { c: "abonnements", t: "Annuler un essai gratuit avant qu'il ne devienne payant" },
+  { c: "transport", t: "Remplacer un trajet payant par la marche ou le vélo" },
+  { c: "transport", t: "Comparer un abonnement transport au prix de tes tickets" },
+  { c: "logement", t: "Relever tes compteurs et vérifier ta facture d'énergie" },
+  { c: "sante", t: "Vérifier tes remboursements de mutuelle en attente" },
+  { c: "", t: "Comparer ton forfait mobile avec une offre concurrente" },
+  { c: "", t: "Relire tes relevés : aucun prélèvement inconnu" },
+  { c: "", t: "Passer une journée entière sans aucune dépense" },
+  { c: "", t: "Programmer un virement automatique vers ton épargne le jour de la paie" },
+  { c: "", t: "Ranger tes factures et justificatifs du mois" }
+];
+function weekKey() {
+  var d = new Date(), wd = (d.getDay() + 6) % 7;
+  d.setDate(d.getDate() - wd);
+  return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
+}
+function defiOfWeek() {
+  var wk = weekKey(), m = curMonth(), st = stats(m);
+  var ref = Object.keys(st.byCat).length ? st.byCat : stats(shiftM(m, -1)).byCat;
+  var top = Object.keys(ref).sort(function (a, b) { return ref[b] - ref[a]; }).slice(0, 3);
+  var pool = DEFIS.filter(function (x) { return !x.c || top.indexOf(x.c) >= 0; });
+  var seed = 0;
+  for (var i = 0; i < wk.length; i++) seed = (seed * 31 + wk.charCodeAt(i)) >>> 0;
+  var skip = (S.game.skip && S.game.skip[wk]) || 0;
+  var x = pool[(seed + skip * 7) % pool.length], c = x.c ? cat(x.c) : null;
+  return { t: x.t, key: "w:" + wk, xp: 15, skip: skip, done: !!S.game.claimed["w:" + wk],
+    why: c && ref[x.c] ? c.n + " : " + money(ref[x.c]) + (Object.keys(st.byCat).length ? " ce mois." : " le mois dernier.") : "Un petit geste qui paie toute l'année." };
 }
 
 /* ---------- CONNEXION BANCAIRE (via proxy serveur) ---------- */
@@ -1904,7 +2098,7 @@ function donut(byCat, total) {
     '<div style="position:relative;width:128px;height:128px;flex-shrink:0">' +
     '<svg width="128" height="128" viewBox="0 0 128 128">' + paths + '</svg>' +
     '<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">' +
-    '<span style="font-size:10px" class="dim">Total</span><b style="font-size:13.5px">' + money(total) + '</b></div></div>' +
+    '<span style="font-size:11px" class="dim">Total</span><b style="font-size:13.5px">' + money(total) + '</b></div></div>' +
     '<div style="flex:1;min-width:170px">' + leg + '</div></div>';
 }
 function barsH(items) {
@@ -1968,7 +2162,7 @@ function render() {
     '<div class="foot"><button class="pchip" onclick="App.go(\'set\')">' +
     '<span class="pavatar">' + esc(prof.charAt(0).toUpperCase() || "P") + '</span>' +
     '<span><span class="n">' + esc(prof) + '</span><br><span class="d">Paramètres & profils</span></span></button>' +
-    '<div style="font-size:10.5px;color:var(--dim);padding:8px 10px 0">Palette : <b style="border:1px solid var(--line2);border-radius:4px;padding:0 4px">Ctrl K</b></div></div>';
+    '<div style="font-size:11px;color:var(--dim);padding:8px 10px 0">Palette : <b style="border:1px solid var(--line2);border-radius:4px;padding:0 4px">Ctrl K</b></div></div>';
   var html = tab === "dash" ? vDash() : tab === "tx" ? vTx() : tab === "bud" ? vBud() :
     tab === "goal" ? vGoal() : tab === "debt" ? vDebt() : tab === "stat" ? vStat() :
     tab === "hist" ? vHist() : vSet();
@@ -2009,7 +2203,11 @@ function vDash() {
 
   /* --- Bandeau de quête : rang, score, XP --- */
   var before = levelOf(S.game.xp).lvl.n;
+  /* un plafond (« freiner sur… ») ne se juge qu'une fois le mois fini :
+     on solde le mois précédent en arrivant sur le mois en cours */
+  var G0 = month === curMonth() ? grantXp(shiftM(month, -1)) : { gained: 0, names: [] };
   var G = grantXp(month), DS = discipline(month), LV = levelOf(S.game.xp);
+  G.gained += G0.gained; G.names = G0.names.concat(G.names);
   if (G.gained) {
     setTimeout(function () { rewardPop(G.gained, G.names); }, 350);
     if (LV.lvl.n > before) setTimeout(function () { levelUpPop(LV.lvl); }, 4600);
@@ -2033,18 +2231,24 @@ function vDash() {
   var open_ = ms.filter(function (x) { return !x.done; });
   var doneN = ms.length - open_.length;
   var show = (open_.length ? open_ : ms).slice(0, 3);
-  h += '<div class="c12">' + chapter("Quêtes du mois — " + doneN + " / " + ms.length + " accomplies") +
+  var isNow = month === curMonth();
+  h += '<div class="' + (isNow ? "c8" : "c12") + '">' + chapter("Quêtes du mois — " + doneN + " / " + ms.length + " accomplies") +
     '<div class="qlist">';
-  show.forEach(function (x) {
-    h += '<div class="quest' + (x.done ? " on" : "") + '">' +
-      '<span class="qic">' + (x.done ? ic("check", 3) : "◈") + '</span>' +
-      '<span class="qtx"><span class="qt">' + x.t + '</span><span class="qs">' + x.d + '</span>' +
-      (x.done ? "" : '<span class="qb"><i style="width:' + x.pct + '%"></i></span>') + '</span>' +
-      '<span class="qxpc">' + (x.done ? "✓ " : "") + x.xp + ' XP</span></div>';
-  });
+  show.forEach(function (x) { h += questCard(x, true); });
   h += '</div>';
   if (ms.length > show.length) h += '<button class="link" style="margin-top:9px;padding:4px 0" onclick="App.openProgress()">Voir les ' + ms.length + ' quêtes</button>';
   h += '</div>';
+  if (isNow) {
+    var D = defiOfWeek();
+    h += '<div class="c4 cdefi">' + chapter("Défi de la semaine") +
+      '<div class="defi' + (D.done ? " on" : "") + '"><span class="dic">' + ic(D.done ? "check" : "spark", D.done ? 3 : 2) + '</span>' +
+      '<div class="dt">' + esc(D.t) + '</div><div class="dw">' + esc(D.why) + '</div>' +
+      '<div class="da">' + (D.done
+        ? '<span class="dok">Relevé · +' + D.xp + ' XP</span>'
+        : '<button class="qgo" onclick="App.defiDo()">' + ic("check", 2.4) + 'C\'est fait</button>' +
+          (D.skip < 1 ? '<button class="icb" onclick="App.defiSkip()" aria-label="Tirer un autre défi" title="Tirer un autre défi">' + ic("shuffle") + '</button>' : "")) +
+      (D.done ? "" : '<span class="dxp">+' + D.xp + ' XP</span>') + '</div></div></div>';
+  }
 
   /* --- Solde du mois --- */
   var burn = s.income > 0 ? Math.min(100, s.expenses / s.income * 100) : (s.expenses > 0 ? 100 : 0);
@@ -2152,6 +2356,28 @@ function vDash() {
     }
   }
   return h + '</div>';
+}
+
+/* Une quête : ce qu'il faut faire, pourquoi ça te concerne, et le bouton
+   qui mène directement à l'écran où ça se fait. */
+function questCard(x, compact) {
+  var act = x.kind === "act", live = month === curMonth();
+  var go = "";
+  if (!x.done && live) {
+    if (act) go = '<button class="qgo" onclick="App.questDo(\'' + x.id + '\')">' + ic("check", 2.4) + 'C\'est fait</button>';
+    else if (x.cta) go = '<button class="qgo ghost" onclick="' + (compact ? "" : "App.closeSheet(true);") + x.cta[1] + '">' + x.cta[0] + '</button>';
+  }
+  var pc = x.ceil && x.goal > 1 ? (x.cur > x.goal ? "var(--red)" : x.pct > 80 ? "var(--amb)" : "var(--grn)") : "";
+  return '<div class="quest' + (x.done ? " on" : "") + (act ? " honor" : "") + (compact ? "" : " full") + '">' +
+    '<span class="qic">' + ic(x.done ? "check" : x.ico || "target", x.done ? 3 : 2) + '</span>' +
+    '<span class="qtx"><span class="qt">' + esc(x.t) + '</span>' +
+    '<span class="qs">' + esc(x.d) + '</span>' +
+    (x.done ? "" : '<span class="qw">' + x.why + '</span>') +
+    (x.done || act ? "" : '<span class="qbr"><span class="qb"><i style="width:' + x.pct + '%' + (pc ? ';background:' + pc : "") + '"></i></span>' +
+      '<span class="qn">' + questProgress(x) + '</span></span>') +
+    (go ? '<span class="qact">' + go + (act ? '<span class="qh">sur l\'honneur</span>' : "") + '</span>' : "") +
+    '</span>' +
+    '<span class="qxpc">' + (x.done ? "+" : "") + x.xp + ' XP</span></div>';
 }
 
 function txRow(t, actions) {
@@ -2915,6 +3141,34 @@ var App = {
     toast(AP.mate === false ? "Compagnon masqué" : "Compagnon affiché");
   },
 
+  /* ----- Quêtes à valider sur l'honneur ----- */
+  questDo: function (id) {
+    var x = missionsFor(curMonth()).filter(function (q) { return q.id === id && q.kind === "act"; })[0];
+    if (!x || S.game.claimed[x.key]) return;
+    App.claim(x.key, x.xp, x.t);
+  },
+  defiDo: function () {
+    var D = defiOfWeek();
+    if (D.done) return;
+    App.claim(D.key, D.xp, D.t);
+  },
+  defiSkip: function () {
+    var wk = weekKey();
+    S.game.skip = S.game.skip || {};
+    if (S.game.skip[wk]) return;
+    S.game.skip[wk] = 1; saveNow(); render(); sfxTap();
+  },
+  claim: function (key, xp, name) {
+    var before = levelOf(S.game.xp).lvl.n;
+    S.game.claimed[key] = 1; S.game.xp += xp; saveNow();
+    var lv = levelOf(S.game.xp);
+    var inSheet = document.getElementById("ov").classList.contains("on");
+    render();
+    if (inSheet) App.openProgress();
+    setTimeout(function () { rewardPop(xp, [name]); }, 120);
+    if (lv.lvl.n > before) setTimeout(function () { levelUpPop(lv.lvl); }, 4400);
+  },
+
   /* ----- Progression ----- */
   openProgress: function () {
     var DS = discipline(month), LV = levelOf(S.game.xp), ms = missionsFor(month);
@@ -2934,22 +3188,20 @@ var App = {
         '<span class="p" style="color:' + c + '">' + Math.round(p.v) + '/' + p.max + '</span></div>';
     });
 
-    h += '<label class="lbl">Missions du mois</label>';
-    ms.forEach(function (x) {
-      h += '<div class="msn' + (x.done ? " done" : "") + '"><span class="ck">' + (x.done ? ic("check", 3) : "") + '</span>' +
-        '<span class="gr"><span class="t">' + x.t + '</span><span class="d">' + x.d + '</span>' +
-        (x.done ? "" : '<span class="pg"><i style="width:' + x.pct + '%"></i></span>') + '</span>' +
-        '<span class="rw">' + (x.done ? "+" : "") + x.xp + ' XP</span></div>';
-    });
+    h += '<label class="lbl">Quêtes du mois</label><div class="qlist">';
+    ms.forEach(function (x) { h += questCard(x, false); });
+    if (!ms.length) h += '<div class="dim" style="font-size:13px">Aucune quête pour ce mois.</div>';
+    h += '</div>';
 
     h += '<div class="xpbar" style="margin-top:16px"><i style="width:' + LV.pct + '%"></i></div>' +
       '<div class="xpinfo"><span>' + S.game.xp + ' XP au total</span><span>' +
       (LV.next ? "Prochain palier : " + LV.next.t : "Palier maximum") + '</span></div>';
 
     h += '<div class="dim" style="font-size:11.5px;margin-top:14px;line-height:1.65">' +
-      'Les missions se valident toutes seules à partir de tes opérations — rien à cocher. ' +
-      'Le score mesure la qualité de ton suivi, pas ta capacité à te priver : ' +
-      'une dépense assumée et notée vaut mieux qu\'un mois sans saisie.</div>';
+      'Les quêtes sont choisies d\'après tes propres chiffres et changent avec eux. ' +
+      'Celles qui se mesurent se valident seules à partir de tes opérations ; les gestes concrets ' +
+      '(résilier, relancer) se valident sur l\'honneur, rapportent moins et ne comptent pas dans le score. ' +
+      'Le score mesure la qualité de ton suivi, pas ta capacité à te priver.</div>';
 
     h += sheetFoot("Fermer", "App.closeSheet(true)");
     openSheet(h, { wide: true, guard: false });
@@ -3265,6 +3517,7 @@ var App = {
     var v = num(document.getElementById("g_fund").value);
     if (v <= 0) { document.getElementById("e_fund").textContent = "Montant invalide"; return; }
     g.saved += v; g.done = g.saved >= g.target;
+    (g.hist = g.hist || []).push({ d: todayISO(), v: v });
     save(); App.closeSheet(true); render(); toast(g.done ? "🏁 Objectif atteint !" : "+" + money(v) + " ✓");
   },
   delGoal: function (id) {
