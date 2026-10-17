@@ -1827,6 +1827,8 @@ function bankFetch(path, opts) {
 /* Règles de catégorisation : mot-clé du libellé bancaire -> catégorie Arpagon.
    Modifiable librement, c'est du texte simple. */
 var BANK_RULES = [
+  /* En premier : un virement vers l'épargne n'est pas une dépense */
+  ["epargne", ["livret", "ldds", "epargne", "épargne", "assurance vie", "trade republic"]],
   ["logement", ["loyer", "bailleur", "crous", "edf", "engie", "veolia", "assurance habitation"]],
   ["nourriture", ["carrefour", "lidl", "aldi", "leclerc", "auchan", "intermarche", "monoprix", "franprix", "casino", "boulangerie", "uber eats", "deliveroo", "restaurant"]],
   ["transport", ["tcl", "sncf", "ratp", "blablacar", "total", "essence", "station", "uber", "peage"]],
@@ -2033,6 +2035,19 @@ function stats(m) {
    occurrence la marque "sautée" pour ce mois ; repasser en Variable arrête
    le modèle à partir du mois concerné. */
 function daysIn(m) { var p = m.split("-"); return new Date(+p[0], +p[1], 0).getDate(); }
+/* Rattrapage unique : les virements d'épargne déjà importés et rangés en Divers
+   passent en Épargne, pour ne plus faire baisser « Il te reste ». */
+function fixSavingsCats() {
+  if (S.settings.epFix1) return;
+  var r = BANK_RULES[0][1], n = 0;
+  S.transactions.forEach(function (t) {
+    if (t.type !== "expense" || t.categoryId !== "divers") return;
+    var l = String(t.note || "").toLowerCase();
+    for (var i = 0; i < r.length; i++) if (l.indexOf(r[i]) >= 0) { t.categoryId = "epargne"; n++; return; }
+  });
+  S.settings.epFix1 = true; save();
+  if (n) setTimeout(function () { toast(n + " virement(s) d'épargne reclassé(s) ✓"); }, 600);
+}
 function syncFixed() {
   if (!S.fixed || !S.fixed.length) return false;
   var cm = curMonth(), added = false;
@@ -2167,6 +2182,7 @@ var MOBILE_TABS = ["dash", "tx", "bud", "goal"];
 var MORE_TABS = ["debt", "stat", "hist", "set"];
 var FAB_LABELS = { dash: "Nouvelle opération", tx: "Nouvelle opération", bud: "Nouvelle opération", stat: "Nouvelle opération", hist: "Nouvelle opération", goal: "Nouvel objectif ou achat", debt: "Nouvelle dette ou prêt" };
 function render() {
+  fixSavingsCats();
   syncFixed();
   document.getElementById("mlabel").textContent = mLabel(month);
   document.getElementById("vtitle").textContent = VTITLES[tab] || "";
