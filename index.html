@@ -1038,7 +1038,7 @@ var TABS = [
   { id: "stat", l: "Stats", i: "chart" }, { id: "hist", l: "Historique", i: "clock" }
 ];
 var VTITLES = { dash: "Ton aventure", tx: "Opérations", bud: "Budgets", goal: "Objectifs & achats", debt: "Dettes & prêts", stat: "Statistiques", hist: "Historique", set: "Paramètres" };
-var DEF = { version: 4, transactions: [], budgets: [], goals: [], wishlist: [], debts: [],
+var DEF = { version: 4, transactions: [], fixed: [], budgets: [], goals: [], wishlist: [], debts: [],
   game: { xp: 0, claimed: {}, seen: {}, skip: {} },
   settings: { currency: "€", monthlyGoal: 300, alertThreshold: 100, rollover: false, onboard: true } };
 
@@ -2011,15 +2011,46 @@ function frDate(d) { return d ? d.split("-").reverse().join("/") : "—"; }
 /* ---------- SERVICES ---------- */
 function stats(m) {
   var txs = S.transactions.filter(function (t) { return monthOf(t.date) === m; });
-  var inc = 0, exp = 0, useless = 0, byCat = {};
+  /* L'épargne est un transfert vers un autre compte : elle ne compte ni dans
+     "ce qui sort" ni dans "il te reste". Elle est suivie à part (saved). */
+  var inc = 0, exp = 0, useless = 0, fixedExp = 0, byCat = {}, spend = {};
   txs.forEach(function (t) {
-    if (t.type === "income") inc += t.amount;
-    else { exp += t.amount; byCat[t.categoryId] = (byCat[t.categoryId] || 0) + t.amount; if (t.useful === "useless") useless += t.amount; }
+    if (t.type === "income") { inc += t.amount; return; }
+    byCat[t.categoryId] = (byCat[t.categoryId] || 0) + t.amount;
+    if (t.categoryId === "epargne") return;
+    exp += t.amount; spend[t.categoryId] = (spend[t.categoryId] || 0) + t.amount;
+    if (t.fixedId) fixedExp += t.amount;
+    if (t.useful === "useless") useless += t.amount;
   });
   var saved = byCat["epargne"] || 0;
   return { txs: txs, income: inc, expenses: exp, left: inc - exp, saved: saved,
-    rate: inc > 0 ? saved / inc * 100 : 0, byCat: byCat, useless: useless };
+    fixedExp: fixedExp, varExp: exp - fixedExp,
+    rate: inc > 0 ? saved / inc * 100 : 0, byCat: byCat, spend: spend, useless: useless };
 }
+/* ---------- OPÉRATIONS FIXES ----------
+   Un modèle (S.fixed) par charge ou recette fixe. Chaque mois, jusqu'au mois
+   en cours, on crée l'opération si elle n'existe pas encore. Supprimer une
+   occurrence la marque "sautée" pour ce mois ; repasser en Variable arrête
+   le modèle à partir du mois concerné. */
+function daysIn(m) { var p = m.split("-"); return new Date(+p[0], +p[1], 0).getDate(); }
+function syncFixed() {
+  if (!S.fixed || !S.fixed.length) return false;
+  var cm = curMonth(), added = false;
+  S.fixed.forEach(function (f) {
+    var have = {};
+    S.transactions.forEach(function (t) { if (t.fixedId === f.id) have[monthOf(t.date)] = 1; });
+    for (var m = f.start; m <= cm && (!f.end || m <= f.end); m = shiftM(m, 1)) {
+      if (have[m] || (f.skip && f.skip[m])) continue;
+      S.transactions.push({ id: uid(), type: f.type, amount: f.amount, categoryId: f.categoryId,
+        date: m + "-" + pad(Math.min(f.day, daysIn(m))), payMethod: f.payMethod, note: f.note,
+        useful: f.type === "income" ? null : f.useful, fixedId: f.id });
+      added = true;
+    }
+  });
+  if (added) save();
+  return added;
+}
+function fixedOf(id) { for (var i = 0; i < (S.fixed || []).length; i++) if (S.fixed[i].id === id) return S.fixed[i]; return null; }
 function budgetOf(m, c) { for (var i = 0; i < S.budgets.length; i++) if (S.budgets[i].month === m && S.budgets[i].categoryId === c) return S.budgets[i]; return null; }
 function carryFor(c) {
   if (!S.settings.rollover) return 0;
@@ -2136,6 +2167,7 @@ var MOBILE_TABS = ["dash", "tx", "bud", "goal"];
 var MORE_TABS = ["debt", "stat", "hist", "set"];
 var FAB_LABELS = { dash: "Nouvelle opération", tx: "Nouvelle opération", bud: "Nouvelle opération", stat: "Nouvelle opération", hist: "Nouvelle opération", goal: "Nouvel objectif ou achat", debt: "Nouvelle dette ou prêt" };
 function render() {
+  syncFixed();
   document.getElementById("mlabel").textContent = mLabel(month);
   document.getElementById("vtitle").textContent = VTITLES[tab] || "";
   document.getElementById("mgrp").style.display = MONTHLESS[tab] ? "none" : "flex";
@@ -2260,7 +2292,11 @@ function vDash() {
     '<div class="ldg"><div class="lrow"><span class="ll">Ce qui rentre</span>' +
     '<b class="grn">+ ' + money(s.income) + '</b></div>' +
     '<div class="lrow"><span class="ll">Ce qui sort</span>' +
-    '<b class="red">− ' + money(s.expenses) + '</b></div></div>' +
+    '<b class="red">− ' + money(s.expenses) + '</b></div>' +
+    '<div class="lrow dim" style="font-size:12.5px;padding-left:12px"><span>dont fixe</span><span>' + money(s.fixedExp) + '</span></div>' +
+    '<div class="lrow dim" style="font-size:12.5px;padding-left:12px"><span>dont variable</span><span>' + money(s.varExp) + '</span></div>' +
+    (s.saved > 0 ? '<div class="lrow"><span class="ll">Mis de côté</span><b style="color:var(--tea)">' + money(s.saved) + '</b></div>' : "") +
+    '</div>' +
     '<div class="k" style="margin-top:14px">Il te reste</div>' +
     '<div class="big" style="color:' + lcol + '">' + money(s.left) + '</div>' +
     (delta !== null ? '<div class="trend" style="color:' + (delta <= 0 ? "var(--grn)" : "var(--amb)") + '">' +
@@ -2297,7 +2333,7 @@ function vDash() {
 
   /* --- Répartition par poste, façon liste bancaire --- */
   var items = [];
-  for (var k in s.byCat) { var c = cat(k); if (c) items.push({ c: c, v: s.byCat[k] }); }
+  for (var k in s.spend) { var c = cat(k); if (c) items.push({ c: c, v: s.spend[k] }); }
   items.sort(function (a, b) { return b.v - a.v; });
   var maxv = items.length ? items[0].v : 1;
   var spH = '<div class="ttl">Où part l\'argent <button class="link" style="padding:2px 8px" onclick="App.go(\'stat\')">Détail</button></div>';
@@ -2383,7 +2419,8 @@ function questCard(x, compact) {
 function txRow(t, actions) {
   var c = cat(t.categoryId);
   return '<div class="row"><div class="av" style="background:' + (c ? c.c : "#666") + '22">' + catE(c) + '</div>' +
-    '<div class="gr"><div class="t">' + esc(t.note || (c ? c.n : "—")) + (t.useful === "useless" ? ' <span class="amb">🍿</span>' : "") + '</div>' +
+    '<div class="gr"><div class="t">' + esc(t.note || (c ? c.n : "—")) + (t.useful === "useless" ? ' <span class="amb">🍿</span>' : "") +
+    (t.fixedId ? ' <span class="dim" style="font-size:11px;border:1px solid var(--line);border-radius:6px;padding:0 5px">Fixe</span>' : "") + '</div>' +
     '<div class="s">' + (c ? c.n : "") + ' · ' + t.date.slice(8, 10) + "/" + t.date.slice(5, 7) + (t.payMethod ? " · " + t.payMethod : "") + '</div></div>' +
     '<div class="amt ' + (t.type === "income" ? "grn" : "") + '">' + (t.type === "income" ? "+" : "−") + money(t.amount) + '</div>' +
     (actions ? '<div class="act"><button class="mini" onclick="App.editTx(\'' + t.id + '\')" aria-label="Modifier">' + ic("edit") + '</button>' +
@@ -2746,7 +2783,7 @@ function vDebt() {
 
 function vStat() {
   var s = stats(month), items = [];
-  for (var k in s.byCat) { var c = cat(k); items.push({ label: (c ? catE(c) + " " + c.n : k), value: s.byCat[k], color: c ? c.c : "#666" }); }
+  for (var k in s.spend) { var c = cat(k); items.push({ label: (c ? catE(c) + " " + c.n : k), value: s.spend[k], color: c ? c.c : "#666" }); }
   items.sort(function (a, b) { return b.value - a.value; });
   var uH = "";
   var u6 = [], t6 = [];
@@ -2992,6 +3029,13 @@ function sheetTx() {
       '</select>' : "") + '</div>';
 
   h += '<input id="f_note" style="margin-top:8px" placeholder="Note (facultatif)" value="' + esc(t.note || "") + '">';
+
+  h += '<div style="display:flex;justify-content:center;margin-top:12px">' +
+    '<div class="pillseg">' +
+    '<button class="' + (!t.fixed ? "on a" : "") + '" onclick="App.setFixed(false)">Variable</button>' +
+    '<button class="' + (t.fixed ? "on g" : "") + '" onclick="App.setFixed(true)">Fixe · chaque mois</button>' +
+    '</div></div>' +
+    (t.fixed ? '<div class="dim" style="font-size:12px;text-align:center;margin-top:6px">Ajoutée automatiquement chaque mois le ' + (t.date ? +t.date.slice(8, 10) : 1) + '. Les mois suivants reprendront ce montant.</div>' : "");
 
   if (t.type === "expense") h += '<div style="display:flex;justify-content:center;margin-top:12px">' +
     '<div class="pillseg">' +
@@ -3399,7 +3443,8 @@ var App = {
 
   /* transactions */
   newTx: function () { tmp = { type: "expense", amount: "", categoryId: "", date: month === curMonth() ? todayISO() : month + "-01", payMethod: "Carte", note: "", useful: null }; sheetTx(); },
-  editTx: function (id) { var t = S.transactions.filter(function (x) { return x.id === id; })[0]; if (t) { tmp = JSON.parse(JSON.stringify(t)); sheetTx(); } },
+  editTx: function (id) { var t = S.transactions.filter(function (x) { return x.id === id; })[0]; if (t) { tmp = JSON.parse(JSON.stringify(t)); tmp.fixed = !!t.fixedId; sheetTx(); } },
+  setFixed: function (v) { App.grab(); tmp.fixed = v; sheetTx(); sheetCtx.dirty = true; },
   setType: function (t) { App.grab(); tmp.type = t; tmp.categoryId = ""; if (t === "income") tmp.useful = null; sheetTx(); sheetCtx.dirty = true; },
   setCat: function (c) { App.grab(); tmp.categoryId = c; sheetTx(); sheetCtx.dirty = true; },
   setUseful: function (u) { App.grab(); tmp.useful = tmp.useful === u ? null : u; sheetTx(); sheetCtx.dirty = true; },
@@ -3418,6 +3463,21 @@ var App = {
     if (!ok) return;
     var tx = { id: tmp.id || uid(), type: tmp.type, amount: amt, categoryId: tmp.categoryId, date: tmp.date,
       payMethod: tmp.payMethod, note: tmp.note, useful: tmp.type === "income" ? null : tmp.useful };
+    if (!S.fixed) S.fixed = [];
+    var tm = monthOf(tx.date), fx = tmp.fixedId ? fixedOf(tmp.fixedId) : null;
+    if (tmp.fixed) {
+      /* Nouveau modèle, ou mise à jour du modèle existant pour les mois suivants */
+      if (!fx) { fx = { id: uid(), start: tm, end: null, skip: {} }; S.fixed.push(fx); }
+      fx.type = tx.type; fx.amount = amt; fx.categoryId = tx.categoryId; fx.day = +tx.date.slice(8, 10);
+      fx.payMethod = tx.payMethod; fx.note = tx.note; fx.useful = tx.useful;
+      if (tm < fx.start) fx.start = tm;
+      if (fx.end && fx.end < tm) fx.end = null;
+      tx.fixedId = fx.id;
+    } else if (fx) {
+      /* Repassée en Variable : le modèle s'arrête avant ce mois, les mois suivants déjà créés partent */
+      fx.end = shiftM(tm, -1);
+      S.transactions = S.transactions.filter(function (x) { return !(x.fixedId === fx.id && monthOf(x.date) > tm); });
+    }
     if (tmp.id) S.transactions = S.transactions.map(function (x) { return x.id === tx.id ? tx : x; });
     else S.transactions.push(tx);
     save(); App.closeSheet(true); render();
@@ -3432,12 +3492,14 @@ var App = {
         toast("⚠️ Il te reste moins de " + money(S.settings.alertThreshold)); return;
       }
     }
-    toast(tmp.id ? "Modifié ✓" : "Ajouté ✓");
+    toast(tx.fixedId && !tmp.id ? "Ajouté ✓ · reviendra chaque mois" : tmp.id ? "Modifié ✓" : "Ajouté ✓");
   },
   delTx: function (id) {
     var i = S.transactions.findIndex(function (t) { return t.id === id; });
     if (i < 0) return;
     undoBuf = { tx: S.transactions[i], index: i };
+    var fx = S.transactions[i].fixedId ? fixedOf(S.transactions[i].fixedId) : null;
+    if (fx) { fx.skip = fx.skip || {}; fx.skip[monthOf(S.transactions[i].date)] = 1; }
     S.transactions.splice(i, 1);
     save(); render();
     toast("Opération supprimée", "Annuler", function () {
