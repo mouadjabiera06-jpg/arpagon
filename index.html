@@ -511,7 +511,10 @@ input.shp{width:72px;flex-shrink:0;padding:7px 9px;font-size:12.5px;text-align:r
 .wk.ok{color:var(--grn);border-color:rgba(52,211,153,.4)}
 .wk.bad{color:var(--red);border-color:var(--red);background:var(--red-soft)}
 .bagmsg.amb{color:var(--amb)}.bagmsg.red{color:var(--red)}
-.shfc{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.shfc{width:100%;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:8px}
+.shfc small{display:block;font-size:11px;color:var(--mut);margin-top:2px;line-height:1.3}
+.shfc .tot{border-color:var(--ind);background:var(--ind-soft)}
+@media(max-width:420px){.shfc b{font-size:15px}.shfc div{padding:8px 8px}}
 .shfc div{background:var(--bg2);border:1px solid var(--line);border-radius:var(--r-m);padding:8px 11px;text-align:left}
 .shfc span{display:block;font-size:11px;color:var(--dim);font-weight:650}
 .shfc b{font-size:17px;font-weight:780;font-variant-numeric:tabular-nums;letter-spacing:-.015em}
@@ -3271,11 +3274,13 @@ function shopBought(trips, it) {
 }
 /* La limite du mois est l'enveloppe Courses du mois ; à défaut, le dernier réglage */
 function shopLimit(m) { var b = budgetOf(m, "courses"); return b ? b.amount : (shopData().limit || 0); }
-/* Coût prévu de la liste pour une semaine, ou pour le mois m entier */
-function shopForecast(m, per) {
+/* Coût prévu de la liste : une semaine (articles hebdo), les achats une fois par mois,
+   et le total du mois = 4 semaines + achats du mois */
+var SHOP_WEEKS = 4;
+function shopForecast() {
   var w = 0, mo = 0;
   shopData().items.forEach(function (it) { if (it.freq === "week") w += itemCost(it); else mo += itemCost(it); });
-  return per === "week" ? w + mo * 7 / daysIn(m) : w * daysIn(m) / 7 + mo;
+  return { week: w, month: mo, total: w * SHOP_WEEKS + mo };
 }
 /* Coché ? Ce que tu coches toi-même prime ; sinon, coché dès qu'un ticket couvre la quantité. */
 function periodKey(freq, ref) { return freq === "week" ? "w:" + mondayOf(ref) : "m:" + monthOf(ref); }
@@ -3465,7 +3470,7 @@ function vShop() {
   var mTrips = shopTrips(m + "-01", m + "-" + pad(daysIn(m))), wTrips = shopTrips(wk, addDays(wk, 6));
   var mLim = shopLimit(m), wLim = mLim * 7 / daysIn(m);
   var trips = isW ? wTrips : mTrips, lim = isW ? wLim : mLim, spent = shopSum(trips);
-  var fw = shopForecast(m, "week"), fm = shopForecast(m, "month"), fc = lim > 0 ? (isW ? fw : fm) / lim * 100 : 0;
+  var F = shopForecast(), fw = F.week, fm = F.total, fc = lim > 0 ? (isW ? fw : fm) / lim * 100 : 0;
   var anim = shopAnim; shopAnim = false;
   var pct = lim > 0 ? spent / lim * 100 : 0, over = lim > 0 && spent > lim + 0.004;
   var col = over ? "var(--red)" : pct >= 80 ? "var(--amb)" : "var(--grn)";
@@ -3509,8 +3514,10 @@ function vShop() {
     '<input inputmode="decimal" placeholder="0" value="' + (mLim || "") + '" onchange="App.setShopLimit(this.value)" onfocus="this.select()" aria-label="Limite courses du mois"></div>' +
     '</div>';
   /* Ce que coûterait ta liste, en euros, avant même d'aller en magasin */
-  if (fw + fm > 0) h += '<div class="shfc"><div><span>Ta liste · semaine</span><b>≈ ' + money(fw) + '</b></div>' +
-    '<div><span>Ta liste · mois</span><b>≈ ' + money(fm) + '</b></div></div>' +
+  if (fm > 0) h += '<div class="shfc">' +
+    '<div><span>Semaine</span><b>≈ ' + money(F.week) + '</b><small>× ' + SHOP_WEEKS + ' semaines = ' + money(F.week * SHOP_WEEKS) + '</small></div>' +
+    '<div><span>Mensuel</span><b>≈ ' + money(F.month) + '</b><small>achetés 1 fois / mois</small></div>' +
+    '<div class="tot"><span>Total du mois</span><b>≈ ' + money(F.total) + '</b><small>' + SHOP_WEEKS + ' semaines + achats du mois</small></div></div>' +
     (mLim > 0 ? '<div class="bagmsg ' + (fm > mLim ? "red" : "dim") + '" style="width:100%;text-align:left;font-weight:600">' +
       (fm > mLim ? "Ta liste dépasse ta limite de " + money(fm - mLim) + " sur le mois" : "Marge prévue : ≈ " + money(mLim - fm) + " sur le mois") + '</div>' : "");
 
