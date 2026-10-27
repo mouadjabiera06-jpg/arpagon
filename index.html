@@ -511,6 +511,9 @@ input.shp{width:72px;flex-shrink:0;padding:7px 9px;font-size:12.5px;text-align:r
 .wk.ok{color:var(--grn);border-color:rgba(52,211,153,.4)}
 .wk.bad{color:var(--red);border-color:var(--red);background:var(--red-soft)}
 .bagmsg.amb{color:var(--amb)}.bagmsg.red{color:var(--red)}
+.shcalc{font-size:13px;color:var(--mut);margin-top:4px;font-variant-numeric:tabular-nums}
+.shcalc span{font-size:11px;color:var(--dim)}
+.shcalc b{color:var(--txt)}
 .shfc{width:100%;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:8px}
 .shfc small{display:block;font-size:11px;color:var(--mut);margin-top:2px;line-height:1.3}
 .shfc .tot{border-color:var(--ind);background:var(--ind-soft)}
@@ -3263,25 +3266,6 @@ function shopTrips(from, to, skipId) {
   });
 }
 function shopSum(trips) { return trips.reduce(function (a, t) { return a + t.amount; }, 0); }
-/* Une ligne de ticket est-elle un achat « une fois par mois » ? (article de la liste du mois) */
-function lineMonthly(l) {
-  if (l.f) return l.f === "month";
-  var it = l.id ? shopItem(l.id) : null;
-  return !!it && it.freq === "month";
-}
-function lineCost(l) {
-  if (l.p > 0) return l.p;
-  var it = l.id ? shopItem(l.id) : null;
-  return it ? (it.price || 0) * (l.q || 0) : 0;
-}
-/* Part « semaine » d'un ticket : tout, sauf les articles de la liste du mois.
-   Le sac Semaine ne compte que ça ; le sac Mois compte les tickets en entier. */
-function tripWeek(t) {
-  var mo = 0;
-  (t.lines || []).forEach(function (l) { if (lineMonthly(l)) mo += lineCost(l); });
-  return Math.max(0, t.amount - Math.min(t.amount, mo));
-}
-function shopWeekSum(trips) { return trips.reduce(function (a, t) { return a + tripWeek(t); }, 0); }
 function shopBought(trips, it) {
   var n = 0, nm = it.name.toLowerCase();
   trips.forEach(function (t) {
@@ -3293,46 +3277,13 @@ function shopBought(trips, it) {
 }
 /* La limite du mois est l'enveloppe Courses du mois ; à défaut, le dernier réglage */
 function shopLimit(m) { var b = budgetOf(m, "courses"); return b ? b.amount : (shopData().limit || 0); }
-/* Maximum par semaine, fixé par toi ; à défaut, le quart de la limite du mois */
-function shopWLimit(m) { return shopData().wlimit || shopLimit(m) / SHOP_WEEKS; }
-/* Coût prévu de la liste : une semaine (articles hebdo), les achats une fois par mois,
-   et le total du mois = 4 semaines + achats du mois */
 var SHOP_WEEKS = 4;
-function shopForecast() {
-  var w = 0, mo = 0;
-  shopData().items.forEach(function (it) { if (it.freq === "week") w += itemCost(it); else mo += itemCost(it); });
-  return { week: w, month: mo, total: w * SHOP_WEEKS + mo };
-}
 /* Coché ? Ce que tu coches toi-même prime ; sinon, coché dès qu'un ticket couvre la quantité. */
 function periodKey(freq, ref) { return freq === "week" ? "w:" + mondayOf(ref) : "m:" + monthOf(ref); }
 function shopChecked(it, key, trips) {
   var c = shopData().checks[key], o = c && c[it.id];
   return o === true || o === false ? o : shopBought(trips, it) >= it.qty;
 }
-/* Ventilation par type ; la part des tickets sans prix d'article tombe dans « non détaillé » */
-function shopByKind(trips, weekOnly) {
-  var k = {}, rest = 0;
-  trips.forEach(function (t) {
-    var priced = 0, tot = weekOnly ? tripWeek(t) : t.amount;
-    (t.lines || []).forEach(function (l) {
-      if (weekOnly && lineMonthly(l)) return;
-      if (l.p > 0) { k[l.k] = (k[l.k] || 0) + l.p; priced += l.p; }
-    });
-    if (tot - priced > 0.005) rest += tot - priced;
-  });
-  return { k: k, rest: rest };
-}
-function shopEmos(trips, weekOnly) {
-  var out = [];
-  trips.forEach(function (t) {
-    (t.lines || []).forEach(function (l) {
-      if (weekOnly && lineMonthly(l)) return;
-      for (var i = 0; i < Math.min(3, Math.ceil(l.q || 1)); i++) out.push(l.e || shopKind(l.k).e);
-    });
-  });
-  return out.length ? out : ["🛒", "🍎", "🥖", "🧀", "🥛", "🧴", "🍫", "🥕"];
-}
-
 /* ---------- LE SAC, SELON L'UNIVERS ---------- */
 var BAG_STYLES = { taverne: "sack", boise: "satchel", france: "basket", synthwave: "neon", cyberpunk: "cargo" };
 var BAG_NAMES = { sack: "Ta besace", satchel: "Ta sacoche", basket: "Ton panier", neon: "Ton sac néon", cargo: "Ton module cargo", tote: "Ton sac" };
@@ -3388,10 +3339,10 @@ function bagShape(st) {
     back: '<path d="M68 78 C68 30 132 30 132 78" style="fill:none;stroke:var(--ind);stroke-width:7;stroke-linecap:round"/>',
     front: '<path d="M38 88 L162 88" style="stroke:var(--line2);stroke-width:1.5;stroke-dasharray:4 4"/>' };
 }
-function bagSvg(pct, emos, fc) {
+function bagSvg(pct, emos, fc, neutral) {
   var B = bagShape(BAG_STYLES[AP.theme] || "tote"), bot = 212;
   var lv = Math.min(100, Math.max(0, pct)) / 100, y = bot - lv * (bot - B.top);
-  var col = pct > 100 ? "var(--red)" : pct >= 80 ? "var(--amb)" : "var(--grn)";
+  var col = neutral ? "var(--ind)" : pct > 100 ? "var(--red)" : pct >= 80 ? "var(--amb)" : "var(--grn)";
   var inner = "", k = 0;
   if (lv > 0) inner += '<path d="M0 ' + y + ' Q25 ' + (y - 5) + ' 50 ' + y + ' T100 ' + y + ' T150 ' + y + ' T200 ' + y +
     ' L200 230 L0 230 Z" style="fill:' + col + ';opacity:.3"/>';
@@ -3489,77 +3440,66 @@ function shopListCard(freq, trips, ref, title, anim) {
   return h;
 }
 
+/* Contenu et prix d'une liste : semaine, mois, ou total (4 semaines + mois) */
+function shopListSum(which) {
+  var R = { t: 0, n: 0, k: {}, e: [] };
+  shopData().items.forEach(function (it) {
+    if (which !== "total" && it.freq !== which) return;
+    var mult = which === "total" && it.freq === "week" ? SHOP_WEEKS : 1, v = itemCost(it) * mult;
+    R.t += v; R.n++;
+    R.k[it.kind] = (R.k[it.kind] || 0) + v;
+    for (var i = 0; i < Math.min(which === "total" ? 1 : 3, Math.ceil(it.qty)); i++) R.e.push(it.e || shopKind(it.kind).e);
+  });
+  return R;
+}
 function vShop() {
-  var m = month, wk = shopWeekOf(m), isW = shopMode === "week";
+  var m = month, wk = shopWeekOf(m), mode = shopMode;
   shopWeek = wk;
   var mTrips = shopTrips(m + "-01", m + "-" + pad(daysIn(m))), wTrips = shopTrips(wk, addDays(wk, 6));
-  var mLim = shopLimit(m), wLim = shopWLimit(m);
-  var trips = isW ? wTrips : mTrips, lim = isW ? wLim : mLim, spent = isW ? shopWeekSum(trips) : shopSum(trips);
-  var F = shopForecast(), fw = F.week, fm = F.total, fc = lim > 0 ? (isW ? fw : fm) / lim * 100 : 0;
+  var W = shopListSum("week"), M = shopListSum("month"), T = shopListSum("total"), L = mode === "week" ? W : mode === "month" ? M : T;
+  var mLim = shopLimit(m), spent = shopSum(mTrips);
   var anim = shopAnim; shopAnim = false;
-  var pct = lim > 0 ? spent / lim * 100 : 0, over = lim > 0 && spent > lim + 0.004;
-  var col = over ? "var(--red)" : pct >= 80 ? "var(--amb)" : "var(--grn)";
   var h = '<div class="dg">';
 
-  /* --- Le sac --- */
-  h += '<div class="c5">' + chapter(bagName() + (isW ? " de la semaine" : " du mois")) +
+  /* --- Les trois sacs : la semaine et le mois sont des images de ta liste ;
+     le total (4 semaines + le mois) se compare à ta limite et peut déborder --- */
+  var titles = { week: " de la semaine", month: " du mois", total: " — total du mois" };
+  h += '<div class="c5">' + chapter(bagName() + titles[mode]) +
     '<div class="card shopbag"><div class="pillseg">' +
-    '<button class="' + (isW ? "on" : "") + '" onclick="App.setShopMode(\'week\')">Semaine</button>' +
-    '<button class="' + (isW ? "" : "on") + '" onclick="App.setShopMode(\'month\')">Mois</button></div>';
-  /* En mode mois, chaque semaine garde son verdict : on voit celles qui ont débordé */
-  var wOver = 0;
-  h += '<div class="wkrow">' + monthWeeks(m).map(function (w) {
-    if (isW) return '<button class="wk' + (w === wk ? " on" : "") + '" onclick="App.setShopWeek(\'' + w + '\')">' + weekLabel(w) + '</button>';
-    /* seulement les jours de la semaine qui tombent dans ce mois, comparés au maximum par semaine */
-    var a = w < m + "-01" ? m + "-01" : w, z = addDays(w, 6) > m + "-" + pad(daysIn(m)) ? m + "-" + pad(daysIn(m)) : addDays(w, 6);
-    var nd = Math.round((parseD(z) - parseD(a)) / 864e5) + 1, wl = wLim;
-    var ws = shopWeekSum(shopTrips(a, z)), ov = wl > 0 && ws > wl + 0.004;
-    if (ov) wOver++;
-    var lb = a.slice(5, 7) === z.slice(5, 7) && a.slice(8) !== z.slice(8) ? +a.slice(8, 10) + "–" + +z.slice(8, 10) + " " + MN3[+z.slice(5, 7) - 1] : weekLabel(w);
-    return '<button class="wk' + (ov ? " bad" : ws > 0 ? " ok" : "") + (w === mondayOf(todayISO()) ? " cur" : "") + '" onclick="App.openShopWeek(\'' + w + '\')" ' +
-      'title="' + money(ws) + ' sur ' + money(wl) + ' max (' + nd + ' jours dans ce mois)">' + lb + ' · ' + money(ws) + (ov ? " ⚠" : "") + '</button>';
-  }).join("") + '</div>';
-  var proj = !isW && m === curMonth() && spent > 0 ? spent / +todayISO().slice(8, 10) * daysIn(m) : 0;
-  h += '<div class="bagw">' + bagSvg(pct, shopEmos(trips, isW), fc) + '</div>' +
-    '<div class="bagnum"><b style="color:' + (lim > 0 ? col : "var(--txt)") + '">' + money(spent) + '</b>' +
-    (lim > 0 ? "/ " + money(lim) : "dépensés") + '</div>' +
-    '<div class="bagmsg" style="color:' + (over ? "var(--red)" : "var(--mut)") + '">' +
-    (lim <= 0 ? "Fixe une limite pour voir le sac se remplir"
-      : over ? "Ça déborde de " + money(spent - lim) + " !"
-      : "Encore " + money(lim - spent) + " avant que ça déborde") + '</div>' +
-    (!isW && lim > 0 && !over && wOver ? '<div class="bagmsg amb">Le mois tient, mais ' + wOver + ' semaine' + (wOver > 1 ? "s ont" : " a") + ' débordé</div>' : "") +
-    (lim > 0 && !over && fc > 100 ? '<div class="bagmsg amb">Ta liste ferait déborder le sac de ≈ ' + money((isW ? fw : fm) - lim) + ' (en transparence)</div>' : "") +
-    (proj > lim && lim > 0 && !over ? '<div class="bagmsg amb">À ce rythme : ≈ ' + money(proj) + ' fin du mois — ça va déborder</div>' : "");
-
-  var D0 = shopData(), sug = D0.wlimit ? Math.round((D0.wlimit * SHOP_WEEKS + F.month) * 100) / 100 : 0;
-  h += '<div class="shlim"><div class="set"><div><div class="n">Maximum par semaine</div>' +
-    '<div class="d">' + (D0.wlimit ? "Le sac de la semaine se remplit jusqu'ici" : mLim > 0 ? "Vide : ≈ " + money(wLim) + " (limite du mois ÷ " + SHOP_WEEKS + ")" : "Ce que tu t'autorises en une semaine") + '</div></div>' +
-    '<input inputmode="decimal" placeholder="' + (mLim > 0 ? fmtQ(Math.round(wLim * 100) / 100) : "0") + '" value="' + (D0.wlimit || "") + '" onchange="App.setShopWLimit(this.value)" onfocus="this.select()" aria-label="Maximum par semaine"></div>' +
-    '<div class="set"><div><div class="n">Limite du mois (total)</div>' +
-    '<div class="d">Les ' + SHOP_WEEKS + ' semaines + les achats du mois, tout compris</div></div>' +
-    '<input inputmode="decimal" placeholder="0" value="' + (mLim || "") + '" onchange="App.setShopLimit(this.value)" onfocus="this.select()" aria-label="Limite du mois"></div>' +
-    (sug > 0 && Math.abs(sug - mLim) > 0.009 ? '<div class="dim" style="font-size:12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">' +
-      SHOP_WEEKS + ' × ' + money(D0.wlimit) + ' + mensuel ≈ ' + money(F.month) + ' = <b>' + money(sug) + '</b>' +
-      '<button class="link" style="padding:3px 8px" onclick="App.setShopLimit(\'' + sug + '\')">Utiliser pour le mois</button></div>' : "") +
-    '</div>';
-  /* Ce que coûterait ta liste, en euros, avant même d'aller en magasin */
-  if (fm > 0) h += '<div class="shfc">' +
-    '<div><span>Semaine</span><b>≈ ' + money(F.week) + '</b><small>× ' + SHOP_WEEKS + ' semaines = ' + money(F.week * SHOP_WEEKS) + '</small></div>' +
-    '<div><span>Mensuel</span><b>≈ ' + money(F.month) + '</b><small>achetés 1 fois / mois</small></div>' +
-    '<div class="tot"><span>Total du mois</span><b>≈ ' + money(F.total) + '</b><small>' + SHOP_WEEKS + ' semaines + achats du mois</small></div></div>' +
-    (mLim > 0 ? '<div class="bagmsg ' + (fm > mLim ? "red" : "dim") + '" style="width:100%;text-align:left;font-weight:600">' +
-      (fm > mLim ? "Ta liste dépasse ta limite de " + money(fm - mLim) + " sur le mois" : "Marge prévue : ≈ " + money(mLim - fm) + " sur le mois") + '</div>' : "");
-
-  if (spent > 0) {
-    var K = shopByKind(trips, isW), parts = [];
-    SHOP_KINDS.forEach(function (x) { if (K.k[x.id]) parts.push({ n: x.e + " " + x.n, v: K.k[x.id], c: x.c }); });
-    if (K.rest > 0.005) parts.push({ n: "Non détaillé", v: K.rest, c: "var(--line2)" });
+    [["week", "Semaine"], ["month", "Mois"], ["total", "Total"]].map(function (x) {
+      return '<button class="' + (mode === x[0] ? "on" : "") + '" onclick="App.setShopMode(\'' + x[0] + '\')">' + x[1] + '</button>';
+    }).join("") + '</div>';
+  var pct = 82, over = false, col = "var(--ind2)";
+  if (mode === "total" && mLim > 0) {
+    pct = T.t / mLim * 100; over = T.t > mLim + 0.004;
+    col = over ? "var(--red)" : pct >= 85 ? "var(--amb)" : "var(--grn)";
+  }
+  h += '<div class="bagw">' + bagSvg(L.n ? pct : 0, L.e.length ? L.e : ["🛒"], 0, mode !== "total" || !(mLim > 0)) + '</div>';
+  if (mode === "week") h += '<div class="bagnum"><b>≈ ' + money(W.t) + '</b>/ semaine</div>' +
+    '<div class="bagmsg dim">' + W.n + ' article' + (W.n > 1 ? "s" : "") + ' dans ta liste de la semaine</div>';
+  else if (mode === "month") h += '<div class="bagnum"><b>≈ ' + money(M.t) + '</b>/ mois</div>' +
+    '<div class="bagmsg dim">' + M.n + ' achat' + (M.n > 1 ? "s" : "") + ' ponctuel' + (M.n > 1 ? "s" : "") + ', une fois par mois</div>';
+  else {
+    h += '<div class="bagnum"><b style="color:' + (mLim > 0 ? col : "var(--txt)") + '">≈ ' + money(T.t) + '</b>' + (mLim > 0 ? "/ " + money(mLim) : "/ mois") + '</div>' +
+      '<div class="shcalc">' + SHOP_WEEKS + ' × ' + money(W.t) + ' <span>semaine</span> + ' + money(M.t) + ' <span>mois</span> = <b>' + money(T.t) + '</b></div>' +
+      '<div class="bagmsg" style="color:' + (over ? "var(--red)" : "var(--mut)") + '">' +
+      (!(mLim > 0) ? "Fixe ta limite du mois pour voir si ça déborde"
+        : over ? "Ça déborde de " + money(T.t - mLim) + " !" : "Encore " + money(mLim - T.t) + " de marge") + '</div>';
+    h += '<div class="shlim"><div class="set"><div><div class="n">Limite du mois</div>' +
+      '<div class="d">Le sac Total déborde au-delà</div></div>' +
+      '<input inputmode="decimal" placeholder="0" value="' + (mLim || "") + '" onchange="App.setShopLimit(this.value)" onfocus="this.select()" aria-label="Limite du mois"></div>' +
+      '<div class="set"><div><div class="n">Dépensé ce mois</div><div class="d">D\'après tes tickets de courses</div></div>' +
+      '<b class="' + (mLim > 0 && spent > mLim ? "red" : "") + '" style="font-size:16px">' + money(spent) + '</b></div></div>';
+  }
+  if (L.t > 0) {
+    var parts = [];
+    SHOP_KINDS.forEach(function (x) { if (L.k[x.id]) parts.push({ n: x.e + " " + x.n, v: L.k[x.id], c: x.c }); });
     h += '<div class="shk"><div class="lbl" style="margin-top:4px">Ce qu\'il y a dans le sac</div><div class="shbar">' +
-      parts.map(function (p) { return '<i style="width:' + (p.v / spent * 100) + '%;background:' + p.c + '"></i>'; }).join("") + '</div>' +
+      parts.map(function (p) { return '<i style="width:' + (p.v / L.t * 100) + '%;background:' + p.c + '"></i>'; }).join("") + '</div>' +
       parts.map(function (p) {
         return '<div class="shkl"><i class="dt" style="background:' + p.c + '"></i><span>' + p.n + '</span><b>' + money(p.v) + '</b></div>';
       }).join("") + '</div>';
-  }
+  } else if (L.n) h += '<div class="dim" style="font-size:12px;margin-top:8px">Ajoute un prix à tes articles (✎) pour voir le montant.</div>';
   h += '<button class="btn" style="margin-top:14px" onclick="App.newShop()">+ Noter des courses</button></div></div>';
 
   /* --- La liste --- */
@@ -4387,9 +4327,7 @@ var App = {
   },
 
   /* courses */
-  setShopMode: function (m) { shopMode = m === "month" ? "month" : "week"; render(); },
-  setShopWeek: function (w) { shopWeek = w; render(); },
-  openShopWeek: function (w) { shopWeek = w; shopMode = "week"; render(); },
+  setShopMode: function (m) { shopMode = m === "month" || m === "total" ? m : "week"; render(); },
   /* La limite devient l'enveloppe Courses du mois (visible dans Budgets) et le réglage par défaut */
   setShopLimit: function (v) {
     var amt = String(v).trim() === "" ? 0 : num(v);
@@ -4399,12 +4337,6 @@ var App = {
     if (amt > 0) S.budgets.push({ id: month + ":courses", month: month, categoryId: "courses", amount: amt });
     save(); render();
     toast(amt > 0 ? "Limite courses : " + money(amt) + " ✓" : "Limite courses retirée");
-  },
-  setShopWLimit: function (v) {
-    var amt = String(v).trim() === "" ? 0 : num(v);
-    if (amt < 0) { toast("⚠️ Montant négatif ignoré"); render(); return; }
-    shopData().wlimit = amt; save(); render();
-    toast(amt > 0 ? "Maximum par semaine : " + money(amt) + " ✓" : "Maximum par semaine retiré");
   },
   newShop: function (preset) {
     var lines = {};
@@ -4537,10 +4469,8 @@ var App = {
     else S.transactions.push(tx);
     save(); App.closeSheet(true); render();
     var m = monthOf(tx.date), lim = shopLimit(m), sp = shopSum(shopTrips(m + "-01", m + "-" + pad(daysIn(m))));
-    var w0 = mondayOf(tx.date), wsp = shopWeekSum(shopTrips(w0, addDays(w0, 6))), wl = shopWLimit(m);
-    if (lim > 0 && sp > lim) toast("⚠️ " + bagName() + " du mois déborde de " + money(sp - lim));
-    else if (wl > 0 && wsp > wl) toast("⚠️ Semaine dépassée : " + money(wsp) + " / " + money(wl));
-    else toast((wasEdit ? "Ticket modifié ✓" : "Dans le sac ✓") + (wl > 0 ? " · semaine " + money(wsp) + " / " + money(wl) : ""));
+    if (lim > 0 && sp > lim) toast("⚠️ Tes courses du mois dépassent ta limite de " + money(sp - lim));
+    else toast((wasEdit ? "Ticket modifié ✓" : "Ticket noté ✓") + (lim > 0 ? " · " + money(sp) + " / " + money(lim) + " ce mois" : ""));
   },
   newShopItem: function (freq) { sheetShopItem(null, freq); },
   editShopItem: function (id) { var it = shopItem(id); if (it) sheetShopItem(it); },
