@@ -3274,6 +3274,8 @@ function shopBought(trips, it) {
 }
 /* La limite du mois est l'enveloppe Courses du mois ; à défaut, le dernier réglage */
 function shopLimit(m) { var b = budgetOf(m, "courses"); return b ? b.amount : (shopData().limit || 0); }
+/* Maximum par semaine, fixé par toi ; à défaut, le quart de la limite du mois */
+function shopWLimit(m) { return shopData().wlimit || shopLimit(m) / SHOP_WEEKS; }
 /* Coût prévu de la liste : une semaine (articles hebdo), les achats une fois par mois,
    et le total du mois = 4 semaines + achats du mois */
 var SHOP_WEEKS = 4;
@@ -3468,7 +3470,7 @@ function vShop() {
   var m = month, wk = shopWeekOf(m), isW = shopMode === "week";
   shopWeek = wk;
   var mTrips = shopTrips(m + "-01", m + "-" + pad(daysIn(m))), wTrips = shopTrips(wk, addDays(wk, 6));
-  var mLim = shopLimit(m), wLim = mLim * 7 / daysIn(m);
+  var mLim = shopLimit(m), wLim = shopWLimit(m);
   var trips = isW ? wTrips : mTrips, lim = isW ? wLim : mLim, spent = shopSum(trips);
   var F = shopForecast(), fw = F.week, fm = F.total, fc = lim > 0 ? (isW ? fw : fm) / lim * 100 : 0;
   var anim = shopAnim; shopAnim = false;
@@ -3487,7 +3489,7 @@ function vShop() {
     if (isW) return '<button class="wk' + (w === wk ? " on" : "") + '" onclick="App.setShopWeek(\'' + w + '\')">' + weekLabel(w) + '</button>';
     /* seulement les jours de la semaine qui tombent dans ce mois, avec la limite au prorata */
     var a = w < m + "-01" ? m + "-01" : w, z = addDays(w, 6) > m + "-" + pad(daysIn(m)) ? m + "-" + pad(daysIn(m)) : addDays(w, 6);
-    var nd = Math.round((parseD(z) - parseD(a)) / 864e5) + 1, wl = mLim * nd / daysIn(m);
+    var nd = Math.round((parseD(z) - parseD(a)) / 864e5) + 1, wl = wLim * nd / 7;
     var ws = shopSum(shopTrips(a, z)), ov = wl > 0 && ws > wl + 0.004;
     if (ov) wOver++;
     var lb = a.slice(5, 7) === z.slice(5, 7) && a.slice(8) !== z.slice(8) ? +a.slice(8, 10) + "–" + +z.slice(8, 10) + " " + MN3[+z.slice(5, 7) - 1] : weekLabel(w);
@@ -3504,14 +3506,22 @@ function vShop() {
       : "Encore " + money(lim - spent) + " avant que ça déborde") + '</div>' +
     (!isW && lim > 0 && !over && wOver ? '<div class="bagmsg amb">Le mois tient, mais ' + wOver + ' semaine' + (wOver > 1 ? "s ont" : " a") + ' débordé</div>' : "") +
     (lim > 0 && !over && fc > 100 ? '<div class="bagmsg amb">Ta liste ferait déborder le sac de ≈ ' + money((isW ? fw : fm) - lim) + ' (en transparence)</div>' : "") +
-    (isW && monthOf(wk) !== monthOf(addDays(wk, 6)) && shopSum(wTrips) > 0 ? '<div class="bagmsg dim" style="font-weight:600">Semaine à cheval : ' +
+    (isW && monthOf(wk) !== monthOf(addDays(wk, 6)) && shopSum(shopTrips(wk, monthOf(wk) + "-" + pad(daysIn(monthOf(wk))))) > 0 &&
+      shopSum(shopTrips(monthOf(addDays(wk, 6)) + "-01", addDays(wk, 6))) > 0 ? '<div class="bagmsg dim" style="font-weight:600">Semaine à cheval : ' +
       money(shopSum(shopTrips(wk, monthOf(wk) + "-" + pad(daysIn(monthOf(wk)))))) + ' en ' + MN[+wk.slice(5, 7) - 1] + ', ' +
       money(shopSum(shopTrips(monthOf(addDays(wk, 6)) + "-01", addDays(wk, 6)))) + ' en ' + MN[+addDays(wk, 6).slice(5, 7) - 1] + '</div>' : "") +
     (proj > lim && lim > 0 && !over ? '<div class="bagmsg amb">À ce rythme : ≈ ' + money(proj) + ' fin du mois — ça va déborder</div>' : "");
 
-  h += '<div class="shlim"><div class="set"><div><div class="n">Limite courses du mois</div>' +
-    '<div class="d">' + (mLim > 0 ? "≈ " + money(wLim) + " par semaine · tout compris" : "Tout compris : nourriture, plaisir, hygiène, soins…") + '</div></div>' +
-    '<input inputmode="decimal" placeholder="0" value="' + (mLim || "") + '" onchange="App.setShopLimit(this.value)" onfocus="this.select()" aria-label="Limite courses du mois"></div>' +
+  var D0 = shopData(), sug = D0.wlimit ? Math.round((D0.wlimit * SHOP_WEEKS + F.month) * 100) / 100 : 0;
+  h += '<div class="shlim"><div class="set"><div><div class="n">Maximum par semaine</div>' +
+    '<div class="d">' + (D0.wlimit ? "Le sac de la semaine se remplit jusqu'ici" : mLim > 0 ? "Vide : ≈ " + money(wLim) + " (limite du mois ÷ " + SHOP_WEEKS + ")" : "Ce que tu t'autorises en une semaine") + '</div></div>' +
+    '<input inputmode="decimal" placeholder="' + (mLim > 0 ? fmtQ(Math.round(wLim * 100) / 100) : "0") + '" value="' + (D0.wlimit || "") + '" onchange="App.setShopWLimit(this.value)" onfocus="this.select()" aria-label="Maximum par semaine"></div>' +
+    '<div class="set"><div><div class="n">Limite du mois (total)</div>' +
+    '<div class="d">Les ' + SHOP_WEEKS + ' semaines + les achats du mois, tout compris</div></div>' +
+    '<input inputmode="decimal" placeholder="0" value="' + (mLim || "") + '" onchange="App.setShopLimit(this.value)" onfocus="this.select()" aria-label="Limite du mois"></div>' +
+    (sug > 0 && Math.abs(sug - mLim) > 0.009 ? '<div class="dim" style="font-size:12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">' +
+      SHOP_WEEKS + ' × ' + money(D0.wlimit) + ' + mensuel ≈ ' + money(F.month) + ' = <b>' + money(sug) + '</b>' +
+      '<button class="link" style="padding:3px 8px" onclick="App.setShopLimit(\'' + sug + '\')">Utiliser pour le mois</button></div>' : "") +
     '</div>';
   /* Ce que coûterait ta liste, en euros, avant même d'aller en magasin */
   if (fm > 0) h += '<div class="shfc">' +
@@ -4370,6 +4380,12 @@ var App = {
     if (amt > 0) S.budgets.push({ id: month + ":courses", month: month, categoryId: "courses", amount: amt });
     save(); render();
     toast(amt > 0 ? "Limite courses : " + money(amt) + " ✓" : "Limite courses retirée");
+  },
+  setShopWLimit: function (v) {
+    var amt = String(v).trim() === "" ? 0 : num(v);
+    if (amt < 0) { toast("⚠️ Montant négatif ignoré"); render(); return; }
+    shopData().wlimit = amt; save(); render();
+    toast(amt > 0 ? "Maximum par semaine : " + money(amt) + " ✓" : "Maximum par semaine retiré");
   },
   newShop: function (preset) {
     var lines = {};
