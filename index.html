@@ -465,6 +465,7 @@ html.wp input,html.wp select,html.wp textarea{backdrop-filter:blur(var(--glass-b
 .bagsvg{width:min(230px,64vw);height:auto;overflow:visible}
 .bagsvg .bgi{font-size:21px;text-anchor:middle;dominant-baseline:central}
 .bagsvg.over{animation:bagwob 1.8s ease-in-out infinite;transform-origin:50% 92%}
+.bagsvg .ghost{opacity:.5;filter:grayscale(.4)}
 .bagsvg .spill{animation:bagspill .55s cubic-bezier(.3,1.4,.5,1) both}
 @keyframes bagwob{0%,100%{transform:rotate(0)}25%{transform:rotate(-2deg)}75%{transform:rotate(2deg)}}
 @keyframes bagspill{from{opacity:0;transform:translateY(-16px)}to{opacity:1;transform:none}}
@@ -3372,14 +3373,16 @@ function bagSvg(pct, emos, fc) {
     });
   });
   /* Au-delà de 100 % : un tas qui dépasse de l'ouverture, puis des articles qui tombent à côté */
-  var heap = "";
-  if (pct > 100) {
+  /* Au-delà de 100 % : un tas qui dépasse. Si c'est seulement ta liste qui ferait
+     déborder, le même tas apparaît en fantôme, pointillé et transparent. */
+  var heap = "", ghost = pct <= 100 && fc > 100, hp = ghost ? fc : pct;
+  if (hp > 100) {
     var spots = [[100, -12, 0], [76, -6, -14], [124, -6, 12], [89, -30, -6], [112, -29, 10], [100, -50, 4],
       [18, 0, -32], [184, 0, 28], [6, 0, -64], [196, 0, 70]];
-    var n = Math.min(spots.length, 2 + Math.floor((pct - 100) / 8));
+    var n = Math.min(spots.length, 2 + Math.floor((hp - 100) / 8));
     for (var i = 0; i < n; i++) {
       var p = spots[i], sx = p[0], sy = i < 6 ? B.top + p[1] : (i < 8 ? 204 : 222);
-      heap += '<g transform="rotate(' + p[2] + ' ' + sx + ' ' + sy + ')"><text class="bgi spill" x="' + sx + '" y="' + sy +
+      heap += '<g transform="rotate(' + p[2] + ' ' + sx + ' ' + sy + ')"' + (ghost ? ' class="ghost"' : "") + '><text class="bgi spill" x="' + sx + '" y="' + sy +
         '" style="animation-delay:' + (i * 0.1).toFixed(1) + 's">' + esc(emos[(k + i) % emos.length]) + '</text></g>';
     }
   }
@@ -3477,10 +3480,14 @@ function vShop() {
   var wOver = 0;
   h += '<div class="wkrow">' + monthWeeks(m).map(function (w) {
     if (isW) return '<button class="wk' + (w === wk ? " on" : "") + '" onclick="App.setShopWeek(\'' + w + '\')">' + weekLabel(w) + '</button>';
-    var ws = shopSum(shopTrips(w, addDays(w, 6))), ov = wLim > 0 && ws > wLim + 0.004;
+    /* seulement les jours de la semaine qui tombent dans ce mois, avec la limite au prorata */
+    var a = w < m + "-01" ? m + "-01" : w, z = addDays(w, 6) > m + "-" + pad(daysIn(m)) ? m + "-" + pad(daysIn(m)) : addDays(w, 6);
+    var nd = Math.round((parseD(z) - parseD(a)) / 864e5) + 1, wl = mLim * nd / daysIn(m);
+    var ws = shopSum(shopTrips(a, z)), ov = wl > 0 && ws > wl + 0.004;
     if (ov) wOver++;
-    return '<button class="wk' + (ov ? " bad" : ws > 0 ? " ok" : "") + (w === mondayOf(todayISO()) ? " cur" : "") + '" onclick="App.openShopWeek(\'' + w + '\')" title="Voir cette semaine">' +
-      weekLabel(w) + ' · ' + money(ws) + (ov ? " ⚠" : "") + '</button>';
+    var lb = a.slice(5, 7) === z.slice(5, 7) && a.slice(8) !== z.slice(8) ? +a.slice(8, 10) + "–" + +z.slice(8, 10) + " " + MN3[+z.slice(5, 7) - 1] : weekLabel(w);
+    return '<button class="wk' + (ov ? " bad" : ws > 0 ? " ok" : "") + (w === mondayOf(todayISO()) ? " cur" : "") + '" onclick="App.openShopWeek(\'' + w + '\')" ' +
+      'title="' + money(ws) + ' sur ' + money(wl) + ' prévus pour ces ' + nd + ' jours">' + lb + ' · ' + money(ws) + (ov ? " ⚠" : "") + '</button>';
   }).join("") + '</div>';
   var proj = !isW && m === curMonth() && spent > 0 ? spent / +todayISO().slice(8, 10) * daysIn(m) : 0;
   h += '<div class="bagw">' + bagSvg(pct, shopEmos(trips), fc) + '</div>' +
@@ -3491,6 +3498,10 @@ function vShop() {
       : over ? "Ça déborde de " + money(spent - lim) + " !"
       : "Encore " + money(lim - spent) + " avant que ça déborde") + '</div>' +
     (!isW && lim > 0 && !over && wOver ? '<div class="bagmsg amb">Le mois tient, mais ' + wOver + ' semaine' + (wOver > 1 ? "s ont" : " a") + ' débordé</div>' : "") +
+    (lim > 0 && !over && fc > 100 ? '<div class="bagmsg amb">Ta liste ferait déborder le sac de ≈ ' + money((isW ? fw : fm) - lim) + ' (en transparence)</div>' : "") +
+    (isW && monthOf(wk) !== monthOf(addDays(wk, 6)) && shopSum(wTrips) > 0 ? '<div class="bagmsg dim" style="font-weight:600">Semaine à cheval : ' +
+      money(shopSum(shopTrips(wk, monthOf(wk) + "-" + pad(daysIn(monthOf(wk)))))) + ' en ' + MN[+wk.slice(5, 7) - 1] + ', ' +
+      money(shopSum(shopTrips(monthOf(addDays(wk, 6)) + "-01", addDays(wk, 6)))) + ' en ' + MN[+addDays(wk, 6).slice(5, 7) - 1] + '</div>' : "") +
     (proj > lim && lim > 0 && !over ? '<div class="bagmsg amb">À ce rythme : ≈ ' + money(proj) + ' fin du mois — ça va déborder</div>' : "");
 
   h += '<div class="shlim"><div class="set"><div><div class="n">Limite courses du mois</div>' +
