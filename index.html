@@ -409,11 +409,6 @@ html.wp input,html.wp select,html.wp textarea{backdrop-filter:blur(var(--glass-b
 .defi .dok{font-size:12.5px;font-weight:700;color:var(--grn)}
 .defi.on{border-style:solid;border-color:rgba(92,127,63,.45);background:var(--grn-soft)}
 .defi.on .dic{background:var(--grn);color:var(--s-card)}
-@@END
-@@OLD
-  .cdefi{grid-column:span 12}.defi{height:auto}
-@@NEW
-  .cdefi{grid-column:span 12}
 .qxpc{font-size:11px;font-weight:800;color:var(--ind2);background:var(--ind-soft);
   border-radius:999px;padding:5px 10px;flex-shrink:0;white-space:nowrap}
 .quest.on .qxpc{color:var(--grn);background:transparent;border:1px solid rgba(52,211,153,.4)}
@@ -456,6 +451,60 @@ html.wp input,html.wp select,html.wp textarea{backdrop-filter:blur(var(--glass-b
 .pitem .pn{font-size:13px;font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .pitem .pd{font-size:11px;color:var(--dim);margin-left:auto;white-space:nowrap}
 .pitem b{font-size:13px;font-variant-numeric:tabular-nums;min-width:64px;text-align:right}
+
+/* ===================== COURSES ===================== */
+/* Le sac se dessine en SVG selon l'univers ; il se remplit avec les tickets
+   et déborde quand la limite est dépassée. */
+.shopbag{display:flex;flex-direction:column;align-items:center;text-align:center}
+.wkrow{display:flex;gap:6px;overflow-x:auto;max-width:100%;padding:10px 2px 2px;scrollbar-width:none}
+.wkrow::-webkit-scrollbar{display:none}
+.wk{flex-shrink:0;font-size:11.5px;font-weight:650;padding:5px 10px;border-radius:999px;border:1px solid var(--line2);color:var(--mut);white-space:nowrap}
+.wk:hover{color:var(--txt);border-color:var(--dim)}
+.wk.on{background:var(--ind-soft);border-color:var(--ind);color:var(--ind2)}
+.bagw{width:100%;display:flex;justify-content:center;margin:10px 0 2px}
+.bagsvg{width:min(230px,64vw);height:auto;overflow:visible}
+.bagsvg .bgi{font-size:21px;text-anchor:middle;dominant-baseline:central}
+.bagsvg.over{animation:bagwob 1.8s ease-in-out infinite;transform-origin:50% 92%}
+.bagsvg .spill{animation:bagspill .55s cubic-bezier(.3,1.4,.5,1) both}
+@keyframes bagwob{0%,100%{transform:rotate(0)}25%{transform:rotate(-2deg)}75%{transform:rotate(2deg)}}
+@keyframes bagspill{from{opacity:0;transform:translateY(-16px)}to{opacity:1;transform:none}}
+.bagnum{margin-top:4px;font-size:13px;color:var(--mut)}
+.bagnum b{font-size:28px;font-weight:780;letter-spacing:-.025em;font-variant-numeric:tabular-nums;margin-right:6px}
+.bagmsg{font-size:12.5px;font-weight:650;margin-top:2px}
+.shlim{width:100%;margin-top:14px;border-top:1px solid var(--line);padding-top:4px;text-align:left}
+.shlim .set{border-bottom:none}
+.shk{width:100%;text-align:left;margin-top:10px}
+.shbar{display:flex;height:8px;border-radius:99px;overflow:hidden;background:var(--bg2);border:1px solid var(--line);margin-bottom:6px}
+.shbar i{display:block;height:100%}
+.shkl{display:flex;align-items:center;gap:8px;font-size:12.5px;padding:3px 0}
+.shkl .dt{width:9px;height:9px;border-radius:3px;flex-shrink:0}
+.shkl span{flex:1;color:var(--mut)}
+.shkl b{font-variant-numeric:tabular-nums;font-size:12.5px}
+.shi{display:flex;align-items:center;gap:11px;padding:9px 0;border-bottom:1px solid var(--line)}
+.shi:last-of-type{border-bottom:none}
+.shck{width:26px;height:26px;border-radius:50%;border:1.5px solid var(--line2);flex-shrink:0;display:flex;
+  align-items:center;justify-content:center;color:var(--dim)}
+.shck:hover{border-color:var(--ind);color:var(--ind2)}
+.shck svg{width:13px;height:13px}
+.shi.part .shck{border-color:var(--amb)}
+.shi.done .shck{background:var(--grn);border-color:var(--grn);color:var(--s-card)}
+.she{font-size:20px;width:26px;text-align:center;flex-shrink:0;line-height:1}
+.shn{flex:1;min-width:0;display:flex;flex-direction:column}
+.shn b{font-size:13.5px;font-weight:650;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.shn small{font-size:11.5px;color:var(--dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.shi.done .shn b{color:var(--mut);text-decoration:line-through;text-decoration-color:var(--line2)}
+.shn .pg{height:3px;border-radius:99px;background:var(--bg2);overflow:hidden;margin-top:5px;max-width:160px}
+.shn .pg i{display:block;height:100%;background:var(--amb);border-radius:99px}
+.shq{font-size:12.5px;font-weight:750;font-variant-numeric:tabular-nums;white-space:nowrap}
+.shgrp{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--dim);font-weight:700;margin:14px 0 2px}
+.shl{display:flex;align-items:center;gap:9px;padding:6px 8px;border-radius:var(--r-m);border:1px solid transparent;margin-top:3px}
+.shl.on{background:var(--ind-soft);border-color:var(--ind)}
+.stp{display:flex;align-items:center;gap:2px;background:var(--bg2);border:1px solid var(--line);border-radius:999px;padding:2px;flex-shrink:0}
+.stp button{width:28px;height:28px;border-radius:50%;font-size:16px;font-weight:700;color:var(--mut)}
+.stp button:hover{background:var(--card3);color:var(--txt)}
+.stp b{min-width:20px;text-align:center;font-size:13px;font-variant-numeric:tabular-nums}
+input.shp{width:72px;flex-shrink:0;padding:7px 9px;font-size:12.5px;text-align:right}
+@media(max-width:400px){input.shp{width:60px}.shl{gap:6px;padding:6px 4px}}
 
 /* ===================== COMPAGNON ===================== */
 /* Fixé en bas à gauche sur toutes les vues. Il donne les quêtes,
@@ -999,6 +1048,7 @@ function ic(n, s) {
     scissors: '<circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M8.6 7.6L20 18M8.6 16.4L20 6"/>',
     msg: '<path d="M4 5h16v11H9l-5 4V5z"/>',
     spark: '<path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5L18 18M18 6l-2.5 2.5M8.5 15.5L6 18"/>',
+    bag: '<path d="M5 8h14l-1.2 12.1a1 1 0 01-1 .9H7.2a1 1 0 01-1-.9L5 8z"/><path d="M9 10V6.5a3 3 0 016 0V10"/>',
     shuffle: '<path d="M4 7h3c5 0 5 10 10 10h3M4 17h3c1.6 0 2.7-1 3.6-2.4M13.4 9.4C14.3 8 15.4 7 17 7h3M18 4l3 3-3 3M18 14l3 3-3 3"/>'
   };
   return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="' + (s || 2) + '" stroke-linecap="round" stroke-linejoin="round">' + P[n] + '</svg>';
@@ -1016,6 +1066,7 @@ var LS = {
 var CATS = [
   { id: "logement", n: "Logement", e: "🏠", c: "#818CF8", t: "expense" },
   { id: "nourriture", n: "Nourriture", e: "🍜", c: "#34D399", t: "expense" },
+  { id: "courses", n: "Courses", e: "🛒", c: "#84CC16", t: "expense" },
   { id: "transport", n: "Transport", e: "🚇", c: "#60A5FA", t: "expense" },
   { id: "sante", n: "Santé", e: "🩺", c: "#F87171", t: "expense" },
   { id: "loisirs", n: "Loisirs", e: "🎬", c: "#FBBF24", t: "expense" },
@@ -1033,13 +1084,15 @@ var PAYS = ["Carte", "Espèces", "Virement", "Prélèvement"];
 var MN = ["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 var TABS = [
   { id: "dash", l: "Accueil", i: "home" }, { id: "tx", l: "Opérations", i: "list" },
+  { id: "shop", l: "Courses", i: "bag" },
   { id: "bud", l: "Budgets", i: "wallet" }, { id: "goal", l: "Objectifs", i: "target" },
   { id: "debt", l: "Dettes", i: "scale" },
   { id: "stat", l: "Stats", i: "chart" }, { id: "hist", l: "Historique", i: "clock" }
 ];
-var VTITLES = { dash: "Ton aventure", tx: "Opérations", bud: "Budgets", goal: "Objectifs & achats", debt: "Dettes & prêts", stat: "Statistiques", hist: "Historique", set: "Paramètres" };
+var VTITLES = { dash: "Ton aventure", tx: "Opérations", shop: "Courses", bud: "Budgets", goal: "Objectifs & achats", debt: "Dettes & prêts", stat: "Statistiques", hist: "Historique", set: "Paramètres" };
 var DEF = { version: 4, transactions: [], fixed: [], budgets: [], goals: [], wishlist: [], debts: [],
   game: { xp: 0, claimed: {}, seen: {}, skip: {} },
+  shop: { items: [], limit: 0 },
   settings: { currency: "€", monthlyGoal: 300, alertThreshold: 100, rollover: false, onboard: true } };
 
 /* Fleur de lys réutilisable (viewBox 24x24 d'origine, remise à l'échelle) */
@@ -1054,19 +1107,19 @@ function lys(x, y, sc, fill, op) {
    chez Arpagon, une navette en Cyberpunk. Les données ne bougent pas,
    seule l'icône affichée change. */
 var CAT_SKINS = {
-  taverne: { logement: "🏰", nourriture: "🍞", transport: "🐎", sante: "🌿", loisirs: "🎻",
+  taverne: { courses: "🧺", logement: "🏰", nourriture: "🍞", transport: "🐎", sante: "🌿", loisirs: "🎻",
     shopping: "🧵", abonnements: "📜", epargne: "🏺", remboursement: "⚖️", divers: "🕯️",
     salaire: "💰", bourse: "📜", freelance: "✒️", "autres-rev": "🪙" },
-  france: { logement: "🏰", nourriture: "🥖", transport: "🐎", sante: "⚕️", loisirs: "🎭",
+  france: { courses: "🧺", logement: "🏰", nourriture: "🥖", transport: "🐎", sante: "⚕️", loisirs: "🎭",
     shopping: "🧵", abonnements: "📜", epargne: "⚜️", remboursement: "⚖️", divers: "🕯️",
     salaire: "💰", bourse: "📜", freelance: "✒️", "autres-rev": "🪙" },
-  boise: { logement: "🏕️", nourriture: "🍖", transport: "🐴", sante: "🧪", loisirs: "🎲",
+  boise: { courses: "🎒", logement: "🏕️", nourriture: "🍖", transport: "🐴", sante: "🧪", loisirs: "🎲",
     shopping: "🎒", abonnements: "📯", epargne: "💎", remboursement: "⚒️", divers: "🪵",
     salaire: "🪙", bourse: "📜", freelance: "🗡️", "autres-rev": "🍄" },
-  synthwave: { logement: "🌆", nourriture: "🍕", transport: "🏎️", sante: "💊", loisirs: "🕹️",
+  synthwave: { courses: "🛍️", logement: "🌆", nourriture: "🍕", transport: "🏎️", sante: "💊", loisirs: "🕹️",
     shopping: "🕶️", abonnements: "📼", epargne: "💾", remboursement: "📟", divers: "🎞️",
     salaire: "💵", bourse: "📼", freelance: "🎚️", "autres-rev": "✨" },
-  cyberpunk: { logement: "🏢", nourriture: "🍜", transport: "🛸", sante: "💉", loisirs: "🎮",
+  cyberpunk: { courses: "🥡", logement: "🏢", nourriture: "🍜", transport: "🛸", sante: "💉", loisirs: "🎮",
     shopping: "🛒", abonnements: "📡", epargne: "🔋", remboursement: "⚡", divers: "🔧",
     salaire: "💳", bourse: "📊", freelance: "⌨️", "autres-rev": "🔌" }
 };
@@ -1767,7 +1820,7 @@ function grantXp(m) {
 /* Un geste concret, tiré de tes postes de dépense du moment. Même tirage
    toute la semaine, avec une seule relance possible si le défi ne colle pas. */
 var DEFIS = [
-  { c: "nourriture", t: "Faire tes courses avec une liste, et t'y tenir" },
+  { c: "courses", t: "Faire tes courses avec une liste, et t'y tenir" },
   { c: "nourriture", t: "Préparer ton déjeuner trois jours cette semaine" },
   { c: "nourriture", t: "Cuisiner un plat en grande quantité pour plusieurs repas" },
   { c: "loisirs", t: "Organiser une sortie gratuite ce week-end" },
@@ -1830,7 +1883,8 @@ var BANK_RULES = [
   /* En premier : un virement vers l'épargne n'est pas une dépense */
   ["epargne", ["livret", "ldds", "epargne", "épargne", "assurance vie", "trade republic"]],
   ["logement", ["loyer", "bailleur", "crous", "edf", "engie", "veolia", "assurance habitation"]],
-  ["nourriture", ["carrefour", "lidl", "aldi", "leclerc", "auchan", "intermarche", "monoprix", "franprix", "casino", "boulangerie", "uber eats", "deliveroo", "restaurant"]],
+  ["courses", ["carrefour", "lidl", "aldi", "leclerc", "auchan", "intermarche", "monoprix", "franprix", "casino", "super u", "hyper u", "netto", "picard", "grand frais", "biocoop"]],
+  ["nourriture", ["boulangerie", "uber eats", "deliveroo", "restaurant"]],
   ["transport", ["tcl", "sncf", "ratp", "blablacar", "total", "essence", "station", "uber", "peage"]],
   ["sante", ["pharmacie", "mutuelle", "medecin", "cpam", "dentiste", "opticien"]],
   ["loisirs", ["cinema", "ugc", "pathe", "fnac", "steam", "concert", "salle de sport", "basic fit"]],
@@ -2178,9 +2232,9 @@ function chartMonths(n) {
 }
 
 /* ---------- RENDU ---------- */
-var MOBILE_TABS = ["dash", "tx", "bud", "goal"];
+var MOBILE_TABS = ["dash", "tx", "shop", "bud", "goal"];
 var MORE_TABS = ["debt", "stat", "hist", "set"];
-var FAB_LABELS = { dash: "Nouvelle opération", tx: "Nouvelle opération", bud: "Nouvelle opération", stat: "Nouvelle opération", hist: "Nouvelle opération", goal: "Nouvel objectif ou achat", debt: "Nouvelle dette ou prêt" };
+var FAB_LABELS = { dash: "Nouvelle opération", tx: "Nouvelle opération", shop: "Noter des courses", bud: "Nouvelle opération", stat: "Nouvelle opération", hist: "Nouvelle opération", goal: "Nouvel objectif ou achat", debt: "Nouvelle dette ou prêt" };
 function render() {
   fixSavingsCats();
   syncFixed();
@@ -2202,7 +2256,7 @@ function render() {
   document.getElementById("side").innerHTML =
     '<div class="brand">' + brandHtml() + '</div><div class="tagline">Reprends la main, niveau par niveau</div>' +
     '<div class="sgrp">Ton aventure</div>' +
-    sideBtn("dash") + sideBtn("tx") + sideBtn("stat") +
+    sideBtn("dash") + sideBtn("tx") + sideBtn("shop") + sideBtn("stat") +
     '<div class="sgrp">Tes quêtes</div>' +
     sideBtn("bud") + sideBtn("goal") + sideBtn("debt") +
     '<div class="sgrp">Chroniques</div>' +
@@ -2211,7 +2265,7 @@ function render() {
     '<span class="pavatar">' + esc(prof.charAt(0).toUpperCase() || "P") + '</span>' +
     '<span><span class="n">' + esc(prof) + '</span><br><span class="d">Paramètres & profils</span></span></button>' +
     '<div style="font-size:11px;color:var(--dim);padding:8px 10px 0">Palette : <b style="border:1px solid var(--line2);border-radius:4px;padding:0 4px">Ctrl K</b></div></div>';
-  var html = tab === "dash" ? vDash() : tab === "tx" ? vTx() : tab === "bud" ? vBud() :
+  var html = tab === "dash" ? vDash() : tab === "tx" ? vTx() : tab === "shop" ? vShop() : tab === "bud" ? vBud() :
     tab === "goal" ? vGoal() : tab === "debt" ? vDebt() : tab === "stat" ? vStat() :
     tab === "hist" ? vHist() : vSet();
   if (!MONTHLESS[tab] && month !== curMonth()) {
@@ -2221,12 +2275,14 @@ function render() {
   var v = document.getElementById("view");
   v.innerHTML = html;
   v.classList.remove("view"); void v.offsetWidth; v.classList.add("view");
+  var wkOn = v.querySelector(".wk.on");
+  if (wkOn) wkOn.parentNode.scrollLeft = wkOn.offsetLeft - wkOn.parentNode.offsetLeft - 8;
   var bd = document.getElementById("brand");
   if (bd && !bd.innerHTML) bd.innerHTML = brandHtml();
   renderMate();
 }
-var GKEYS = { a: "dash", o: "tx", b: "bud", j: "goal", d: "debt", s: "stat", h: "hist" };
-var GHINTS = { dash: "G A", tx: "G O", bud: "G B", goal: "G J", debt: "G D", stat: "G S", hist: "G H" };
+var GKEYS = { a: "dash", o: "tx", c: "shop", b: "bud", j: "goal", d: "debt", s: "stat", h: "hist" };
+var GHINTS = { dash: "G A", tx: "G O", shop: "G C", bud: "G B", goal: "G J", debt: "G D", stat: "G S", hist: "G H" };
 function sideBtn(id) {
   var t = TABS.filter(function (x) { return x.id === id; })[0];
   return '<button class="sbtn' + (tab === id ? " on" : "") + '" onclick="App.go(\'' + id + '\')"' + (tab === id ? ' aria-current="page"' : "") + '>' + ic(t.i) + t.l +
@@ -2564,7 +2620,7 @@ function planSummary(m) {
 }
 
 var BGROUPS = [
-  { n: "Essentiels",   ids: ["logement", "nourriture", "transport", "sante"] },
+  { n: "Essentiels",   ids: ["logement", "courses", "nourriture", "transport", "sante"] },
   { n: "Vie courante", ids: ["loisirs", "shopping", "abonnements"] },
   { n: "Engagements",  ids: ["remboursement", "divers"] },
   { n: "Mise de côté", ids: ["epargne"] }
@@ -2987,6 +3043,300 @@ function vSet() {
   return h;
 }
 
+/* ---------- COURSES ----------
+   Un sac par période (semaine ou mois) qui se remplit avec les tickets et
+   déborde quand la limite est dépassée. La limite couvre tout ce qu'on
+   achète en magasin : nourriture, plaisir, hygiène, soins, maison.
+   La liste prédéfinie (S.shop.items) dit quoi acheter chaque semaine ou
+   chaque mois, et combien ; elle se coche toute seule d'après les tickets.
+   Un ticket est une opération normale de catégorie Courses, avec ses
+   articles dans tx.lines : il compte donc aussi dans Budgets et Stats. */
+var SHOP_KINDS = [
+  { id: "nourriture", n: "Nourriture", e: "🥕", c: "var(--grn)" },
+  { id: "plaisir", n: "Plaisir", e: "🍫", c: "var(--vio)" },
+  { id: "hygiene", n: "Hygiène", e: "🧴", c: "var(--tea)" },
+  { id: "soins", n: "Soins", e: "🩹", c: "var(--red)" },
+  { id: "maison", n: "Maison", e: "🧽", c: "var(--amb)" },
+  { id: "autre", n: "Autre", e: "🛍️", c: "var(--dim)" }
+];
+/* Liste type proposée quand la liste est vide : nom, emoji, type, fréquence, quantité, prix estimé */
+var SHOP_STARTER = [
+  ["Pommes", "🍎", "nourriture", "week", 6, 0.4], ["Pain", "🥖", "nourriture", "week", 3, 1.2],
+  ["Lait", "🥛", "nourriture", "week", 2, 1.1], ["Œufs", "🥚", "nourriture", "week", 1, 2.5],
+  ["Légumes", "🥦", "nourriture", "week", 3, 1.5], ["Chocolat", "🍫", "plaisir", "week", 1, 2],
+  ["Pâtes", "🍝", "nourriture", "month", 4, 1], ["Riz", "🍚", "nourriture", "month", 2, 1.8],
+  ["Papier toilette", "🧻", "maison", "month", 1, 4], ["Liquide vaisselle", "🧽", "maison", "month", 1, 2],
+  ["Gel douche", "🧴", "hygiene", "month", 1, 3], ["Dentifrice", "🪥", "hygiene", "month", 1, 2.5]
+];
+var MN3 = ["janv.", "févr.", "mars", "avr.", "mai", "juin", "juil.", "août", "sept.", "oct.", "nov.", "déc."];
+var shopMode = "week", shopWeek = "";
+
+function shopData() {
+  if (!S.shop || !S.shop.items) S.shop = { items: [], limit: 0 };
+  return S.shop;
+}
+function shopKind(id) {
+  for (var i = 0; i < SHOP_KINDS.length; i++) if (SHOP_KINDS[i].id === id) return SHOP_KINDS[i];
+  return SHOP_KINDS[SHOP_KINDS.length - 1];
+}
+function kindIdx(id) { for (var i = 0; i < SHOP_KINDS.length; i++) if (SHOP_KINDS[i].id === id) return i; return 99; }
+function shopItem(id) { var l = shopData().items; for (var i = 0; i < l.length; i++) if (l[i].id === id) return l[i]; return null; }
+function fmtQ(q) { return String(Math.round(q * 100) / 100).replace(".", ","); }
+
+/* Semaines du lundi au dimanche */
+function isoD(d) { return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); }
+function parseD(s) { var p = s.split("-"); return new Date(+p[0], +p[1] - 1, +p[2]); }
+function addDays(s, n) { var d = parseD(s); d.setDate(d.getDate() + n); return isoD(d); }
+function mondayOf(s) { var d = parseD(s); d.setDate(d.getDate() - (d.getDay() + 6) % 7); return isoD(d); }
+function monthWeeks(m) {
+  var out = [], last = m + "-" + pad(daysIn(m));
+  for (var w = mondayOf(m + "-01"); w <= last; w = addDays(w, 7)) out.push(w);
+  return out;
+}
+function weekLabel(w) {
+  var e = addDays(w, 6), f = function (s) { return +s.slice(8, 10) + " " + MN3[+s.slice(5, 7) - 1]; };
+  return w.slice(5, 7) === e.slice(5, 7) ? +w.slice(8, 10) + "–" + f(e) : f(w) + " – " + f(e);
+}
+/* Semaine affichée : celle choisie si elle touche le mois, sinon celle d'aujourd'hui, sinon la première */
+function shopWeekOf(m) {
+  var ws = monthWeeks(m), t = mondayOf(todayISO());
+  if (ws.indexOf(shopWeek) >= 0) return shopWeek;
+  return ws.indexOf(t) >= 0 ? t : ws[0];
+}
+function shopRange(freq, ref) {
+  if (freq === "week") { var w = mondayOf(ref); return [w, addDays(w, 6)]; }
+  var m = monthOf(ref); return [m + "-01", m + "-" + pad(daysIn(m))];
+}
+
+function shopTrips(from, to, skipId) {
+  return S.transactions.filter(function (t) {
+    return t.type === "expense" && t.categoryId === "courses" && t.date >= from && t.date <= to && t.id !== skipId;
+  });
+}
+function shopSum(trips) { return trips.reduce(function (a, t) { return a + t.amount; }, 0); }
+function shopBought(trips, it) {
+  var n = 0, nm = it.name.toLowerCase();
+  trips.forEach(function (t) {
+    (t.lines || []).forEach(function (l) {
+      if (l.id === it.id || (!l.id && String(l.n).toLowerCase() === nm)) n += l.q || 0;
+    });
+  });
+  return n;
+}
+/* La limite du mois est l'enveloppe Courses du mois ; à défaut, le dernier réglage */
+function shopLimit(m) { var b = budgetOf(m, "courses"); return b ? b.amount : (shopData().limit || 0); }
+function shopListCost(m) {
+  return shopData().items.reduce(function (a, it) {
+    return a + (it.price || 0) * it.qty * (it.freq === "week" ? daysIn(m) / 7 : 1);
+  }, 0);
+}
+/* Ventilation par type ; la part des tickets sans prix d'article tombe dans « non détaillé » */
+function shopByKind(trips) {
+  var k = {}, rest = 0;
+  trips.forEach(function (t) {
+    var priced = 0;
+    (t.lines || []).forEach(function (l) { if (l.p > 0) { k[l.k] = (k[l.k] || 0) + l.p; priced += l.p; } });
+    if (t.amount - priced > 0.005) rest += t.amount - priced;
+  });
+  return { k: k, rest: rest };
+}
+function shopEmos(trips) {
+  var out = [];
+  trips.forEach(function (t) {
+    (t.lines || []).forEach(function (l) {
+      for (var i = 0; i < Math.min(3, Math.ceil(l.q || 1)); i++) out.push(l.e || shopKind(l.k).e);
+    });
+  });
+  return out.length ? out : ["🛒", "🍎", "🥖", "🧀", "🥛", "🧴", "🍫", "🥕"];
+}
+
+/* ---------- LE SAC, SELON L'UNIVERS ---------- */
+var BAG_STYLES = { taverne: "sack", boise: "satchel", france: "basket", synthwave: "neon", cyberpunk: "cargo" };
+var BAG_NAMES = { sack: "Ta besace", satchel: "Ta sacoche", basket: "Ton panier", neon: "Ton sac néon", cargo: "Ton module cargo", tote: "Ton sac" };
+function bagName() { return BAG_NAMES[BAG_STYLES[AP.theme] || "tote"]; }
+/* top = hauteur de l'ouverture ; fill/line = matière et contour ; back/mid/front = décor */
+function bagShape(st) {
+  var tote = "M38 76 L162 76 L170 204 Q171 212 163 212 L37 212 Q29 212 30 204 Z";
+  if (st === "sack") return { top: 68,
+    body: "M64 66 Q38 76 33 126 Q28 188 56 205 Q100 220 144 205 Q172 188 167 126 Q162 76 136 66 Z",
+    fill: "fill:#D8BF92", line: "stroke:#8C6A3E;stroke-width:2.5",
+    back: '<path d="M62 70 Q58 44 76 50 Q84 34 99 46 Q111 32 121 48 Q138 42 138 70 Z" style="fill:#CDB07E;stroke:#8C6A3E;stroke-width:2"/>',
+    mid: '<g style="stroke:#8C6A3E;stroke-width:1;opacity:.18">' +
+      [92, 112, 132, 152, 172, 192].map(function (y) { return '<path d="M20 ' + y + ' L180 ' + (y + 4) + '"/>'; }).join("") + '</g>',
+    front: '<path d="M58 70 Q100 84 142 70" style="fill:none;stroke:#A85C24;stroke-width:5;stroke-linecap:round"/>' +
+      '<circle cx="128" cy="76" r="5" style="fill:#A85C24"/>' +
+      '<path d="M128 80 Q133 94 126 106 M128 80 Q122 92 133 102" style="fill:none;stroke:#A85C24;stroke-width:3;stroke-linecap:round"/>' +
+      '<path d="M46 150 Q46 182 64 198" style="fill:none;stroke:#8C6A3E;stroke-width:1.6;stroke-dasharray:4 4;opacity:.7"/>' };
+  if (st === "satchel") return { top: 80,
+    body: "M34 88 Q34 80 42 80 L158 80 Q166 80 166 88 L166 196 Q166 212 150 212 L50 212 Q34 212 34 196 Z",
+    fill: "fill:#7A5230", line: "stroke:#3E2715;stroke-width:2.5",
+    back: '<path d="M44 94 C30 16 170 16 156 94" style="fill:none;stroke:#5A3B22;stroke-width:9;stroke-linecap:round"/>' +
+      '<path d="M42 82 L158 82 L150 42 Q100 30 50 42 Z" style="fill:#5E3E22;stroke:#3E2715;stroke-width:2"/>' +
+      '<rect x="90" y="48" width="20" height="16" rx="3" style="fill:none;stroke:#D9A441;stroke-width:3"/>',
+    front: '<path d="M42 92 L42 194 Q42 204 52 204 L148 204 Q158 204 158 194 L158 92" style="fill:none;stroke:#D9A441;stroke-width:1.4;stroke-dasharray:5 4;opacity:.65"/>' };
+  if (st === "basket") return { top: 98,
+    body: "M28 98 L172 98 L158 204 Q157 212 149 212 L51 212 Q43 212 42 204 Z",
+    fill: "fill:#C99A55", line: "stroke:#7A5426;stroke-width:2.5",
+    back: '<path d="M48 100 C44 12 156 12 152 100" style="fill:none;stroke:#9C6B32;stroke-width:9;stroke-linecap:round"/>' +
+      '<path d="M86 30 L80 48" style="stroke:#2C4C9B;stroke-width:5;stroke-linecap:round"/>' +
+      '<path d="M100 27 L100 46" style="stroke:#F6F2E6;stroke-width:5;stroke-linecap:round"/>' +
+      '<path d="M114 30 L120 48" style="stroke:#E03B4B;stroke-width:5;stroke-linecap:round"/>',
+    mid: '<g style="fill:none;stroke:#8A6230;stroke-width:1.6;opacity:.5">' +
+      [122, 146, 170, 194].map(function (y) { return '<path d="M20 ' + y + ' Q60 ' + (y - 6) + ' 100 ' + y + ' T180 ' + y + '"/>'; }).join("") +
+      [56, 82, 108, 134, 160].map(function (x) { return '<path d="M' + x + ' 98 L' + (x - 4) + ' 212"/>'; }).join("") + '</g>',
+    front: '<rect x="22" y="90" width="156" height="15" rx="7.5" style="fill:#B5843F;stroke:#7A5426;stroke-width:2"/>' +
+      lys(90, 86, 0.85, "#2C4C9B") };
+  if (st === "neon") return { top: 76, body: tote,
+    fill: "fill:rgba(36,20,80,.55)", line: "stroke:#FF2E97;stroke-width:3;filter:drop-shadow(0 0 5px #FF2E97)",
+    back: '<path d="M68 78 C68 30 132 30 132 78" style="fill:none;stroke:#00E5FF;stroke-width:6;stroke-linecap:round;filter:drop-shadow(0 0 5px #00E5FF)"/>',
+    mid: '<g style="stroke:#00E5FF;stroke-width:1;opacity:.22">' +
+      [104, 128, 152, 176, 200].map(function (y) { return '<path d="M20 ' + y + ' L180 ' + y + '"/>'; }).join("") +
+      [40, 70, 100, 130, 160].map(function (x) { return '<path d="M100 60 L' + (x * 1.6 - 60) + ' 212"/>'; }).join("") + '</g>' };
+  if (st === "cargo") return { top: 82,
+    body: "M40 82 L160 82 L172 100 L172 198 L158 212 L42 212 L28 198 L28 100 Z",
+    fill: "fill:#111419", line: "stroke:#FCEE0A;stroke-width:2.2",
+    back: '<path d="M70 84 L70 54 L82 42 L118 42 L130 54 L130 84" style="fill:none;stroke:#FCEE0A;stroke-width:6"/>' +
+      '<text x="100" y="30" style="font:700 9px ui-monospace,monospace;fill:#00E5FF;text-anchor:middle;letter-spacing:.2em">CARGO//</text>',
+    mid: '<g style="stroke:#00E5FF;stroke-width:1;opacity:.12">' +
+      [96, 112, 128, 144, 160, 176, 192, 208].map(function (y) { return '<path d="M20 ' + y + ' L180 ' + y + '"/>'; }).join("") + '</g>',
+    front: '<path d="M28 116 L28 100 L40 82 L56 82 M144 82 L160 82 L172 100 L172 116" style="fill:none;stroke:#00FF9C;stroke-width:3"/>' };
+  return { top: 76, body: tote,
+    fill: "fill:var(--card2)", line: "stroke:var(--line2);stroke-width:2.5",
+    back: '<path d="M68 78 C68 30 132 30 132 78" style="fill:none;stroke:var(--ind);stroke-width:7;stroke-linecap:round"/>',
+    front: '<path d="M38 88 L162 88" style="stroke:var(--line2);stroke-width:1.5;stroke-dasharray:4 4"/>' };
+}
+function bagSvg(pct, emos) {
+  var B = bagShape(BAG_STYLES[AP.theme] || "tote"), bot = 212;
+  var lv = Math.min(100, Math.max(0, pct)) / 100, y = bot - lv * (bot - B.top);
+  var col = pct > 100 ? "var(--red)" : pct >= 80 ? "var(--amb)" : "var(--grn)";
+  var inner = "", k = 0;
+  if (lv > 0) inner += '<path d="M0 ' + y + ' Q25 ' + (y - 5) + ' 50 ' + y + ' T100 ' + y + ' T150 ' + y + ' T200 ' + y +
+    ' L200 230 L0 230 Z" style="fill:' + col + ';opacity:.3"/>';
+  /* Les articles s'empilent depuis le fond, jusqu'au niveau atteint */
+  [196, 172, 148, 124, 100].forEach(function (ry, r) {
+    (r % 2 ? [81, 119] : [62, 100, 138]).forEach(function (rx) {
+      if (ry < B.top + 12 || ry < y + 6) return;
+      inner += '<text class="bgi" x="' + rx + '" y="' + ry + '">' + esc(emos[k++ % emos.length]) + '</text>';
+    });
+  });
+  /* Au-delà de 100 % : un tas qui dépasse de l'ouverture, puis des articles qui tombent à côté */
+  var heap = "";
+  if (pct > 100) {
+    var spots = [[100, -12, 0], [76, -6, -14], [124, -6, 12], [89, -30, -6], [112, -29, 10], [100, -50, 4],
+      [18, 0, -32], [184, 0, 28], [6, 0, -64], [196, 0, 70]];
+    var n = Math.min(spots.length, 2 + Math.floor((pct - 100) / 8));
+    for (var i = 0; i < n; i++) {
+      var p = spots[i], sx = p[0], sy = i < 6 ? B.top + p[1] : (i < 8 ? 204 : 222);
+      heap += '<g transform="rotate(' + p[2] + ' ' + sx + ' ' + sy + ')"><text class="bgi spill" x="' + sx + '" y="' + sy +
+        '" style="animation-delay:' + (i * 0.1).toFixed(1) + 's">' + esc(emos[(k + i) % emos.length]) + '</text></g>';
+    }
+  }
+  return '<svg class="bagsvg' + (pct > 100 ? " over" : "") + '" viewBox="-10 -20 220 256" aria-hidden="true">' +
+    '<defs><clipPath id="bagclip"><path d="' + B.body + '"/></clipPath></defs>' +
+    B.back + '<path d="' + B.body + '" style="' + B.fill + '"/>' +
+    '<g clip-path="url(#bagclip)">' + (B.mid || "") + inner + '</g>' +
+    '<path d="' + B.body + '" style="fill:none;' + B.line + '"/>' + (B.front || "") + heap + '</svg>';
+}
+
+function shopListCard(freq, trips, title) {
+  var rows = shopData().items.filter(function (it) { return it.freq === freq; }).map(function (it) {
+    var b = shopBought(trips, it);
+    return { it: it, b: b, done: b >= it.qty };
+  });
+  rows.sort(function (a, b) {
+    return (a.done - b.done) || (kindIdx(a.it.kind) - kindIdx(b.it.kind)) || a.it.name.localeCompare(b.it.name);
+  });
+  var done = rows.filter(function (r) { return r.done; }).length;
+  var h = '<div class="card mb"><div class="ttl"><span>' + title +
+    ' <span class="dim" style="text-transform:none;letter-spacing:0;font-weight:600">· ' + done + ' / ' + rows.length + '</span></span>' +
+    (done < rows.length ? '<button class="link" style="padding:2px 8px" onclick="App.shopMissing(\'' + freq + '\')">Acheter ce qui manque</button>' : "") + '</div>';
+  if (!rows.length) h += '<div class="empty" style="padding:14px">Rien à acheter chaque ' + (freq === "week" ? "semaine" : "mois") + ' pour l\'instant.</div>';
+  rows.forEach(function (r) {
+    var it = r.it, K = shopKind(it.kind);
+    h += '<div class="shi' + (r.done ? " done" : r.b > 0 ? " part" : "") + '">' +
+      '<button class="shck" onclick="App.shopTick(\'' + it.id + '\')" aria-label="Noter un achat : ' + esc(it.name) + '">' + (r.done ? ic("check", 3) : "") + '</button>' +
+      '<span class="she">' + esc(it.e || K.e) + '</span>' +
+      '<span class="shn"><b>' + esc(it.name) + '</b><small>' + K.n + (it.price > 0 ? ' · ~' + money(it.price) + ' l\'unité' : "") + '</small>' +
+      (r.b > 0 && !r.done ? '<span class="pg"><i style="width:' + (r.b / it.qty * 100) + '%"></i></span>' : "") + '</span>' +
+      '<span class="shq' + (r.done ? " grn" : "") + '">' + fmtQ(r.b) + ' / ' + fmtQ(it.qty) + '</span>' +
+      '<button class="mini" onclick="App.editShopItem(\'' + it.id + '\')" aria-label="Modifier ' + esc(it.name) + '">' + ic("edit") + '</button></div>';
+  });
+  h += '<button class="dash" style="margin-top:10px" onclick="App.newShopItem(\'' + freq + '\')">' + ic("plus") + 'Ajouter un article</button></div>';
+  return h;
+}
+
+function vShop() {
+  var m = month, wk = shopWeekOf(m), isW = shopMode === "week";
+  shopWeek = wk;
+  var mTrips = shopTrips(m + "-01", m + "-" + pad(daysIn(m))), wTrips = shopTrips(wk, addDays(wk, 6));
+  var mLim = shopLimit(m), wLim = mLim * 7 / daysIn(m);
+  var trips = isW ? wTrips : mTrips, lim = isW ? wLim : mLim, spent = shopSum(trips);
+  var pct = lim > 0 ? spent / lim * 100 : 0, over = lim > 0 && spent > lim + 0.004;
+  var col = over ? "var(--red)" : pct >= 80 ? "var(--amb)" : "var(--grn)";
+  var h = '<div class="dg">';
+
+  /* --- Le sac --- */
+  h += '<div class="c5">' + chapter(bagName() + (isW ? " de la semaine" : " du mois")) +
+    '<div class="card shopbag"><div class="pillseg">' +
+    '<button class="' + (isW ? "on" : "") + '" onclick="App.setShopMode(\'week\')">Semaine</button>' +
+    '<button class="' + (isW ? "" : "on") + '" onclick="App.setShopMode(\'month\')">Mois</button></div>';
+  if (isW) h += '<div class="wkrow">' + monthWeeks(m).map(function (w) {
+    return '<button class="wk' + (w === wk ? " on" : "") + '" onclick="App.setShopWeek(\'' + w + '\')">' + weekLabel(w) + '</button>';
+  }).join("") + '</div>';
+  h += '<div class="bagw">' + bagSvg(pct, shopEmos(trips)) + '</div>' +
+    '<div class="bagnum"><b style="color:' + (lim > 0 ? col : "var(--txt)") + '">' + money(spent) + '</b>' +
+    (lim > 0 ? "/ " + money(lim) : "dépensés") + '</div>' +
+    '<div class="bagmsg" style="color:' + (over ? "var(--red)" : "var(--mut)") + '">' +
+    (lim <= 0 ? "Fixe une limite pour voir le sac se remplir"
+      : over ? "Ça déborde de " + money(spent - lim) + " !"
+      : "Encore " + money(lim - spent) + " avant que ça déborde") + '</div>';
+
+  var lc = shopListCost(m);
+  h += '<div class="shlim"><div class="set"><div><div class="n">Limite courses du mois</div>' +
+    '<div class="d">' + (mLim > 0 ? "≈ " + money(wLim) + " par semaine · tout compris" : "Tout compris : nourriture, plaisir, hygiène, soins…") + '</div></div>' +
+    '<input inputmode="decimal" placeholder="0" value="' + (mLim || "") + '" onchange="App.setShopLimit(this.value)" onfocus="this.select()" aria-label="Limite courses du mois"></div>' +
+    (lc > 0 ? '<div class="dim" style="font-size:11.5px">Ta liste complète coûte environ <b>' + money(lc) + '</b> par mois' +
+      (mLim > 0 && lc > mLim ? ' — <b class="red">plus que ta limite</b>' : "") + '</div>' : "") + '</div>';
+
+  if (spent > 0) {
+    var K = shopByKind(trips), parts = [];
+    SHOP_KINDS.forEach(function (x) { if (K.k[x.id]) parts.push({ n: x.e + " " + x.n, v: K.k[x.id], c: x.c }); });
+    if (K.rest > 0.005) parts.push({ n: "Non détaillé", v: K.rest, c: "var(--line2)" });
+    h += '<div class="shk"><div class="lbl" style="margin-top:4px">Ce qu\'il y a dans le sac</div><div class="shbar">' +
+      parts.map(function (p) { return '<i style="width:' + (p.v / spent * 100) + '%;background:' + p.c + '"></i>'; }).join("") + '</div>' +
+      parts.map(function (p) {
+        return '<div class="shkl"><i class="dt" style="background:' + p.c + '"></i><span>' + p.n + '</span><b>' + money(p.v) + '</b></div>';
+      }).join("") + '</div>';
+  }
+  h += '<button class="btn" style="margin-top:14px" onclick="App.newShop()">+ Noter des courses</button></div></div>';
+
+  /* --- La liste --- */
+  h += '<div class="c7">' + chapter("Ta liste de courses");
+  if (!shopData().items.length) h += '<div class="card mb onb"><div class="ttl">Liste vide</div>' +
+    '<div class="dim" style="font-size:13px;line-height:1.6">Note une fois ce que tu achètes chaque semaine (pommes ×6, pain…) et chaque mois ' +
+    '(papier toilette, dentifrice…). Les articles se cochent tout seuls quand tu notes tes courses : tu vois d\'un coup d\'œil ce qu\'il manque.</div>' +
+    '<button class="cta" style="margin-top:12px;border:none;cursor:pointer;color:var(--ind2);background:var(--ind-soft);padding:9px 16px;border-radius:999px;font-weight:700" onclick="App.shopStarter()">Partir d\'une liste type</button></div>';
+  h += shopListCard("week", wTrips, "Chaque semaine — " + weekLabel(wk)) +
+    shopListCard("month", mTrips, "Chaque mois — " + MN[+m.split("-")[1] - 1]) + '</div>';
+
+  /* --- Les tickets du mois --- */
+  var tk = mTrips.slice().sort(function (a, b) { return b.date.localeCompare(a.date); });
+  h += '<div class="c12">' + chapter("Tickets de " + MN[+m.split("-")[1] - 1] + " — " + money(shopSum(mTrips))) + '<div class="card">';
+  if (!tk.length) h += '<div class="empty" style="padding:22px">Aucunes courses notées ce mois.<br><button class="cta" onclick="App.newShop()">+ Noter des courses</button></div>';
+  tk.forEach(function (t) {
+    var ls = t.lines || [];
+    var sub = ls.length ? ls.slice(0, 4).map(function (l) { return esc(l.e || "") + " " + esc(l.n) + (l.q !== 1 ? " ×" + fmtQ(l.q) : ""); }).join(", ") +
+      (ls.length > 4 ? "…" : "") : "articles non détaillés";
+    h += '<div class="row"><div class="av" style="background:var(--grn-soft)">' + catE(cat("courses")) + '</div>' +
+      '<div class="gr"><div class="t">' + esc(t.note || "Courses") + '</div><div class="s">' + frDate(t.date) + ' · ' + sub + '</div></div>' +
+      '<div class="amt">−' + money(t.amount) + '</div>' +
+      '<div class="act"><button class="mini" onclick="App.editShop(\'' + t.id + '\')" aria-label="Modifier">' + ic("edit") + '</button>' +
+      '<button class="mini" onclick="App.delTx(\'' + t.id + '\')" aria-label="Supprimer">' + ic("trash") + '</button></div></div>';
+  });
+  h += '</div></div>';
+  return h + '</div>';
+}
+
 /* ---------- FEUILLES ---------- */
 function openSheet(html, opts) {
   opts = opts || {};
@@ -3161,6 +3511,79 @@ function sheetConfirm(title, msg, okLabel, onOk) {
     '<div class="two"><button class="btn ghost" onclick="App.closeSheet(true)">Annuler</button>' +
     '<button class="btn danger" onclick="App.confirmOk()">' + okLabel + '</button></div>',
     { guard: false, submit: function () { App.confirmOk(); } });
+}
+
+/* Ticket de courses : total, puis les articles de la liste à cocher d'un geste.
+   tmp.lines[idArticle] = { q, p } ; tmp.extra = articles hors liste. */
+function shLine(key, e, name, sub, est, r) {
+  return '<div class="shl' + (r.q > 0 ? " on" : "") + '" id="shl_' + key + '"><span class="she">' + esc(e) + '</span>' +
+    '<span class="shn"><b>' + esc(name) + '</b>' + (sub ? '<small>' + sub + '</small>' : "") + '</span>' +
+    '<span class="stp"><button onclick="App.shStep(\'' + key + '\',-1)" aria-label="Un de moins">−</button>' +
+    '<b id="shq_' + key + '">' + fmtQ(r.q) + '</b>' +
+    '<button onclick="App.shStep(\'' + key + '\',1)" aria-label="Un de plus">+</button></span>' +
+    '<input class="shp" data-k="' + key + '" data-est="' + (est || 0) + '" inputmode="decimal" oninput="App.shSum()" ' +
+    'placeholder="' + (est > 0 && r.q > 0 ? fmtQ(est * r.q) : "prix") + '" value="' + (r.p > 0 ? r.p : "") + '" aria-label="Prix ' + esc(name) + '"></div>';
+}
+function sheetShop() {
+  var t = tmp, D = shopData();
+  var h = sheetHead(t.id ? "Modifier le ticket" : "Noter des courses", bagName() + " · " + mLabel(monthOf(t.date)));
+  h += '<div class="amtwrap"><input id="f_amt" inputmode="decimal" placeholder="0,00" aria-label="Total du ticket" value="' + esc(t.amount) + '">' +
+    '<span class="cur">' + S.settings.currency + '</span></div><div class="err" id="e_amt"></div>' +
+    '<div class="dim" style="font-size:11.5px;margin-top:5px">Total du ticket. Laisse vide : on additionne les prix des articles (les prix estimés de ta liste servent par défaut).</div>';
+  h += '<div class="crow"><input type="date" id="s_date" aria-label="Date" value="' + t.date + '">' +
+    '<select id="s_pay" aria-label="Moyen de paiement">' +
+    PAYS.map(function (p) { return '<option' + (t.pay === p ? " selected" : "") + '>' + p + '</option>'; }).join("") + '</select></div>' +
+    '<input id="s_note" style="margin-top:8px" placeholder="Magasin (Lidl, marché…) — facultatif" value="' + esc(t.note) + '">';
+
+  [["week", "Ma liste de la semaine"], ["month", "Ma liste du mois"]].forEach(function (g) {
+    var its = D.items.filter(function (it) { return it.freq === g[0]; });
+    if (!its.length) return;
+    var rg = shopRange(g[0], t.date), trips = shopTrips(rg[0], rg[1], t.id);
+    its.sort(function (a, b) { return (kindIdx(a.kind) - kindIdx(b.kind)) || a.name.localeCompare(b.name); });
+    h += '<div class="shgrp">' + g[1] + '</div>';
+    its.forEach(function (it) {
+      var miss = Math.max(0, it.qty - shopBought(trips, it));
+      h += shLine(it.id, it.e || shopKind(it.kind).e, it.name,
+        miss > 0 ? "il en manque " + fmtQ(miss) : "déjà coché ✓", it.price, t.lines[it.id] || { q: 0, p: 0 });
+    });
+  });
+  if (t.extra.length) {
+    h += '<div class="shgrp">Hors liste</div>';
+    t.extra.forEach(function (x, i) { h += shLine("x:" + i, x.e || shopKind(x.k).e, x.n, shopKind(x.k).n, 0, x); });
+  }
+  if (!D.items.length) h += '<div class="dim" style="font-size:12px;margin-top:12px;line-height:1.6">Astuce : remplis ta liste depuis la page Courses, ' +
+    'tu n\'auras plus qu\'à appuyer sur + ici.</div>';
+  h += '<div class="shgrp">Ajouter un article hors liste</div><div class="crow" style="margin-top:4px">' +
+    '<input id="s_xn" placeholder="Bonbons, éponges…" onkeydown="if(event.key===\'Enter\'){event.preventDefault();event.stopPropagation();App.shAddExtra()}">' +
+    '<select id="s_xk" aria-label="Type">' + SHOP_KINDS.map(function (k) { return '<option value="' + k.id + '">' + k.e + " " + k.n + '</option>'; }).join("") + '</select>' +
+    '<button class="btn ghost" style="width:auto;padding:9px 14px" onclick="App.shAddExtra()">Ajouter</button></div>' +
+    '<div class="dim" id="s_sum" style="font-size:12px;margin-top:12px"></div>';
+  h += sheetFoot(t.id ? "Enregistrer" : "Mettre dans le sac", "App.saveShop()");
+  openSheet(h, { wide: true, submit: function () { App.saveShop(); } });
+  App.shSum();
+}
+
+function sheetShopItem(it, freq) {
+  var isEdit = !!it;
+  it = it || { name: "", e: "", kind: "nourriture", freq: freq || "week", qty: 1, price: 0 };
+  tmp.si = { kind: it.kind, freq: it.freq };
+  var h = sheetHead(isEdit ? "Modifier l'article" : "Nouvel article", "Ta liste de courses") +
+    '<label class="lbl">Article</label><div class="two" style="gap:8px">' +
+    '<input id="si_e" style="flex:0 0 62px;text-align:center;font-size:20px;padding:8px" maxlength="4" placeholder="' + shopKind(it.kind).e + '" value="' + esc(it.e) + '" aria-label="Emoji (facultatif)">' +
+    '<input id="si_name" placeholder="Pommes, lessive, chocolat…" value="' + esc(it.name) + '"></div><div class="err" id="e_si"></div>' +
+    '<label class="lbl">Type</label><div class="chips" id="si_kind" style="margin-bottom:0">' +
+    SHOP_KINDS.map(function (k) {
+      return '<button class="chip' + (k.id === it.kind ? " on" : "") + '" data-k="' + k.id + '" onclick="App.siKind(this)">' + k.e + " " + k.n + '</button>';
+    }).join("") + '</div>' +
+    '<label class="lbl">Fréquence</label><div class="seg" style="margin-top:0" id="si_freq">' +
+    '<button data-f="week" class="' + (it.freq === "week" ? "on i" : "") + '" onclick="App.siFreq(this)">Chaque semaine</button>' +
+    '<button data-f="month" class="' + (it.freq === "month" ? "on i" : "") + '" onclick="App.siFreq(this)">Chaque mois</button></div>' +
+    '<div class="two"><div><label class="lbl">Combien</label><input id="si_q" inputmode="decimal" value="' + fmtQ(it.qty) + '"></div>' +
+    '<div><label class="lbl">Prix estimé / unité (opt.)</label><input id="si_p" inputmode="decimal" placeholder="0,00" value="' + (it.price > 0 ? fmtQ(it.price) : "") + '"></div></div>' +
+    (isEdit ? '<button class="link" style="margin-top:12px;color:var(--red)" onclick="App.delShopItem(\'' + it.id + '\')">Retirer de la liste</button>' : "") +
+    sheetFoot(isEdit ? "Enregistrer" : "Ajouter à la liste", "App.saveShopItem(" + (isEdit ? "'" + it.id + "'" : "null") + ")");
+  openSheet(h, { submit: (function (id) { return function () { App.saveShopItem(id); }; })(isEdit ? it.id : null) });
+  if (!isEdit) setTimeout(function () { var a = document.getElementById("si_name"); if (a) a.focus(); }, 120);
 }
 
 /* ---------- API ---------- */
@@ -3374,6 +3797,7 @@ var App = {
   fabAction: function () {
     if (tab === "goal") { if (goalSub === "wishes") App.newWish(); else App.newGoal(); }
     else if (tab === "debt") App.newDebt();
+    else if (tab === "shop") App.newShop();
     else App.newTx();
   },
   more: function () {
@@ -3402,6 +3826,7 @@ var App = {
     var acts = [
       { l: "Nouvelle dépense", i: "plus", g: "Actions", run: function () { App.newTx(); } },
       { l: "Nouveau revenu", i: "plus", g: "Actions", run: function () { tmp = { type: "income", amount: "", categoryId: "", date: month === curMonth() ? todayISO() : month + "-01", payMethod: "Virement", note: "", useful: null }; sheetTx(); } },
+      { l: "Noter des courses", i: "bag", g: "Actions", run: function () { App.newShop(); } },
       { l: "Nouvel objectif", i: "target", g: "Actions", run: function () { App.newGoal(); } },
       { l: "Nouvelle dette ou prêt", i: "scale", g: "Actions", run: function () { App.newDebt(); } },
       { l: "Exporter la sauvegarde JSON", i: "down", g: "Actions", run: function () { App.exportJSON(); } },
@@ -3459,7 +3884,11 @@ var App = {
 
   /* transactions */
   newTx: function () { tmp = { type: "expense", amount: "", categoryId: "", date: month === curMonth() ? todayISO() : month + "-01", payMethod: "Carte", note: "", useful: null }; sheetTx(); },
-  editTx: function (id) { var t = S.transactions.filter(function (x) { return x.id === id; })[0]; if (t) { tmp = JSON.parse(JSON.stringify(t)); tmp.fixed = !!t.fixedId; sheetTx(); } },
+  editTx: function (id) {
+    var t = S.transactions.filter(function (x) { return x.id === id; })[0];
+    if (t && t.categoryId === "courses" && !t.fixedId) { App.editShop(id); return; }
+    if (t) { tmp = JSON.parse(JSON.stringify(t)); tmp.fixed = !!t.fixedId; sheetTx(); }
+  },
   setFixed: function (v) { App.grab(); tmp.fixed = v; sheetTx(); sheetCtx.dirty = true; },
   setType: function (t) { App.grab(); tmp.type = t; tmp.categoryId = ""; if (t === "income") tmp.useful = null; sheetTx(); sheetCtx.dirty = true; },
   setCat: function (c) { App.grab(); tmp.categoryId = c; sheetTx(); sheetCtx.dirty = true; },
@@ -3479,6 +3908,8 @@ var App = {
     if (!ok) return;
     var tx = { id: tmp.id || uid(), type: tmp.type, amount: amt, categoryId: tmp.categoryId, date: tmp.date,
       payMethod: tmp.payMethod, note: tmp.note, useful: tmp.type === "income" ? null : tmp.useful };
+    if (tmp.lines) tx.lines = tmp.lines;
+    if (tmp.ext) tx.ext = tmp.ext;
     if (!S.fixed) S.fixed = [];
     var tm = monthOf(tx.date), fx = tmp.fixedId ? fixedOf(tmp.fixedId) : null;
     if (tmp.fixed) {
@@ -3696,6 +4127,174 @@ var App = {
     });
   },
 
+  /* courses */
+  setShopMode: function (m) { shopMode = m === "month" ? "month" : "week"; render(); },
+  setShopWeek: function (w) { shopWeek = w; render(); },
+  /* La limite devient l'enveloppe Courses du mois (visible dans Budgets) et le réglage par défaut */
+  setShopLimit: function (v) {
+    var amt = String(v).trim() === "" ? 0 : num(v);
+    if (amt < 0) { toast("⚠️ Montant négatif ignoré"); render(); return; }
+    shopData().limit = amt;
+    S.budgets = S.budgets.filter(function (b) { return !(b.month === month && b.categoryId === "courses"); });
+    if (amt > 0) S.budgets.push({ id: month + ":courses", month: month, categoryId: "courses", amount: amt });
+    save(); render();
+    toast(amt > 0 ? "Limite courses : " + money(amt) + " ✓" : "Limite courses retirée");
+  },
+  newShop: function (preset) {
+    var lines = {};
+    for (var k in (preset || {})) lines[k] = { q: preset[k], p: 0 };
+    tmp = { id: null, amount: "", date: month === curMonth() ? todayISO() : month + "-01", pay: "Carte", note: "", lines: lines, extra: [] };
+    sheetShop();
+  },
+  editShop: function (id) {
+    var t = S.transactions.filter(function (x) { return x.id === id; })[0]; if (!t) return;
+    var lines = {}, extra = [];
+    (t.lines || []).forEach(function (l) {
+      if (l.id && shopItem(l.id)) {
+        var r = lines[l.id] = lines[l.id] || { q: 0, p: 0 };
+        r.q += l.q || 0; r.p += l.p || 0;
+      } else extra.push({ n: l.n, e: l.e, k: l.k, q: l.q || 0, p: l.p || 0 });
+    });
+    tmp = { id: t.id, ext: t.ext, amount: t.amount, date: t.date, pay: t.payMethod || "Carte",
+      note: t.note === "Courses" ? "" : (t.note || ""), lines: lines, extra: extra };
+    sheetShop();
+  },
+  /* Le rond d'un article : ouvre un ticket avec ce qu'il en manque */
+  shopTick: function (id) {
+    var it = shopItem(id); if (!it) return;
+    var rg = it.freq === "week" ? [shopWeek, addDays(shopWeek, 6)] : shopRange("month", month + "-01");
+    var miss = it.qty - shopBought(shopTrips(rg[0], rg[1]), it), p = {};
+    p[id] = miss > 0 ? miss : 1;
+    App.newShop(p);
+  },
+  shopMissing: function (freq) {
+    var rg = freq === "week" ? [shopWeek, addDays(shopWeek, 6)] : shopRange("month", month + "-01");
+    var trips = shopTrips(rg[0], rg[1]), p = {}, n = 0;
+    shopData().items.forEach(function (it) {
+      if (it.freq !== freq) return;
+      var miss = it.qty - shopBought(trips, it);
+      if (miss > 0) { p[it.id] = miss; n++; }
+    });
+    if (!n) { toast("Tout est déjà coché ✓"); return; }
+    App.newShop(p);
+  },
+  shRef: function (k) {
+    if (k.indexOf("x:") === 0) return tmp.extra[+k.slice(2)];
+    return (tmp.lines[k] = tmp.lines[k] || { q: 0, p: 0 });
+  },
+  shGrab: function () {
+    var g = function (id) { var e = document.getElementById(id); return e ? e.value : null; };
+    var a = g("f_amt"), d = g("s_date"), p = g("s_pay"), n = g("s_note");
+    if (a !== null) tmp.amount = a; if (d !== null) tmp.date = d; if (p !== null) tmp.pay = p; if (n !== null) tmp.note = n;
+    var ins = document.querySelectorAll("#sheet .shp");
+    for (var i = 0; i < ins.length; i++) { var r = App.shRef(ins[i].dataset.k); if (r) r.p = num(ins[i].value); }
+  },
+  shStep: function (k, d) {
+    var r = App.shRef(k); if (!r) return;
+    r.q = Math.max(0, Math.round((r.q + d) * 100) / 100);
+    var q = document.getElementById("shq_" + k), row = document.getElementById("shl_" + k);
+    if (q) q.textContent = fmtQ(r.q);
+    if (row) {
+      row.classList.toggle("on", r.q > 0);
+      var pin = row.querySelector(".shp"), est = pin ? num(pin.dataset.est) : 0;
+      if (pin) pin.placeholder = est > 0 && r.q > 0 ? fmtQ(est * r.q) : "prix";
+    }
+    sheetCtx.dirty = true; sheetCtx.warned = false;
+    App.shSum();
+  },
+  shSum: function () {
+    var el = document.getElementById("s_sum"); if (!el) return;
+    var ins = document.querySelectorAll("#sheet .shp"), tot = 0, n = 0;
+    for (var i = 0; i < ins.length; i++) {
+      var r = App.shRef(ins[i].dataset.k); if (!r || !(r.q > 0)) continue;
+      n += r.q;
+      tot += num(ins[i].value) || num(ins[i].dataset.est) * r.q;
+    }
+    el.innerHTML = n ? fmtQ(n) + " article" + (n > 1 ? "s" : "") + " · environ <b>" + money(tot) + "</b> d'après les prix" : "Aucun article coché — tu peux aussi juste noter le total.";
+  },
+  shAddExtra: function () {
+    App.shGrab();
+    var el = document.getElementById("s_xn"), n = el ? el.value.trim() : "", kd = document.getElementById("s_xk");
+    if (!n) { if (el) el.focus(); return; }
+    var same = shopData().items.filter(function (it) { return it.name.toLowerCase() === n.toLowerCase(); })[0];
+    if (same) { App.shStep(same.id, 1); el.value = ""; toast(same.name + " est déjà dans ta liste : +1"); return; }
+    var k = kd ? kd.value : "autre";
+    tmp.extra.push({ n: n, k: k, e: shopKind(k).e, q: 1, p: 0 });
+    sheetShop(); sheetCtx.dirty = true;
+    setTimeout(function () { var x = document.getElementById("s_xn"); if (x) x.focus(); }, 60);
+  },
+  saveShop: function () {
+    App.shGrab();
+    var lines = [], typed = String(tmp.amount).trim() !== "", wasEdit = !!tmp.id;
+    shopData().items.forEach(function (it) {
+      var r = tmp.lines[it.id];
+      if (!r || !(r.q > 0)) return;
+      /* sans total saisi, le prix estimé de la liste sert pour les articles sans prix */
+      var p = r.p > 0 ? r.p : (!typed && it.price > 0 ? Math.round(it.price * r.q * 100) / 100 : 0);
+      lines.push({ id: it.id, n: it.name, e: it.e || shopKind(it.kind).e, k: it.kind, q: r.q, p: p });
+    });
+    tmp.extra.forEach(function (x) { if (x.q > 0) lines.push({ id: null, n: x.n, e: x.e, k: x.k, q: x.q, p: x.p || 0 }); });
+    var amt = typed ? num(tmp.amount) : lines.reduce(function (a, l) { return a + l.p; }, 0);
+    amt = Math.round(amt * 100) / 100;
+    var e = document.getElementById("e_amt"); e.textContent = "";
+    if (amt <= 0) { e.textContent = "Indique le total du ticket, ou le prix des articles"; return; }
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(tmp.date)) { e.textContent = "Date invalide"; return; }
+    var tx = { id: tmp.id || uid(), type: "expense", amount: amt, categoryId: "courses", date: tmp.date,
+      payMethod: tmp.pay, note: String(tmp.note || "").trim() || "Courses", useful: "useful", lines: lines };
+    if (tmp.ext) tx.ext = tmp.ext;
+    if (wasEdit) S.transactions = S.transactions.map(function (x) { return x.id === tx.id ? tx : x; });
+    else S.transactions.push(tx);
+    save(); App.closeSheet(true); render();
+    var m = monthOf(tx.date), lim = shopLimit(m), sp = shopSum(shopTrips(m + "-01", m + "-" + pad(daysIn(m))));
+    if (lim > 0 && sp > lim) toast("⚠️ " + bagName() + " déborde de " + money(sp - lim) + " ce mois-ci");
+    else toast((wasEdit ? "Ticket modifié ✓" : "Dans le sac ✓") + (lim > 0 ? " · encore " + money(lim - sp) + " ce mois" : ""));
+  },
+  newShopItem: function (freq) { sheetShopItem(null, freq); },
+  editShopItem: function (id) { var it = shopItem(id); if (it) sheetShopItem(it); },
+  siKind: function (btn) {
+    tmp.si.kind = btn.dataset.k;
+    var b = document.querySelectorAll("#si_kind button");
+    for (var i = 0; i < b.length; i++) b[i].classList.toggle("on", b[i].dataset.k === tmp.si.kind);
+    var e = document.getElementById("si_e"); if (e) e.placeholder = shopKind(tmp.si.kind).e;
+    sheetCtx.dirty = true;
+  },
+  siFreq: function (btn) {
+    tmp.si.freq = btn.dataset.f;
+    var b = document.querySelectorAll("#si_freq button");
+    for (var i = 0; i < b.length; i++) b[i].className = b[i].dataset.f === tmp.si.freq ? "on i" : "";
+    sheetCtx.dirty = true;
+  },
+  saveShopItem: function (id) {
+    var n = document.getElementById("si_name").value.trim();
+    var q = num(document.getElementById("si_q").value), p = num(document.getElementById("si_p").value);
+    var e = document.getElementById("si_e").value.trim();
+    document.getElementById("e_si").textContent = "";
+    if (!n) { document.getElementById("e_si").textContent = "Nomme l'article"; return; }
+    var it = { id: id || uid(), name: n, e: e, kind: tmp.si.kind, freq: tmp.si.freq, qty: q > 0 ? q : 1, price: p > 0 ? p : 0 };
+    var D = shopData();
+    if (id) D.items = D.items.map(function (x) { return x.id === id ? it : x; });
+    else D.items.push(it);
+    save(); App.closeSheet(true); render();
+    toast(id ? "Article modifié ✓" : n + " ajouté à ta liste " + (it.freq === "week" ? "de la semaine" : "du mois") + " ✓");
+  },
+  delShopItem: function (id) {
+    var it = shopItem(id); if (!it) return;
+    sheetConfirm("Retirer de la liste ?", "« " + esc(it.name) + " » ne sera plus dans ta liste. Tes tickets passés le gardent.", "Retirer", function () {
+      shopData().items = shopData().items.filter(function (x) { return x.id !== id; });
+      save(); render(); toast("Retiré de la liste");
+    });
+  },
+  shopStarter: function () {
+    var D = shopData(), have = {}, n = 0;
+    D.items.forEach(function (it) { have[it.name.toLowerCase()] = 1; });
+    SHOP_STARTER.forEach(function (s) {
+      if (have[s[0].toLowerCase()]) return;
+      D.items.push({ id: uid(), name: s[0], e: s[1], kind: s[2], freq: s[3], qty: s[4], price: s[5] });
+      n++;
+    });
+    save(); render(); toast(n + " articles ajoutés — adapte-les à tes habitudes ✓");
+  },
+
   /* paramètres */
   setCur: function (v) { S.settings.currency = v; save(); render(); },
   setGoalAmt: function (v) { S.settings.monthlyGoal = num(v); save(); },
@@ -3727,6 +4326,7 @@ var App = {
           S = Object.assign({}, DEF, d);
           S.settings = Object.assign({}, DEF.settings, d.settings || {});
           if (!S.debts) S.debts = [];
+          if (!S.shop || !S.shop.items) S.shop = { items: [], limit: 0 };
           save(); render(); toast(S.transactions.length + " opérations restaurées ✓");
         } else {
           var n = importCSV(r.result);
@@ -3831,6 +4431,7 @@ function loadData() {
       S.settings = Object.assign({}, DEF.settings, d.settings || {});
       if (!S.debts) S.debts = [];
       if (!S.wishlist) S.wishlist = [];
+      if (!S.shop || !S.shop.items) S.shop = { items: [], limit: 0 };
       if (!S.game) S.game = { xp: 0, claimed: {}, seen: {} };
       if (!S.game.claimed) S.game.claimed = {};
       if (!S.game.seen) S.game.seen = {};
