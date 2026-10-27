@@ -492,7 +492,8 @@ html.wp input,html.wp select,html.wp textarea{backdrop-filter:blur(var(--glass-b
 .shn{flex:1;min-width:0;display:flex;flex-direction:column}
 .shn b{font-size:13.5px;font-weight:650;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .shn small{font-size:11.5px;color:var(--dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.shi.done .shn b{color:var(--mut);text-decoration:line-through;text-decoration-color:var(--line2)}
+.shn b{background:linear-gradient(currentColor,currentColor) no-repeat 0 58%/0 1.6px;width:fit-content;max-width:100%}
+.shi.done .shn b{color:var(--mut);background-size:100% 1.6px}
 .shn .pg{height:3px;border-radius:99px;background:var(--bg2);overflow:hidden;margin-top:5px;max-width:160px}
 .shn .pg i{display:block;height:100%;background:var(--amb);border-radius:99px}
 .shq{font-size:12.5px;font-weight:750;font-variant-numeric:tabular-nums;white-space:nowrap}
@@ -505,6 +506,98 @@ html.wp input,html.wp select,html.wp textarea{backdrop-filter:blur(var(--glass-b
 .stp b{min-width:20px;text-align:center;font-size:13px;font-variant-numeric:tabular-nums}
 input.shp{width:72px;flex-shrink:0;padding:7px 9px;font-size:12.5px;text-align:right}
 @media(max-width:400px){input.shp{width:60px}.shl{gap:6px;padding:6px 4px}}
+.wk.cur{font-weight:800}
+.wk.ok{color:var(--grn);border-color:rgba(52,211,153,.4)}
+.wk.bad{color:var(--red);border-color:var(--red);background:var(--red-soft)}
+.bagmsg.amb{color:var(--amb)}.bagmsg.red{color:var(--red)}
+.shfc{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.shfc div{background:var(--bg2);border:1px solid var(--line);border-radius:var(--r-m);padding:8px 11px;text-align:left}
+.shfc span{display:block;font-size:11px;color:var(--dim);font-weight:650}
+.shfc b{font-size:17px;font-weight:780;font-variant-numeric:tabular-nums;letter-spacing:-.015em}
+
+/* --- La liste : une feuille écrite, propre à chaque univers --- */
+:root{--ink:var(--ind2)}
+html[data-theme="taverne"]{--ink:#5B3E24}
+html[data-theme="boise"]{--ink:#D9A441}
+html[data-theme="france"]{--ink:#D4AF37}
+html[data-theme="synthwave"]{--ink:#FF2E97}
+html[data-theme="cyberpunk"]{--ink:#00FF9C}
+.slist{position:relative}
+.slist .ttl{align-items:baseline;flex-wrap:wrap}
+.slt::before{content:"✎ ";color:var(--ink)}
+.sln{text-transform:none;letter-spacing:0;font-weight:600;color:var(--dim)}
+.sle{font-size:14px;font-weight:780;color:var(--txt);text-transform:none;letter-spacing:-.01em;white-space:nowrap;font-variant-numeric:tabular-nums}
+.slr{font-size:12px;color:var(--mut);margin:-6px 0 4px}
+.slist .shi{border-bottom-style:dashed}
+.slist .shq{min-width:62px;text-align:right}
+/* cahier : la marge rouge */
+.slist::before{content:"";position:absolute;top:0;bottom:0;left:50px;width:1.5px;background:var(--red);opacity:.2;pointer-events:none}
+.shi.just .shck{animation:rpop .4s cubic-bezier(.16,1,.3,1)}
+.shi.just.done .shn b{animation:shstrike .45s ease-out both}
+@keyframes shstrike{from{background-size:0 1.6px}to{background-size:100% 1.6px}}
+.slist.anim .shi,.shi.new{animation:shwrite .5s ease-out both;animation-delay:calc(var(--i) * 70ms)}
+.shi.new{animation-delay:0s}
+@keyframes shwrite{from{clip-path:inset(0 100% 0 0);opacity:.2}to{clip-path:inset(0 0 0 0);opacity:1}}
+.shadd{display:flex;gap:6px;align-items:center;margin-top:10px}
+.shadd input{padding:9px 12px;font-size:13.5px;background:transparent;border-style:dashed}
+.shadd input:focus{border-style:solid}
+.shfoot{display:flex;align-items:flex-end;gap:10px;margin-top:10px;min-height:38px;flex-wrap:wrap}
+.pent{margin-left:auto;font-size:12px;font-style:italic;color:var(--ink);font-weight:650}
+.shpen{position:relative;width:130px;height:38px;flex-shrink:0}
+.shpen .scrib{position:absolute;left:0;bottom:2px;width:100px;height:28px;overflow:visible}
+.shpen .scrib path{fill:none;stroke:var(--ink);stroke-width:2.2;stroke-linecap:round;stroke-dasharray:150;stroke-dashoffset:0}
+.shpen .pen{position:absolute;left:92px;bottom:12px;width:30px;height:30px;transform:translate(6px,-5px) rotate(-14deg);transform-origin:8% 92%}
+.shpen .pen svg{width:100%;height:100%;overflow:visible}
+/* À l'arrivée : la liste s'écrit ligne à ligne, puis le crayon signe et se relève */
+.slist.anim .scrib path{animation:shink 1.1s ease-in-out both;animation-delay:calc(var(--n) * 70ms + .3s)}
+.slist.anim .pen{animation:shpenmv 1.5s ease-in-out both;animation-delay:calc(var(--n) * 70ms + .3s)}
+.slist.anim .pent{animation:shfade .4s both;animation-delay:calc(var(--n) * 70ms + 1.6s)}
+@keyframes shink{from{stroke-dashoffset:150}to{stroke-dashoffset:0}}
+@keyframes shpenmv{
+  0%{left:0;transform:translate(0,2px)}
+  14%{left:12px;transform:translate(0,-8px)}
+  28%{left:24px;transform:translate(0,6px)}
+  42%{left:46px;transform:translate(0,-2px)}
+  56%{left:66px;transform:translate(0,-8px)}
+  70%{left:84px;transform:translate(0,-6px)}
+  80%{left:92px;transform:translate(0,0)}
+  100%{left:92px;transform:translate(6px,-5px) rotate(-14deg)}}
+@keyframes shfade{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:none}}
+html[data-theme="synthwave"] .shpen .scrib path{filter:drop-shadow(0 0 3px #FF2E97)}
+html[data-theme="cyberpunk"] .shpen .pen{animation-timing-function:steps(14,end)}
+
+/* Taverne : parchemin, petites capitales, encre brune */
+html[data-theme="taverne"] .slist::before,html[data-theme="boise"] .slist::before,html[data-theme="france"] .slist::before,
+html[data-theme="synthwave"] .slist::before,html[data-theme="cyberpunk"] .slist::before{display:none}
+html[data-theme="taverne"] .slist{background:radial-gradient(ellipse at 15% 0%,rgba(193,120,42,.12),transparent 60%),
+  radial-gradient(ellipse at 100% 100%,rgba(120,86,50,.12),transparent 55%),var(--card);
+  border-color:var(--line2);box-shadow:var(--sh),inset 0 0 0 5px var(--card),inset 0 0 0 6px var(--line)}
+html[data-theme="taverne"] .slist .ttl,html[data-theme="boise"] .slist .ttl,html[data-theme="france"] .slist .ttl{
+  font-variant:small-caps;text-transform:none;letter-spacing:.06em;font-size:14.5px}
+html[data-theme="taverne"] .slt::before{content:"❦ "}
+html[data-theme="taverne"] .slist .shn b,html[data-theme="boise"] .slist .shn b{font-style:italic;font-size:14.5px}
+html[data-theme="taverne"] .slist .shi{border-bottom-color:var(--line2);border-bottom-style:dotted}
+/* Boisé : parchemin sombre aux bords brûlés */
+html[data-theme="boise"] .slist{box-shadow:var(--sh-md),inset 0 0 26px rgba(0,0,0,.5);border-color:#6B5033}
+html[data-theme="boise"] .slt::before{content:"✠ "}
+html[data-theme="boise"] .slist .shi{border-bottom-color:rgba(217,164,65,.22)}
+/* Empire : papier bleu nuit, fleur de lys, filets dorés */
+html[data-theme="france"] .slt::before{content:"⚜ "}
+html[data-theme="france"] .slist .shi{border-bottom:1px solid rgba(212,175,55,.22)}
+html[data-theme="france"] .slist .shck{border-color:rgba(212,175,55,.6)}
+/* Synthwave : néon */
+html[data-theme="synthwave"] .slist{border-color:var(--red);box-shadow:0 0 0 1px rgba(255,46,151,.25),0 0 22px rgba(255,46,151,.2)}
+html[data-theme="synthwave"] .slt::before{content:"✦ ";text-shadow:0 0 8px currentColor}
+html[data-theme="synthwave"] .slist .shi{border-bottom:1px solid rgba(0,229,255,.22)}
+html[data-theme="synthwave"] .slist .shi.done .shn b{text-shadow:0 0 6px currentColor}
+/* Cyberpunk : terminal */
+html[data-theme="cyberpunk"] .slist{border-left:3px solid var(--amb)}
+html[data-theme="cyberpunk"] .slt::before{content:"> ";color:var(--grn)}
+html[data-theme="cyberpunk"] .slist .shck{border-radius:2px}
+html[data-theme="cyberpunk"] .slist .shn b{text-transform:uppercase;letter-spacing:.05em;font-size:12.5px}
+html[data-theme="cyberpunk"] .slist .shi{border-bottom-style:dotted}
+html[data-theme="cyberpunk"] .pent::after{content:"_";animation:shcur 1s steps(1) infinite}
+@keyframes shcur{50%{opacity:0}}
 
 /* ===================== COMPAGNON ===================== */
 /* Fixé en bas à gauche sur toutes les vues. Il donne les quêtes,
@@ -2275,7 +2368,7 @@ function render() {
   var v = document.getElementById("view");
   v.innerHTML = html;
   v.classList.remove("view"); void v.offsetWidth; v.classList.add("view");
-  var wkOn = v.querySelector(".wk.on");
+  var wkOn = v.querySelector(".wk.on") || v.querySelector(".wk.cur");
   if (wkOn) wkOn.parentNode.scrollLeft = wkOn.offsetLeft - wkOn.parentNode.offsetLeft - 8;
   var bd = document.getElementById("brand");
   if (bd && !bd.innerHTML) bd.innerHTML = brandHtml();
@@ -3059,20 +3152,44 @@ var SHOP_KINDS = [
   { id: "maison", n: "Maison", e: "🧽", c: "var(--amb)" },
   { id: "autre", n: "Autre", e: "🛍️", c: "var(--dim)" }
 ];
-/* Liste type proposée quand la liste est vide : nom, emoji, type, fréquence, quantité, prix estimé */
+/* Liste type proposée quand la liste est vide :
+   nom, emoji, type, fréquence, quantité, prix estimé pour 1, contenance, unité */
 var SHOP_STARTER = [
-  ["Pommes", "🍎", "nourriture", "week", 6, 0.4], ["Pain", "🥖", "nourriture", "week", 3, 1.2],
-  ["Lait", "🥛", "nourriture", "week", 2, 1.1], ["Œufs", "🥚", "nourriture", "week", 1, 2.5],
-  ["Légumes", "🥦", "nourriture", "week", 3, 1.5], ["Chocolat", "🍫", "plaisir", "week", 1, 2],
-  ["Pâtes", "🍝", "nourriture", "month", 4, 1], ["Riz", "🍚", "nourriture", "month", 2, 1.8],
-  ["Papier toilette", "🧻", "maison", "month", 1, 4], ["Liquide vaisselle", "🧽", "maison", "month", 1, 2],
-  ["Gel douche", "🧴", "hygiene", "month", 1, 3], ["Dentifrice", "🪥", "hygiene", "month", 1, 2.5]
+  ["Pommes", "🍎", "nourriture", "week", 6, 0.4, 0, ""], ["Pain", "🥖", "nourriture", "week", 3, 1.2, 0, ""],
+  ["Lait", "🥛", "nourriture", "week", 2, 1.1, 1, "L"], ["Œufs", "🥚", "nourriture", "week", 1, 2.5, 0, ""],
+  ["Légumes", "🥦", "nourriture", "week", 1, 3, 1.5, "kg"], ["Chocolat", "🍫", "plaisir", "week", 1, 2, 0, ""],
+  ["Pâtes", "🍝", "nourriture", "month", 4, 1, 500, "g"], ["Riz", "🍚", "nourriture", "month", 2, 1.8, 1, "kg"],
+  ["Papier toilette", "🧻", "maison", "month", 1, 4, 0, ""], ["Liquide vaisselle", "🧽", "maison", "month", 1, 2, 0, ""],
+  ["Gel douche", "🧴", "hygiene", "month", 1, 3, 0, ""], ["Dentifrice", "🪥", "hygiene", "month", 1, 2.5, 0, ""]
+];
+var SHOP_UNITS = ["g", "kg", "ml", "cl", "L"];
+/* Devine l'emoji et le type d'un article tapé à la main (premier mot-clé trouvé) */
+var SHOP_GUESS = [
+  ["pomme de terre", "🥔"], ["pommes de terre", "🥔"], ["patate", "🥔"], ["pomme", "🍎"], ["banane", "🍌"], ["orange", "🍊"], ["citron", "🍋"],
+  ["fraise", "🍓"], ["raisin", "🍇"], ["tomate", "🍅"], ["carotte", "🥕"], ["salade", "🥬"], ["oignon", "🧅"],
+  ["courgette", "🥒"], ["concombre", "🥒"], ["brocoli", "🥦"], ["légume", "🥦"], ["fruit", "🍎"], ["pain", "🥖"],
+  ["baguette", "🥖"], ["lait", "🥛"], ["yaourt", "🥛"], ["oeuf", "🥚"], ["œuf", "🥚"], ["fromage", "🧀"],
+  ["beurre", "🧈"], ["riz", "🍚"], ["pâte", "🍝"], ["pate", "🍝"], ["poulet", "🍗"], ["viande", "🥩"],
+  ["steak", "🥩"], ["jambon", "🥓"], ["poisson", "🐟"], ["thon", "🐟"], ["café", "☕"], ["thé", "🍵"],
+  ["jus", "🧃"], ["farine", "🌾"], ["huile", "🫒"], ["vinaigre", "🫙"], ["sel", "🧂"], ["céréale", "🥣"],
+  ["gâteau", "🍰", "plaisir"], ["eau", "💧"], ["chocolat", "🍫", "plaisir"], ["bonbon", "🍬", "plaisir"],
+  ["biscuit", "🍪", "plaisir"], ["chips", "🍟", "plaisir"], ["glace", "🍨", "plaisir"], ["soda", "🥤", "plaisir"],
+  ["coca", "🥤", "plaisir"], ["bière", "🍺", "plaisir"], ["vin", "🍷", "plaisir"],
+  ["dentifrice", "🪥", "hygiene"], ["brosse", "🪥", "hygiene"], ["savon", "🧼", "hygiene"], ["gel douche", "🧴", "hygiene"],
+  ["shampo", "🧴", "hygiene"], ["déo", "🧴", "hygiene"], ["rasoir", "🪒", "hygiene"], ["coton", "☁️", "hygiene"],
+  ["pansement", "🩹", "soins"], ["doliprane", "💊", "soins"], ["médic", "💊", "soins"], ["vitamine", "💊", "soins"],
+  ["crème", "🧴", "soins"], ["papier", "🧻", "maison"], ["essuie", "🧻", "maison"], ["sopalin", "🧻", "maison"],
+  ["lessive", "🧺", "maison"], ["éponge", "🧽", "maison"], ["vaisselle", "🧽", "maison"], ["poubelle", "🗑️", "maison"],
+  ["javel", "🧴", "maison"]
 ];
 var MN3 = ["janv.", "févr.", "mars", "avr.", "mai", "juin", "juil.", "août", "sept.", "oct.", "nov.", "déc."];
 var shopMode = "week", shopWeek = "";
+/* shopAnim : la liste « s'écrit » en arrivant sur la page ; shopJust / shopNew : article coché / ajouté à l'instant */
+var shopAnim = false, shopJust = null, shopNew = null;
 
 function shopData() {
   if (!S.shop || !S.shop.items) S.shop = { items: [], limit: 0 };
+  if (!S.shop.checks) S.shop.checks = {};
   return S.shop;
 }
 function shopKind(id) {
@@ -3082,6 +3199,34 @@ function shopKind(id) {
 function kindIdx(id) { for (var i = 0; i < SHOP_KINDS.length; i++) if (SHOP_KINDS[i].id === id) return i; return 99; }
 function shopItem(id) { var l = shopData().items; for (var i = 0; i < l.length; i++) if (l[i].id === id) return l[i]; return null; }
 function fmtQ(q) { return String(Math.round(q * 100) / 100).replace(".", ","); }
+function sizeTxt(o) { return o.size > 0 ? fmtQ(o.size) + " " + (o.unit || "") : ""; }
+/* « ×6 », « 1,5 kg », « 2 × 1 L » */
+function qtyTxt(it) {
+  var z = sizeTxt(it);
+  return !z ? "×" + fmtQ(it.qty) : it.qty === 1 ? z : fmtQ(it.qty) + " × " + z;
+}
+function itemCost(it) { return (it.price || 0) * it.qty; }
+function guessItem(name) {
+  var l = " " + name.toLowerCase();
+  for (var i = 0; i < SHOP_GUESS.length; i++) {
+    var g = SHOP_GUESS[i];
+    if (l.indexOf(" " + g[0]) >= 0 || l.indexOf("'" + g[0]) >= 0) return { e: g[1], k: g[2] || "nourriture" };
+  }
+  return { e: "", k: "nourriture" };
+}
+/* « 6 pommes », « riz 1 kg », « 2 x lait 1L », « 1,5 kg de pommes 3 € » */
+function parseQuick(raw) {
+  var s = " " + raw + " ", qty = 1, size = 0, unit = "", price = 0, m;
+  m = s.match(/(\d+(?:[.,]\d+)?)\s*(?:€|eur\b|euros?\b)/i);
+  if (m) { price = num(m[1]); s = s.replace(m[0], " "); }
+  m = s.match(/(\d+(?:[.,]\d+)?)\s*(kg|g|ml|cl|l)(?![a-zà-ÿ])/i);
+  if (m) { size = num(m[1]); unit = m[2].toLowerCase() === "l" ? "L" : m[2].toLowerCase(); s = s.replace(m[0], " "); }
+  m = s.match(/\s(?:x|×)?\s*(\d+(?:[.,]\d+)?)\s*(?:x|×)?\s/i);
+  if (m) { qty = num(m[1]) || 1; s = s.replace(m[0], " "); }
+  var name = s.replace(/\s+/g, " ").trim().replace(/^(de |d'|du |des )/i, "").trim();
+  name = name.charAt(0).toUpperCase() + name.slice(1);
+  return { name: name, qty: qty, size: size, unit: unit, price: price ? Math.round(price / qty * 100) / 100 : 0 };
+}
 
 /* Semaines du lundi au dimanche */
 function isoD(d) { return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); }
@@ -3125,10 +3270,17 @@ function shopBought(trips, it) {
 }
 /* La limite du mois est l'enveloppe Courses du mois ; à défaut, le dernier réglage */
 function shopLimit(m) { var b = budgetOf(m, "courses"); return b ? b.amount : (shopData().limit || 0); }
-function shopListCost(m) {
-  return shopData().items.reduce(function (a, it) {
-    return a + (it.price || 0) * it.qty * (it.freq === "week" ? daysIn(m) / 7 : 1);
-  }, 0);
+/* Coût prévu de la liste pour une semaine, ou pour le mois m entier */
+function shopForecast(m, per) {
+  var w = 0, mo = 0;
+  shopData().items.forEach(function (it) { if (it.freq === "week") w += itemCost(it); else mo += itemCost(it); });
+  return per === "week" ? w + mo * 7 / daysIn(m) : w * daysIn(m) / 7 + mo;
+}
+/* Coché ? Ce que tu coches toi-même prime ; sinon, coché dès qu'un ticket couvre la quantité. */
+function periodKey(freq, ref) { return freq === "week" ? "w:" + mondayOf(ref) : "m:" + monthOf(ref); }
+function shopChecked(it, key, trips) {
+  var c = shopData().checks[key], o = c && c[it.id];
+  return o === true || o === false ? o : shopBought(trips, it) >= it.qty;
 }
 /* Ventilation par type ; la part des tickets sans prix d'article tombe dans « non détaillé » */
 function shopByKind(trips) {
@@ -3205,7 +3357,7 @@ function bagShape(st) {
     back: '<path d="M68 78 C68 30 132 30 132 78" style="fill:none;stroke:var(--ind);stroke-width:7;stroke-linecap:round"/>',
     front: '<path d="M38 88 L162 88" style="stroke:var(--line2);stroke-width:1.5;stroke-dasharray:4 4"/>' };
 }
-function bagSvg(pct, emos) {
+function bagSvg(pct, emos, fc) {
   var B = bagShape(BAG_STYLES[AP.theme] || "tote"), bot = 212;
   var lv = Math.min(100, Math.max(0, pct)) / 100, y = bot - lv * (bot - B.top);
   var col = pct > 100 ? "var(--red)" : pct >= 80 ? "var(--amb)" : "var(--grn)";
@@ -3235,33 +3387,72 @@ function bagSvg(pct, emos) {
     '<defs><clipPath id="bagclip"><path d="' + B.body + '"/></clipPath></defs>' +
     B.back + '<path d="' + B.body + '" style="' + B.fill + '"/>' +
     '<g clip-path="url(#bagclip)">' + (B.mid || "") + inner + '</g>' +
-    '<path d="' + B.body + '" style="fill:none;' + B.line + '"/>' + (B.front || "") + heap + '</svg>';
+    '<path d="' + B.body + '" style="fill:none;' + B.line + '"/>' + (B.front || "") + bagForecast(B, fc) + heap + '</svg>';
+}
+/* Trait pointillé : jusqu'où ta liste remplirait le sac */
+function bagForecast(B, fc) {
+  if (!(fc > 0)) return "";
+  var y = 212 - Math.min(100, fc) / 100 * (212 - B.top), c = fc > 100 ? "var(--red)" : "var(--txt)";
+  return '<path d="M20 ' + y.toFixed(1) + ' L180 ' + y.toFixed(1) + '" style="stroke:' + c + ';stroke-width:2;stroke-dasharray:6 5;opacity:.7"/>' +
+    '<text x="184" y="' + y.toFixed(1) + '" style="font-size:10px;font-weight:700;fill:' + c + ';dominant-baseline:central">' +
+    (fc > 100 ? "liste ↑" : "liste") + '</text>';
 }
 
-function shopListCard(freq, trips, title) {
+/* Le crayon de l'univers qui termine la liste : plume, crayon, stylet néon… */
+function penSvg() {
+  var st = BAG_STYLES[AP.theme] || "tote";
+  var quill = { sack: ["#FBF5E9", "#8C6A3E"], satchel: ["#E8D5B0", "#5A3B22"], basket: ["#F6F2E6", "#D4AF37"] }[st];
+  if (quill) return '<svg viewBox="0 0 40 40"><path d="M4 37 Q12 25 21 14 Q29 5 38 2 Q37 11 28 19 Q19 27 4 37Z" style="fill:' + quill[0] + ';stroke:' + quill[1] + ';stroke-width:1.3"/>' +
+    '<path d="M4 37 L31 9" style="fill:none;stroke:' + quill[1] + ';stroke-width:1.3"/>' +
+    '<path d="M16 25 L22 26 M20 21 L27 21 M24 16 L31 15" style="fill:none;stroke:' + quill[1] + ';stroke-width:.9;opacity:.6"/>' +
+    '<path d="M2.5 38.5 L5 33 L8 35.5Z" style="fill:#2A1E12"/></svg>';
+  var c = st === "neon" ? ["none", "#FF2E97", "#00E5FF", "#00E5FF"] : st === "cargo" ? ["#FCEE0A", "#FCEE0A", "#111419", "#00FF9C"] :
+    ["var(--amb)", "var(--amb)", "#F3D9B1", "#3A3A3A"];
+  return '<svg viewBox="0 0 40 40"' + (st === "neon" ? ' style="filter:drop-shadow(0 0 4px #FF2E97)"' : "") + '>' +
+    '<path d="M6 34 L10 24 L30 4 L36 10 L16 30 Z" style="fill:' + c[0] + ';stroke:' + c[1] + ';stroke-width:1.6;stroke-linejoin:round"/>' +
+    '<path d="M6 34 L10 24 L16 30Z" style="fill:' + c[2] + ';stroke:' + c[1] + ';stroke-width:1.2;stroke-linejoin:round"/>' +
+    '<path d="M5.5 35 L7.6 29.8 L10.2 32.4Z" style="fill:' + c[3] + '"/>' +
+    (st === "tote" ? '<path d="M30 4 L32.5 1.5 Q34 0 35.5 1.5 L38.5 4.5 Q40 6 38.5 7.5 L36 10Z" style="fill:var(--red)"/>' : "") + '</svg>';
+}
+function shopListCard(freq, trips, ref, title, anim) {
+  var key = periodKey(freq, ref);
   var rows = shopData().items.filter(function (it) { return it.freq === freq; }).map(function (it) {
     var b = shopBought(trips, it);
-    return { it: it, b: b, done: b >= it.qty };
+    return { it: it, b: b, done: shopChecked(it, key, trips) };
   });
   rows.sort(function (a, b) {
     return (a.done - b.done) || (kindIdx(a.it.kind) - kindIdx(b.it.kind)) || a.it.name.localeCompare(b.it.name);
   });
-  var done = rows.filter(function (r) { return r.done; }).length;
-  var h = '<div class="card mb"><div class="ttl"><span>' + title +
-    ' <span class="dim" style="text-transform:none;letter-spacing:0;font-weight:600">· ' + done + ' / ' + rows.length + '</span></span>' +
-    (done < rows.length ? '<button class="link" style="padding:2px 8px" onclick="App.shopMissing(\'' + freq + '\')">Acheter ce qui manque</button>' : "") + '</div>';
-  if (!rows.length) h += '<div class="empty" style="padding:14px">Rien à acheter chaque ' + (freq === "week" ? "semaine" : "mois") + ' pour l\'instant.</div>';
+  var done = 0, est = 0, left = 0, toPay = 0;
   rows.forEach(function (r) {
+    est += itemCost(r.it);
+    if (r.done) { done++; if (r.b < r.it.qty) toPay++; } else left += itemCost(r.it);
+  });
+  var h = '<div class="card mb slist' + (anim ? " anim" : "") + '" style="--n:' + rows.length + '">' +
+    '<div class="ttl"><span class="slt">' + title + ' <span class="sln">· ' + done + ' / ' + rows.length + '</span></span>' +
+    (est > 0 ? '<span class="sle">≈ ' + money(est) + '</span>' : "") + '</div>';
+  if (est > 0 && done && left > 0.004) h += '<div class="slr">Encore ≈ <b>' + money(left) + '</b> à acheter</div>';
+  if (!rows.length) h += '<div class="empty" style="padding:12px">Rien à acheter chaque ' + (freq === "week" ? "semaine" : "mois") + ' pour l\'instant.</div>';
+  rows.forEach(function (r, i) {
     var it = r.it, K = shopKind(it.kind);
-    h += '<div class="shi' + (r.done ? " done" : r.b > 0 ? " part" : "") + '">' +
-      '<button class="shck" onclick="App.shopTick(\'' + it.id + '\')" aria-label="Noter un achat : ' + esc(it.name) + '">' + (r.done ? ic("check", 3) : "") + '</button>' +
+    h += '<div class="shi' + (r.done ? " done" : r.b > 0 ? " part" : "") + (shopJust === it.id ? " just" : "") +
+      (shopNew === it.id ? " new" : "") + '" style="--i:' + i + '">' +
+      '<button class="shck" onclick="App.shopTick(\'' + it.id + '\')" aria-pressed="' + r.done + '" aria-label="' +
+      (r.done ? "Décocher " : "Cocher ") + esc(it.name) + '">' + (r.done ? ic("check", 3) : "") + '</button>' +
       '<span class="she">' + esc(it.e || K.e) + '</span>' +
-      '<span class="shn"><b>' + esc(it.name) + '</b><small>' + K.n + (it.price > 0 ? ' · ~' + money(it.price) + ' l\'unité' : "") + '</small>' +
-      (r.b > 0 && !r.done ? '<span class="pg"><i style="width:' + (r.b / it.qty * 100) + '%"></i></span>' : "") + '</span>' +
-      '<span class="shq' + (r.done ? " grn" : "") + '">' + fmtQ(r.b) + ' / ' + fmtQ(it.qty) + '</span>' +
+      '<span class="shn"><b>' + esc(it.name) + '</b><small>' + esc(qtyTxt(it)) + ' · ' + K.n +
+      (r.b > 0 && r.b < it.qty ? ' · ' + fmtQ(r.b) + ' sur un ticket' : "") + '</small></span>' +
+      '<span class="shq">' + (it.price > 0 ? "≈ " + money(itemCost(it)) : '<span class="dim">prix ?</span>') + '</span>' +
       '<button class="mini" onclick="App.editShopItem(\'' + it.id + '\')" aria-label="Modifier ' + esc(it.name) + '">' + ic("edit") + '</button></div>';
   });
-  h += '<button class="dash" style="margin-top:10px" onclick="App.newShopItem(\'' + freq + '\')">' + ic("plus") + 'Ajouter un article</button></div>';
+  h += '<div class="shadd"><input id="shadd_' + freq + '" placeholder="Écris un article… ex : 6 pommes, riz 1 kg, lait 2 L 2,20 €" ' +
+    'onkeydown="if(event.key===\'Enter\'){event.preventDefault();App.shopQuick(\'' + freq + '\')}" aria-label="Ajouter un article">' +
+    '<button class="mini" onclick="App.shopQuick(\'' + freq + '\')" aria-label="Ajouter">' + ic("plus") + '</button></div>';
+  h += '<div class="shfoot">' + (toPay ? '<button class="qgo" onclick="App.shopPay(\'' + freq + '\')">' + ic("check", 2.4) +
+    'Noter le ticket (' + toPay + ' coché' + (toPay > 1 ? "s" : "") + ')</button>' : "") +
+    '<span class="pent">' + (rows.length && done === rows.length ? "Tout est acheté ✓" : rows.length ? "Liste à jour" : "") + '</span>' +
+    '<span class="shpen" aria-hidden="true"><svg class="scrib" viewBox="0 0 100 28"><path d="M2 18 C10 4 16 28 26 14 S40 6 48 16 S62 24 70 12 S84 8 96 16"/></svg>' +
+    '<span class="pen">' + penSvg() + '</span></span></div></div>';
   return h;
 }
 
@@ -3271,6 +3462,8 @@ function vShop() {
   var mTrips = shopTrips(m + "-01", m + "-" + pad(daysIn(m))), wTrips = shopTrips(wk, addDays(wk, 6));
   var mLim = shopLimit(m), wLim = mLim * 7 / daysIn(m);
   var trips = isW ? wTrips : mTrips, lim = isW ? wLim : mLim, spent = shopSum(trips);
+  var fw = shopForecast(m, "week"), fm = shopForecast(m, "month"), fc = lim > 0 ? (isW ? fw : fm) / lim * 100 : 0;
+  var anim = shopAnim; shopAnim = false;
   var pct = lim > 0 ? spent / lim * 100 : 0, over = lim > 0 && spent > lim + 0.004;
   var col = over ? "var(--red)" : pct >= 80 ? "var(--amb)" : "var(--grn)";
   var h = '<div class="dg">';
@@ -3280,23 +3473,35 @@ function vShop() {
     '<div class="card shopbag"><div class="pillseg">' +
     '<button class="' + (isW ? "on" : "") + '" onclick="App.setShopMode(\'week\')">Semaine</button>' +
     '<button class="' + (isW ? "" : "on") + '" onclick="App.setShopMode(\'month\')">Mois</button></div>';
-  if (isW) h += '<div class="wkrow">' + monthWeeks(m).map(function (w) {
-    return '<button class="wk' + (w === wk ? " on" : "") + '" onclick="App.setShopWeek(\'' + w + '\')">' + weekLabel(w) + '</button>';
+  /* En mode mois, chaque semaine garde son verdict : on voit celles qui ont débordé */
+  var wOver = 0;
+  h += '<div class="wkrow">' + monthWeeks(m).map(function (w) {
+    if (isW) return '<button class="wk' + (w === wk ? " on" : "") + '" onclick="App.setShopWeek(\'' + w + '\')">' + weekLabel(w) + '</button>';
+    var ws = shopSum(shopTrips(w, addDays(w, 6))), ov = wLim > 0 && ws > wLim + 0.004;
+    if (ov) wOver++;
+    return '<button class="wk' + (ov ? " bad" : ws > 0 ? " ok" : "") + (w === mondayOf(todayISO()) ? " cur" : "") + '" onclick="App.openShopWeek(\'' + w + '\')" title="Voir cette semaine">' +
+      weekLabel(w) + ' · ' + money(ws) + (ov ? " ⚠" : "") + '</button>';
   }).join("") + '</div>';
-  h += '<div class="bagw">' + bagSvg(pct, shopEmos(trips)) + '</div>' +
+  var proj = !isW && m === curMonth() && spent > 0 ? spent / +todayISO().slice(8, 10) * daysIn(m) : 0;
+  h += '<div class="bagw">' + bagSvg(pct, shopEmos(trips), fc) + '</div>' +
     '<div class="bagnum"><b style="color:' + (lim > 0 ? col : "var(--txt)") + '">' + money(spent) + '</b>' +
     (lim > 0 ? "/ " + money(lim) : "dépensés") + '</div>' +
     '<div class="bagmsg" style="color:' + (over ? "var(--red)" : "var(--mut)") + '">' +
     (lim <= 0 ? "Fixe une limite pour voir le sac se remplir"
       : over ? "Ça déborde de " + money(spent - lim) + " !"
-      : "Encore " + money(lim - spent) + " avant que ça déborde") + '</div>';
+      : "Encore " + money(lim - spent) + " avant que ça déborde") + '</div>' +
+    (!isW && lim > 0 && !over && wOver ? '<div class="bagmsg amb">Le mois tient, mais ' + wOver + ' semaine' + (wOver > 1 ? "s ont" : " a") + ' débordé</div>' : "") +
+    (proj > lim && lim > 0 && !over ? '<div class="bagmsg amb">À ce rythme : ≈ ' + money(proj) + ' fin du mois — ça va déborder</div>' : "");
 
-  var lc = shopListCost(m);
   h += '<div class="shlim"><div class="set"><div><div class="n">Limite courses du mois</div>' +
     '<div class="d">' + (mLim > 0 ? "≈ " + money(wLim) + " par semaine · tout compris" : "Tout compris : nourriture, plaisir, hygiène, soins…") + '</div></div>' +
     '<input inputmode="decimal" placeholder="0" value="' + (mLim || "") + '" onchange="App.setShopLimit(this.value)" onfocus="this.select()" aria-label="Limite courses du mois"></div>' +
-    (lc > 0 ? '<div class="dim" style="font-size:11.5px">Ta liste complète coûte environ <b>' + money(lc) + '</b> par mois' +
-      (mLim > 0 && lc > mLim ? ' — <b class="red">plus que ta limite</b>' : "") + '</div>' : "") + '</div>';
+    '</div>';
+  /* Ce que coûterait ta liste, en euros, avant même d'aller en magasin */
+  if (fw + fm > 0) h += '<div class="shfc"><div><span>Ta liste · semaine</span><b>≈ ' + money(fw) + '</b></div>' +
+    '<div><span>Ta liste · mois</span><b>≈ ' + money(fm) + '</b></div></div>' +
+    (mLim > 0 ? '<div class="bagmsg ' + (fm > mLim ? "red" : "dim") + '" style="width:100%;text-align:left;font-weight:600">' +
+      (fm > mLim ? "Ta liste dépasse ta limite de " + money(fm - mLim) + " sur le mois" : "Marge prévue : ≈ " + money(mLim - fm) + " sur le mois") + '</div>' : "");
 
   if (spent > 0) {
     var K = shopByKind(trips), parts = [];
@@ -3314,10 +3519,11 @@ function vShop() {
   h += '<div class="c7">' + chapter("Ta liste de courses");
   if (!shopData().items.length) h += '<div class="card mb onb"><div class="ttl">Liste vide</div>' +
     '<div class="dim" style="font-size:13px;line-height:1.6">Note une fois ce que tu achètes chaque semaine (pommes ×6, pain…) et chaque mois ' +
-    '(papier toilette, dentifrice…). Les articles se cochent tout seuls quand tu notes tes courses : tu vois d\'un coup d\'œil ce qu\'il manque.</div>' +
+    '(papier toilette, dentifrice…), avec les kg ou litres si tu veux. Tu vois tout de suite combien ça va coûter, et tu coches au fur et à mesure ce que tu as vraiment acheté.</div>' +
     '<button class="cta" style="margin-top:12px;border:none;cursor:pointer;color:var(--ind2);background:var(--ind-soft);padding:9px 16px;border-radius:999px;font-weight:700" onclick="App.shopStarter()">Partir d\'une liste type</button></div>';
-  h += shopListCard("week", wTrips, "Chaque semaine — " + weekLabel(wk)) +
-    shopListCard("month", mTrips, "Chaque mois — " + MN[+m.split("-")[1] - 1]) + '</div>';
+  h += shopListCard("week", wTrips, wk, "Chaque semaine — " + weekLabel(wk), anim) +
+    shopListCard("month", mTrips, m + "-01", "Chaque mois — " + MN[+m.split("-")[1] - 1], anim) + '</div>';
+  shopJust = shopNew = null;
 
   /* --- Les tickets du mois --- */
   var tk = mTrips.slice().sort(function (a, b) { return b.date.localeCompare(a.date); });
@@ -3544,7 +3750,8 @@ function sheetShop() {
     its.forEach(function (it) {
       var miss = Math.max(0, it.qty - shopBought(trips, it));
       h += shLine(it.id, it.e || shopKind(it.kind).e, it.name,
-        miss > 0 ? "il en manque " + fmtQ(miss) : "déjà coché ✓", it.price, t.lines[it.id] || { q: 0, p: 0 });
+        (miss > 0 ? "il en manque " + fmtQ(miss) : "déjà sur un ticket ✓") + (it.size > 0 ? " · " + sizeTxt(it) : ""),
+        it.price, t.lines[it.id] || { q: 0, p: 0 });
     });
   });
   if (t.extra.length) {
@@ -3565,7 +3772,7 @@ function sheetShop() {
 
 function sheetShopItem(it, freq) {
   var isEdit = !!it;
-  it = it || { name: "", e: "", kind: "nourriture", freq: freq || "week", qty: 1, price: 0 };
+  it = it || { name: "", e: "", kind: "nourriture", freq: freq || "week", qty: 1, size: 0, unit: "", price: 0 };
   tmp.si = { kind: it.kind, freq: it.freq };
   var h = sheetHead(isEdit ? "Modifier l'article" : "Nouvel article", "Ta liste de courses") +
     '<label class="lbl">Article</label><div class="two" style="gap:8px">' +
@@ -3578,8 +3785,13 @@ function sheetShopItem(it, freq) {
     '<label class="lbl">Fréquence</label><div class="seg" style="margin-top:0" id="si_freq">' +
     '<button data-f="week" class="' + (it.freq === "week" ? "on i" : "") + '" onclick="App.siFreq(this)">Chaque semaine</button>' +
     '<button data-f="month" class="' + (it.freq === "month" ? "on i" : "") + '" onclick="App.siFreq(this)">Chaque mois</button></div>' +
-    '<div class="two"><div><label class="lbl">Combien</label><input id="si_q" inputmode="decimal" value="' + fmtQ(it.qty) + '"></div>' +
-    '<div><label class="lbl">Prix estimé / unité (opt.)</label><input id="si_p" inputmode="decimal" placeholder="0,00" value="' + (it.price > 0 ? fmtQ(it.price) : "") + '"></div></div>' +
+    '<div class="two"><div><label class="lbl">Quantité</label><input id="si_q" inputmode="decimal" value="' + fmtQ(it.qty) + '"></div>' +
+    '<div><label class="lbl">Poids / volume de chacun (opt.)</label><div class="two" style="gap:6px">' +
+    '<input id="si_s" inputmode="decimal" placeholder="ex : 1" value="' + (it.size > 0 ? fmtQ(it.size) : "") + '">' +
+    '<select id="si_u" aria-label="Unité" style="flex:0 0 74px"><option value="">—</option>' +
+    SHOP_UNITS.map(function (u) { return '<option' + (it.unit === u ? " selected" : "") + '>' + u + '</option>'; }).join("") + '</select></div></div></div>' +
+    '<div class="dim" style="font-size:11.5px;margin-top:6px">Ex. : 6 pommes → quantité 6 · 1,5 kg de pommes → quantité 1, poids 1,5 kg · 2 bouteilles de lait → quantité 2, volume 1 L.</div>' +
+    '<label class="lbl">Prix estimé pour 1 (opt.)</label><input id="si_p" inputmode="decimal" placeholder="0,00" value="' + (it.price > 0 ? fmtQ(it.price) : "") + '">' +
     (isEdit ? '<button class="link" style="margin-top:12px;color:var(--red)" onclick="App.delShopItem(\'' + it.id + '\')">Retirer de la liste</button>' : "") +
     sheetFoot(isEdit ? "Enregistrer" : "Ajouter à la liste", "App.saveShopItem(" + (isEdit ? "'" + it.id + "'" : "null") + ")");
   openSheet(h, { submit: (function (id) { return function () { App.saveShopItem(id); }; })(isEdit ? it.id : null) });
@@ -3779,7 +3991,7 @@ var App = {
     saveAppearance(); render(); toast("Apparence réinitialisée ✓");
   },
 
-  go: function (t) { tab = t; query = ""; fPay = ""; render(); window.scrollTo(0, 0); },
+  go: function (t) { tab = t; query = ""; fPay = ""; if (t === "shop") shopAnim = true; render(); window.scrollTo(0, 0); },
   shift: function (d) { month = shiftM(month, d); render(); },
   goToday: function () { month = curMonth(); render(); },
   pickMonth: function () {
@@ -4130,6 +4342,7 @@ var App = {
   /* courses */
   setShopMode: function (m) { shopMode = m === "month" ? "month" : "week"; render(); },
   setShopWeek: function (w) { shopWeek = w; render(); },
+  openShopWeek: function (w) { shopWeek = w; shopMode = "week"; render(); },
   /* La limite devient l'enveloppe Courses du mois (visible dans Budgets) et le réglage par défaut */
   setShopLimit: function (v) {
     var amt = String(v).trim() === "" ? 0 : num(v);
@@ -4159,24 +4372,49 @@ var App = {
       note: t.note === "Courses" ? "" : (t.note || ""), lines: lines, extra: extra };
     sheetShop();
   },
-  /* Le rond d'un article : ouvre un ticket avec ce qu'il en manque */
+  /* Le rond d'un article : c'est toi qui coches ce que tu as vraiment acheté */
   shopTick: function (id) {
     var it = shopItem(id); if (!it) return;
-    var rg = it.freq === "week" ? [shopWeek, addDays(shopWeek, 6)] : shopRange("month", month + "-01");
-    var miss = it.qty - shopBought(shopTrips(rg[0], rg[1]), it), p = {};
-    p[id] = miss > 0 ? miss : 1;
-    App.newShop(p);
+    var ref = it.freq === "week" ? shopWeek || mondayOf(todayISO()) : month + "-01";
+    var key = periodKey(it.freq, ref), rg = shopRange(it.freq, ref), D = shopData();
+    var trips = shopTrips(rg[0], rg[1]), now = shopChecked(it, key, trips);
+    (D.checks[key] = D.checks[key] || {})[id] = !now;
+    shopJust = id; save(); render(); sfxTap();
+    if (!now && D.items.every(function (x) { return x.freq !== it.freq || shopChecked(x, key, trips); }))
+      toast("Liste " + (it.freq === "week" ? "de la semaine" : "du mois") + " complète ✓");
   },
-  shopMissing: function (freq) {
-    var rg = freq === "week" ? [shopWeek, addDays(shopWeek, 6)] : shopRange("month", month + "-01");
+  /* Ticket prérempli avec ce que tu as coché mais pas encore noté sur un ticket */
+  shopPay: function (freq) {
+    var ref = freq === "week" ? shopWeek : month + "-01", key = periodKey(freq, ref), rg = shopRange(freq, ref);
     var trips = shopTrips(rg[0], rg[1]), p = {}, n = 0;
     shopData().items.forEach(function (it) {
-      if (it.freq !== freq) return;
+      if (it.freq !== freq || !shopChecked(it, key, trips)) return;
       var miss = it.qty - shopBought(trips, it);
       if (miss > 0) { p[it.id] = miss; n++; }
     });
-    if (!n) { toast("Tout est déjà coché ✓"); return; }
+    if (!n) { toast("Tout ce qui est coché est déjà sur un ticket ✓"); return; }
     App.newShop(p);
+  },
+  /* Ajout express : « 6 pommes », « riz 1 kg », « lait 2 L 2,20 € » */
+  shopQuick: function (freq) {
+    var el = document.getElementById("shadd_" + freq), raw = el ? el.value.trim() : "";
+    if (!raw) { if (el) el.focus(); return; }
+    var q = parseQuick(raw);
+    if (!q.name) { toast("⚠️ Écris le nom de l'article"); return; }
+    var D = shopData(), g = guessItem(q.name);
+    var same = D.items.filter(function (x) { return x.freq === freq && x.name.toLowerCase() === q.name.toLowerCase(); })[0];
+    if (same) {
+      same.qty = q.qty;
+      if (q.size) { same.size = q.size; same.unit = q.unit; }
+      if (q.price) same.price = q.price;
+      shopNew = same.id;
+    } else {
+      var it = { id: uid(), name: q.name, e: g.e, kind: g.k, freq: freq, qty: q.qty, size: q.size, unit: q.unit, price: q.price };
+      D.items.push(it); shopNew = it.id;
+    }
+    save(); render();
+    var n = document.getElementById("shadd_" + freq); if (n) n.focus();
+    toast(same ? same.name + " mis à jour ✓" : q.name + " ajouté" + (q.price ? "" : " — touche ✎ pour son prix"));
   },
   shRef: function (k) {
     if (k.indexOf("x:") === 0) return tmp.extra[+k.slice(2)];
@@ -4231,7 +4469,7 @@ var App = {
       if (!r || !(r.q > 0)) return;
       /* sans total saisi, le prix estimé de la liste sert pour les articles sans prix */
       var p = r.p > 0 ? r.p : (!typed && it.price > 0 ? Math.round(it.price * r.q * 100) / 100 : 0);
-      lines.push({ id: it.id, n: it.name, e: it.e || shopKind(it.kind).e, k: it.kind, q: r.q, p: p });
+      lines.push({ id: it.id, n: it.name, e: it.e || shopKind(it.kind).e, k: it.kind, q: r.q, p: p, s: it.size || 0, u: it.unit || "" });
     });
     tmp.extra.forEach(function (x) { if (x.q > 0) lines.push({ id: null, n: x.n, e: x.e, k: x.k, q: x.q, p: x.p || 0 }); });
     var amt = typed ? num(tmp.amount) : lines.reduce(function (a, l) { return a + l.p; }, 0);
@@ -4270,11 +4508,13 @@ var App = {
     var e = document.getElementById("si_e").value.trim();
     document.getElementById("e_si").textContent = "";
     if (!n) { document.getElementById("e_si").textContent = "Nomme l'article"; return; }
-    var it = { id: id || uid(), name: n, e: e, kind: tmp.si.kind, freq: tmp.si.freq, qty: q > 0 ? q : 1, price: p > 0 ? p : 0 };
+    var sz = num(document.getElementById("si_s").value), un = document.getElementById("si_u").value;
+    var it = { id: id || uid(), name: n, e: e, kind: tmp.si.kind, freq: tmp.si.freq, qty: q > 0 ? q : 1,
+      size: sz > 0 && un ? sz : 0, unit: sz > 0 && un ? un : "", price: p > 0 ? p : 0 };
     var D = shopData();
     if (id) D.items = D.items.map(function (x) { return x.id === id ? it : x; });
     else D.items.push(it);
-    save(); App.closeSheet(true); render();
+    shopNew = it.id; save(); App.closeSheet(true); render();
     toast(id ? "Article modifié ✓" : n + " ajouté à ta liste " + (it.freq === "week" ? "de la semaine" : "du mois") + " ✓");
   },
   delShopItem: function (id) {
@@ -4289,10 +4529,10 @@ var App = {
     D.items.forEach(function (it) { have[it.name.toLowerCase()] = 1; });
     SHOP_STARTER.forEach(function (s) {
       if (have[s[0].toLowerCase()]) return;
-      D.items.push({ id: uid(), name: s[0], e: s[1], kind: s[2], freq: s[3], qty: s[4], price: s[5] });
+      D.items.push({ id: uid(), name: s[0], e: s[1], kind: s[2], freq: s[3], qty: s[4], price: s[5], size: s[6], unit: s[7] });
       n++;
     });
-    save(); render(); toast(n + " articles ajoutés — adapte-les à tes habitudes ✓");
+    shopAnim = true; save(); render(); toast(n + " articles ajoutés — adapte-les à tes habitudes ✓");
   },
 
   /* paramètres */
