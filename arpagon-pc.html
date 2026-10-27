@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Arpagon</title>
+<style>
+  html,body{margin:0;height:100%;background:#E8DCC6;color:#3A2B1B;
+    font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif}
+  #msg{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;padding:24px;box-sizing:border-box}
+  #msg b{font-size:22px}
+  #msg span{font-size:14px;color:#6E5A42;max-width:420px;line-height:1.5}
+</style>
+</head>
+<body>
+<div id="msg"><b>Arpagon</b><span>Chargement de la dernière version…</span></div>
+<script>
+/* Lanceur PC d'Arpagon.
+   Ce fichier ne change jamais : à chaque ouverture il va chercher la dernière
+   version de l'app sur GitHub et l'affiche. Une copie est gardée sur le PC,
+   pour que l'app marche aussi sans internet.
+   Tes données restent dans ce navigateur, comme avant : garde ce fichier au
+   même endroit et sous le même nom que l'ancien. */
+(function () {
+  var SRC = "https://raw.githubusercontent.com/mouadjabiera06-jpg/arpagon/main/index.html";
+  var ASSETS = "https://cdn.jsdelivr.net/gh/mouadjabiera06-jpg/arpagon@main/";
+  var DB = "arpagon-lanceur";
+
+  function idb(mode, fn) {
+    return new Promise(function (ok) {
+      try {
+        var r = indexedDB.open(DB, 1);
+        r.onupgradeneeded = function () { r.result.createObjectStore("code"); };
+        r.onsuccess = function () {
+          try {
+            var tx = r.result.transaction("code", mode), q = fn(tx.objectStore("code"));
+            tx.oncomplete = function () { ok(q && q.result); };
+            tx.onerror = tx.onabort = function () { ok(null); };
+          } catch (e) { ok(null); }
+        };
+        r.onerror = function () { ok(null); };
+      } catch (e) { ok(null); }
+    });
+  }
+  var getCache = function () { return idb("readonly", function (s) { return s.get("html"); }); };
+  var setCache = function (h) { return idb("readwrite", function (s) { return s.put(h, "html"); }); };
+
+  function show(html) {
+    /* les images et le manifeste sont pris sur GitHub, pas à côté du fichier */
+    html = html.replace(/<head>/i, '<head><base href="' + ASSETS + '">');
+    document.open(); document.write(html); document.close();
+  }
+  function fail() {
+    document.getElementById("msg").innerHTML = "<b>Arpagon</b><span>Pas d'internet, et aucune version enregistrée sur ce PC pour l'instant. " +
+      "Connecte-toi une première fois, ensuite l'app marchera aussi hors ligne.</span>";
+  }
+
+  var ctl = window.AbortController ? new AbortController() : null;
+  var timer = setTimeout(function () { if (ctl) ctl.abort(); }, 6000);
+  fetch(SRC + "?t=" + Date.now(), { cache: "no-store", signal: ctl ? ctl.signal : undefined })
+    .then(function (r) { if (!r.ok) throw new Error(r.status); return r.text(); })
+    .then(function (html) {
+      clearTimeout(timer);
+      if (html.indexOf("Arpagon") < 0) throw new Error("contenu inattendu");
+      return setCache(html).then(function () { show(html); });
+    })
+    .catch(function () {
+      clearTimeout(timer);
+      getCache().then(function (html) { if (html) show(html); else fail(); });
+    });
+})();
+</script>
+</body>
+</html>
