@@ -3263,6 +3263,25 @@ function shopTrips(from, to, skipId) {
   });
 }
 function shopSum(trips) { return trips.reduce(function (a, t) { return a + t.amount; }, 0); }
+/* Une ligne de ticket est-elle un achat « une fois par mois » ? (article de la liste du mois) */
+function lineMonthly(l) {
+  if (l.f) return l.f === "month";
+  var it = l.id ? shopItem(l.id) : null;
+  return !!it && it.freq === "month";
+}
+function lineCost(l) {
+  if (l.p > 0) return l.p;
+  var it = l.id ? shopItem(l.id) : null;
+  return it ? (it.price || 0) * (l.q || 0) : 0;
+}
+/* Part « semaine » d'un ticket : tout, sauf les articles de la liste du mois.
+   Le sac Semaine ne compte que ça ; le sac Mois compte les tickets en entier. */
+function tripWeek(t) {
+  var mo = 0;
+  (t.lines || []).forEach(function (l) { if (lineMonthly(l)) mo += lineCost(l); });
+  return Math.max(0, t.amount - Math.min(t.amount, mo));
+}
+function shopWeekSum(trips) { return trips.reduce(function (a, t) { return a + tripWeek(t); }, 0); }
 function shopBought(trips, it) {
   var n = 0, nm = it.name.toLowerCase();
   trips.forEach(function (t) {
@@ -3291,19 +3310,23 @@ function shopChecked(it, key, trips) {
   return o === true || o === false ? o : shopBought(trips, it) >= it.qty;
 }
 /* Ventilation par type ; la part des tickets sans prix d'article tombe dans « non détaillé » */
-function shopByKind(trips) {
+function shopByKind(trips, weekOnly) {
   var k = {}, rest = 0;
   trips.forEach(function (t) {
-    var priced = 0;
-    (t.lines || []).forEach(function (l) { if (l.p > 0) { k[l.k] = (k[l.k] || 0) + l.p; priced += l.p; } });
-    if (t.amount - priced > 0.005) rest += t.amount - priced;
+    var priced = 0, tot = weekOnly ? tripWeek(t) : t.amount;
+    (t.lines || []).forEach(function (l) {
+      if (weekOnly && lineMonthly(l)) return;
+      if (l.p > 0) { k[l.k] = (k[l.k] || 0) + l.p; priced += l.p; }
+    });
+    if (tot - priced > 0.005) rest += tot - priced;
   });
   return { k: k, rest: rest };
 }
-function shopEmos(trips) {
+function shopEmos(trips, weekOnly) {
   var out = [];
   trips.forEach(function (t) {
     (t.lines || []).forEach(function (l) {
+      if (weekOnly && lineMonthly(l)) return;
       for (var i = 0; i < Math.min(3, Math.ceil(l.q || 1)); i++) out.push(l.e || shopKind(l.k).e);
     });
   });
@@ -3471,7 +3494,7 @@ function vShop() {
   shopWeek = wk;
   var mTrips = shopTrips(m + "-01", m + "-" + pad(daysIn(m))), wTrips = shopTrips(wk, addDays(wk, 6));
   var mLim = shopLimit(m), wLim = shopWLimit(m);
-  var trips = isW ? wTrips : mTrips, lim = isW ? wLim : mLim, spent = shopSum(trips);
+  var trips = isW ? wTrips : mTrips, lim = isW ? wLim : mLim, spent = isW ? shopWeekSum(trips) : shopSum(trips);
   var F = shopForecast(), fw = F.week, fm = F.total, fc = lim > 0 ? (isW ? fw : fm) / lim * 100 : 0;
   var anim = shopAnim; shopAnim = false;
   var pct = lim > 0 ? spent / lim * 100 : 0, over = lim > 0 && spent > lim + 0.004;
@@ -3487,17 +3510,17 @@ function vShop() {
   var wOver = 0;
   h += '<div class="wkrow">' + monthWeeks(m).map(function (w) {
     if (isW) return '<button class="wk' + (w === wk ? " on" : "") + '" onclick="App.setShopWeek(\'' + w + '\')">' + weekLabel(w) + '</button>';
-    /* seulement les jours de la semaine qui tombent dans ce mois, avec la limite au prorata */
+    /* seulement les jours de la semaine qui tombent dans ce mois, comparés au maximum par semaine */
     var a = w < m + "-01" ? m + "-01" : w, z = addDays(w, 6) > m + "-" + pad(daysIn(m)) ? m + "-" + pad(daysIn(m)) : addDays(w, 6);
-    var nd = Math.round((parseD(z) - parseD(a)) / 864e5) + 1, wl = wLim * nd / 7;
-    var ws = shopSum(shopTrips(a, z)), ov = wl > 0 && ws > wl + 0.004;
+    var nd = Math.round((parseD(z) - parseD(a)) / 864e5) + 1, wl = wLim;
+    var ws = shopWeekSum(shopTrips(a, z)), ov = wl > 0 && ws > wl + 0.004;
     if (ov) wOver++;
     var lb = a.slice(5, 7) === z.slice(5, 7) && a.slice(8) !== z.slice(8) ? +a.slice(8, 10) + "–" + +z.slice(8, 10) + " " + MN3[+z.slice(5, 7) - 1] : weekLabel(w);
     return '<button class="wk' + (ov ? " bad" : ws > 0 ? " ok" : "") + (w === mondayOf(todayISO()) ? " cur" : "") + '" onclick="App.openShopWeek(\'' + w + '\')" ' +
-      'title="' + money(ws) + ' sur ' + money(wl) + ' prévus pour ces ' + nd + ' jours">' + lb + ' · ' + money(ws) + (ov ? " ⚠" : "") + '</button>';
+      'title="' + money(ws) + ' sur ' + money(wl) + ' max (' + nd + ' jours dans ce mois)">' + lb + ' · ' + money(ws) + (ov ? " ⚠" : "") + '</button>';
   }).join("") + '</div>';
   var proj = !isW && m === curMonth() && spent > 0 ? spent / +todayISO().slice(8, 10) * daysIn(m) : 0;
-  h += '<div class="bagw">' + bagSvg(pct, shopEmos(trips), fc) + '</div>' +
+  h += '<div class="bagw">' + bagSvg(pct, shopEmos(trips, isW), fc) + '</div>' +
     '<div class="bagnum"><b style="color:' + (lim > 0 ? col : "var(--txt)") + '">' + money(spent) + '</b>' +
     (lim > 0 ? "/ " + money(lim) : "dépensés") + '</div>' +
     '<div class="bagmsg" style="color:' + (over ? "var(--red)" : "var(--mut)") + '">' +
@@ -3506,10 +3529,6 @@ function vShop() {
       : "Encore " + money(lim - spent) + " avant que ça déborde") + '</div>' +
     (!isW && lim > 0 && !over && wOver ? '<div class="bagmsg amb">Le mois tient, mais ' + wOver + ' semaine' + (wOver > 1 ? "s ont" : " a") + ' débordé</div>' : "") +
     (lim > 0 && !over && fc > 100 ? '<div class="bagmsg amb">Ta liste ferait déborder le sac de ≈ ' + money((isW ? fw : fm) - lim) + ' (en transparence)</div>' : "") +
-    (isW && monthOf(wk) !== monthOf(addDays(wk, 6)) && shopSum(shopTrips(wk, monthOf(wk) + "-" + pad(daysIn(monthOf(wk))))) > 0 &&
-      shopSum(shopTrips(monthOf(addDays(wk, 6)) + "-01", addDays(wk, 6))) > 0 ? '<div class="bagmsg dim" style="font-weight:600">Semaine à cheval : ' +
-      money(shopSum(shopTrips(wk, monthOf(wk) + "-" + pad(daysIn(monthOf(wk)))))) + ' en ' + MN[+wk.slice(5, 7) - 1] + ', ' +
-      money(shopSum(shopTrips(monthOf(addDays(wk, 6)) + "-01", addDays(wk, 6)))) + ' en ' + MN[+addDays(wk, 6).slice(5, 7) - 1] + '</div>' : "") +
     (proj > lim && lim > 0 && !over ? '<div class="bagmsg amb">À ce rythme : ≈ ' + money(proj) + ' fin du mois — ça va déborder</div>' : "");
 
   var D0 = shopData(), sug = D0.wlimit ? Math.round((D0.wlimit * SHOP_WEEKS + F.month) * 100) / 100 : 0;
@@ -3532,7 +3551,7 @@ function vShop() {
       (fm > mLim ? "Ta liste dépasse ta limite de " + money(fm - mLim) + " sur le mois" : "Marge prévue : ≈ " + money(mLim - fm) + " sur le mois") + '</div>' : "");
 
   if (spent > 0) {
-    var K = shopByKind(trips), parts = [];
+    var K = shopByKind(trips, isW), parts = [];
     SHOP_KINDS.forEach(function (x) { if (K.k[x.id]) parts.push({ n: x.e + " " + x.n, v: K.k[x.id], c: x.c }); });
     if (K.rest > 0.005) parts.push({ n: "Non détaillé", v: K.rest, c: "var(--line2)" });
     h += '<div class="shk"><div class="lbl" style="margin-top:4px">Ce qu\'il y a dans le sac</div><div class="shbar">' +
@@ -4503,7 +4522,7 @@ var App = {
       if (!r || !(r.q > 0)) return;
       /* sans total saisi, le prix estimé de la liste sert pour les articles sans prix */
       var p = r.p > 0 ? r.p : (!typed && it.price > 0 ? Math.round(it.price * r.q * 100) / 100 : 0);
-      lines.push({ id: it.id, n: it.name, e: it.e || shopKind(it.kind).e, k: it.kind, q: r.q, p: p, s: it.size || 0, u: it.unit || "" });
+      lines.push({ id: it.id, n: it.name, e: it.e || shopKind(it.kind).e, k: it.kind, f: it.freq, q: r.q, p: p, s: it.size || 0, u: it.unit || "" });
     });
     tmp.extra.forEach(function (x) { if (x.q > 0) lines.push({ id: null, n: x.n, e: x.e, k: x.k, q: x.q, p: x.p || 0 }); });
     var amt = typed ? num(tmp.amount) : lines.reduce(function (a, l) { return a + l.p; }, 0);
@@ -4518,8 +4537,10 @@ var App = {
     else S.transactions.push(tx);
     save(); App.closeSheet(true); render();
     var m = monthOf(tx.date), lim = shopLimit(m), sp = shopSum(shopTrips(m + "-01", m + "-" + pad(daysIn(m))));
-    if (lim > 0 && sp > lim) toast("⚠️ " + bagName() + " déborde de " + money(sp - lim) + " ce mois-ci");
-    else toast((wasEdit ? "Ticket modifié ✓" : "Dans le sac ✓") + (lim > 0 ? " · encore " + money(lim - sp) + " ce mois" : ""));
+    var w0 = mondayOf(tx.date), wsp = shopWeekSum(shopTrips(w0, addDays(w0, 6))), wl = shopWLimit(m);
+    if (lim > 0 && sp > lim) toast("⚠️ " + bagName() + " du mois déborde de " + money(sp - lim));
+    else if (wl > 0 && wsp > wl) toast("⚠️ Semaine dépassée : " + money(wsp) + " / " + money(wl));
+    else toast((wasEdit ? "Ticket modifié ✓" : "Dans le sac ✓") + (wl > 0 ? " · semaine " + money(wsp) + " / " + money(wl) : ""));
   },
   newShopItem: function (freq) { sheetShopItem(null, freq); },
   editShopItem: function (id) { var it = shopItem(id); if (it) sheetShopItem(it); },
