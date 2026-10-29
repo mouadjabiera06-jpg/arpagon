@@ -1,0 +1,9 @@
+{
+  "name": "arpagon",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --no-warnings --test tests/server.test.mjs",
+    "serveur:deployer": "cd server && npx wrangler deploy"
+  }
+}

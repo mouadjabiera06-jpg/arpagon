@@ -1,0 +1,23 @@
+name = "arpagon-api"
+main = "worker.js"
+compatibility_date = "2026-10-01"
+
+# Ménage quotidien (jetons et sessions expirés) à 4 h UTC
+[triggers]
+crons = ["0 4 * * *"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "arpagon"
+database_id = "À_REMPLACER_par_l_identifiant_donné_par_wrangler_d1_create"
+
+[vars]
+# Adresse publique de l'app, avec le / final
+APP_URL = "https://mouadjabiera06-jpg.github.io/arpagon/"
+# Origines autorisées à appeler le serveur (séparées par des virgules)
+APP_ORIGINS = "https://mouadjabiera06-jpg.github.io"
+# Identifiants des prix Stripe (Produits > Arpagon Premium > Prix)
+PRICE_MONTHLY = "price_A_REMPLACER"
+PRICE_YEARLY = "price_A_REMPLACER"
+# Expéditeur des e-mails (domaine vérifié dans Resend)
+MAIL_FROM = "Arpagon <connexion@A_REMPLACER.fr>"

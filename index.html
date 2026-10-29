@@ -2,6 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://cdn.jsdelivr.net; connect-src 'self' https://*.workers.dev; manifest-src 'self' https://cdn.jsdelivr.net; worker-src 'self'; object-src 'none'; base-uri 'self' https://cdn.jsdelivr.net; form-action 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#E8DCC6">
 <title>Arpagon</title>
@@ -979,6 +980,7 @@ html.wp .hero{backdrop-filter:blur(var(--glass-blur)) saturate(1.4);-webkit-back
 .pillseg button.on{background:var(--card);color:var(--txt);box-shadow:var(--sh)}
 .pillseg button.on.g{color:var(--grn)}.pillseg button.on.a{color:var(--amb)}
 .err{color:var(--red);font-size:12px;margin-top:5px}
+.card a{color:var(--ind2);text-underline-offset:2px}
 .tag{font-size:11px;font-weight:700;border-radius:999px;padding:4px 11px;border:1px solid var(--line2);color:var(--mut);white-space:nowrap}
 button.tag:hover{border-color:var(--dim);color:var(--txt)}
 .tag.h{color:var(--red);border-color:rgba(251,113,133,.45);background:var(--red-soft)}
@@ -1985,6 +1987,159 @@ function guessCat(label, isCredit) {
   return isCredit ? "autres-rev" : "divers";
 }
 
+/* ---------- COMPTE & PREMIUM (serveur Arpagon) ----------
+   Premium = sauvegarde en ligne chiffrée + synchro entre appareils.
+   Tout le reste de l'app marche sans compte, en local. */
+var API = "";   /* À renseigner après déploiement, ex. "https://arpagon-api.TONCOMPTE.workers.dev" */
+var PRICES = { monthly: "3,99 €/mois", yearly: "29,99 €/an" };
+var SES_KEY = "budgetv2:session", SYNC_KEY = "budgetv2:syncAt", DIRTY_KEY = "budgetv2:dirty";
+var ACC = { me: null, busy: false, conflict: false, lastSync: 0, cgv: false };
+var cloudT = null;
+
+function apiFetch(path, opts) {
+  if (!API) return Promise.reject(new Error("api_off"));
+  opts = Object.assign({}, opts || {});
+  var h = Object.assign({}, opts.headers || {}), tok = LS.get(SES_KEY);
+  if (tok) h.Authorization = "Bearer " + tok;
+  if (opts.body && typeof opts.body !== "string") { h["Content-Type"] = "application/json"; opts.body = JSON.stringify(opts.body); }
+  opts.headers = h;
+  return fetch(API + path, opts).then(function (r) {
+    return r.json().catch(function () { return {}; }).then(function (j) {
+      if (r.status === 401 && tok) { LS.del(SES_KEY); ACC.me = null; render(); }
+      if (!r.ok) { var e = new Error(j.error || "http_" + r.status); e.status = r.status; e.data = j; throw e; }
+      return j;
+    });
+  });
+}
+function isPremium() { return !!(ACC.me && ACC.me.premium); }
+function accErr(e) {
+  var m = { email_invalide: "Adresse e-mail invalide", trop_de_demandes: "Trop de tentatives, réessaie dans une heure",
+    lien_expire: "Lien expiré ou déjà utilisé, demandes-en un nouveau", premium_requis: "Réservé au Premium",
+    cgv_non_acceptees: "Coche l'acceptation des CGV", api_off: "Serveur pas encore disponible" };
+  toast("⚠️ " + (m[e && e.message] || (e && e.status ? "Le serveur a refusé la demande" : "Serveur injoignable, vérifie ta connexion")));
+}
+/* Tout ce qui part en ligne : chaque profil + l'apparence (sans le fond d'écran, trop lourd) */
+function bundle() {
+  saveNow();
+  var b = { v: 1, at: Date.now(), profiles: { list: PROFILES, active: PID }, data: {}, appearance: AP };
+  PROFILES.forEach(function (p) {
+    var raw = LS.get(p.id === "main" ? "budgetv2:data" : "budgetv2:data:" + p.id);
+    if (raw) { try { b.data[p.id] = JSON.parse(raw); } catch (e) {} }
+  });
+  return b;
+}
+function applyBundle(b) {
+  if (!b || !b.profiles || !b.data) throw new Error("format");
+  PROFILES = b.profiles.list && b.profiles.list.length ? b.profiles.list : [{ id: "main", name: "Principal" }];
+  PID = PROFILES.some(function (p) { return p.id === b.profiles.active; }) ? b.profiles.active : PROFILES[0].id;
+  PROFILES.forEach(function (p) {
+    if (b.data[p.id]) LS.set(p.id === "main" ? "budgetv2:data" : "budgetv2:data:" + p.id, JSON.stringify(normalize(b.data[p.id])));
+  });
+  saveMeta();
+  if (b.appearance) { AP = Object.assign(JSON.parse(JSON.stringify(AP_DEF)), b.appearance); LS.set(AP_KEY, JSON.stringify(AP)); applyAppearance(); }
+  loadData();
+}
+function hasLocalData() {
+  return PROFILES.some(function (p) {
+    try { var d = JSON.parse(LS.get(p.id === "main" ? "budgetv2:data" : "budgetv2:data:" + p.id) || "null"); return !!(d && d.transactions && d.transactions.length); }
+    catch (e) { return false; }
+  });
+}
+function markDirty() { LS.set(DIRTY_KEY, "1"); }
+function cloudSoon() {
+  if (!API || !isPremium() || ACC.conflict) return;
+  clearTimeout(cloudT);
+  cloudT = setTimeout(function () { cloudPush(false); }, 4000);
+}
+function cloudPush(manual, force) {
+  if (!isPremium()) return Promise.resolve();
+  clearTimeout(cloudT);
+  ACC.busy = true; if (manual) render();
+  var base = LS.get(SYNC_KEY);
+  return apiFetch("/backup", { method: "PUT", body: { data: bundle(), base: base ? +base : null, force: !!force } })
+    .then(function (j) {
+      LS.set(SYNC_KEY, String(j.updatedAt)); LS.del(DIRTY_KEY);
+      ACC.busy = false; ACC.conflict = false; ACC.lastSync = Date.now();
+      if (manual) { render(); toast("Sauvegardé en ligne ✓"); }
+    })
+    .catch(function (e) {
+      ACC.busy = false;
+      if (e.status === 409) { ACC.conflict = true; render(); toast("⚠️ Données modifiées sur un autre appareil — choisis quelle version garder dans Paramètres"); }
+      else { if (manual) render(); if (manual) accErr(e); }
+    });
+}
+function cloudPull(manual) {
+  ACC.busy = true; if (manual) render();
+  return apiFetch("/backup").then(function (j) {
+    ACC.busy = false;
+    if (!j.data) { if (manual) { render(); toast("Aucune sauvegarde en ligne pour l'instant"); } return; }
+    applyBundle(j.data);
+    LS.set(SYNC_KEY, String(j.updatedAt)); LS.del(DIRTY_KEY);
+    ACC.conflict = false; ACC.lastSync = Date.now();
+    render(); toast("Données récupérées depuis ta sauvegarde en ligne ✓");
+  }).catch(function (e) { ACC.busy = false; render(); accErr(e); });
+}
+/* Au démarrage : on compare la sauvegarde en ligne et cet appareil */
+function cloudCheck() {
+  if (!isPremium()) return;
+  apiFetch("/backup?meta=1").then(function (j) {
+    var local = +(LS.get(SYNC_KEY) || 0), dirty = !!LS.get(DIRTY_KEY);
+    if (!j.updatedAt) { cloudPush(false); return; }
+    /* Nouvel appareil sans rien de saisi : on récupère simplement la sauvegarde */
+    if (!local && !hasLocalData()) { cloudPull(false); return; }
+    if (j.updatedAt > local) { if (dirty || !local) { ACC.conflict = true; render(); } else cloudPull(false); }
+    else if (dirty) cloudPush(false);
+  }).catch(function () {});
+}
+function accountInit() {
+  if (!API || !LS.get(SES_KEY)) return;
+  apiFetch("/me").then(function (j) { ACC.me = j.me; render(); cloudCheck(); }).catch(function () {});
+}
+
+function fmtDay(sec) { var d = new Date(sec * 1000); return d.getDate() + " " + MN[d.getMonth()] + " " + d.getFullYear(); }
+function vAccount() {
+  var h = '<div class="card mb"><div class="ttl">Compte & Premium</div>';
+  if (!API) {
+    return h + '<div class="d" style="font-size:12.5px;color:var(--dim);line-height:1.65">Bientôt : <b>Arpagon Premium</b> — sauvegarde en ligne chiffrée et synchro entre ton téléphone et ton ordinateur. ' +
+      'En attendant, tout reste sur cet appareil : pense à exporter ta sauvegarde.</div></div>';
+  }
+  if (!LS.get(SES_KEY)) {
+    return h + '<div class="d" style="font-size:12.5px;color:var(--dim);line-height:1.65;margin-top:-4px">Crée un compte (gratuit) pour passer Premium : sauvegarde en ligne chiffrée et synchro entre appareils. Pas de mot de passe : tu reçois un lien par e-mail.</div>' +
+      '<label class="lbl" for="acc_mail">Ton e-mail</label><input id="acc_mail" type="email" inputmode="email" autocomplete="email" placeholder="toi@exemple.fr">' +
+      '<button class="btn" style="margin-top:12px"' + (ACC.busy ? " disabled" : "") + ' onclick="App.accLogin()">' + (ACC.busy ? "Envoi…" : "Recevoir mon lien de connexion") + '</button>' +
+      '<div class="dim" style="font-size:11.5px;margin-top:9px;line-height:1.6">Ton e-mail sert uniquement à te connecter. <a href="confidentialite.html" target="_blank" rel="noopener">Confidentialité</a></div></div>';
+  }
+  var me = ACC.me;
+  if (!me) return h + '<div class="dim" style="font-size:12.5px">Connexion au serveur…</div></div>';
+  h += '<div class="set"><div><div class="n">' + esc(me.email) + '</div><div class="d">' + (me.premium ? "Premium" : "Compte gratuit") + '</div></div>' +
+    '<button class="link" onclick="App.accLogout()">Se déconnecter</button></div>';
+  if (!me.premium) {
+    h += '<div class="d" style="font-size:12.5px;line-height:1.65;margin:10px 0">Premium : sauvegarde en ligne chiffrée, synchro automatique entre tes appareils, et tu soutiens un projet étudiant indépendant. Sans engagement, résiliable en ligne à tout moment.</div>' +
+      '<label style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px;line-height:1.55;margin:8px 0 12px">' +
+      '<input type="checkbox" id="acc_cgv"' + (ACC.cgv ? " checked" : "") + ' onchange="App.accCgv(this.checked)" style="margin-top:3px;width:auto">' +
+      '<span>J\'accepte les <a href="cgv.html" target="_blank" rel="noopener">CGV/CGU</a> et je demande que le service commence dès le paiement.</span></label>' +
+      '<div class="two"><button class="btn" onclick="App.accBuy(\'monthly\')">' + PRICES.monthly + '</button>' +
+      '<button class="btn" onclick="App.accBuy(\'yearly\')">' + PRICES.yearly + '</button></div>';
+  } else {
+    var end = me.periodEnd ? fmtDay(me.periodEnd) : "";
+    h += '<div class="d" style="font-size:12.5px;margin:8px 0">' + (me.plan === "yearly" ? "Formule annuelle" : "Formule mensuelle") +
+      (end ? (me.cancelAtEnd ? " · se termine le " + end : " · renouvellement le " + end) : "") +
+      (me.status === "past_due" ? ' · <span class="red">paiement en échec, mets ta carte à jour</span>' : "") + '</div>';
+    if (ACC.conflict) {
+      h += '<div class="err" style="margin:10px 0">Tes données ont changé ici ET sur un autre appareil. Quelle version garder ?</div>' +
+        '<div class="two"><button class="btn ghost" onclick="App.accKeepCloud()">Celle en ligne</button><button class="btn ghost" onclick="App.accKeepLocal()">Celle de cet appareil</button></div>';
+    } else {
+      h += '<div class="d" style="font-size:12px;color:var(--dim)">' + (ACC.busy ? "Synchronisation…" : LS.get(DIRTY_KEY) ? "Modifications en attente d'envoi" : "À jour avec ta sauvegarde en ligne ✓") + '</div>' +
+        '<div class="two" style="margin-top:10px"><button class="btn ghost"' + (ACC.busy ? " disabled" : "") + ' onclick="App.accPush()">Sauvegarder maintenant</button>' +
+        '<button class="btn ghost"' + (ACC.busy ? " disabled" : "") + ' onclick="App.accPull()">Récupérer en ligne</button></div>';
+    }
+    h += '<button class="btn ghost" style="margin-top:10px" onclick="App.accPortal()">Gérer ou résilier mon abonnement</button>';
+  }
+  h += '<div class="set" style="border-bottom:none;margin-top:6px"><div class="d">Supprimer le compte et la sauvegarde en ligne</div>' +
+    '<button class="link red" onclick="App.accDelete()">Supprimer</button></div>';
+  return h + '</div>';
+}
+
 /* ---------- APPARENCE ---------- */
 var THEMES = [
   { id: "taverne", n: "Taverne",      p: ["#E8DCC6", "#FBF5E9", "#C1782A"], acc: "cannelle",
@@ -2196,6 +2351,7 @@ function save() {
   saveT = setTimeout(function () {
     if (!LS.set(PID === "main" ? "budgetv2:data" : "budgetv2:data:" + PID, JSON.stringify(S)))
       toast("⚠️ Enregistrement impossible");
+    else { markDirty(); cloudSoon(); }
   }, 350);
 }
 function saveNow() { clearTimeout(saveT); LS.set(PID === "main" ? "budgetv2:data" : "budgetv2:data:" + PID, JSON.stringify(S)); }
@@ -3028,7 +3184,7 @@ function vSet() {
     ["€", "$", "£", "CHF", "AU$"].map(function (c) { return '<option' + (S.settings.currency === c ? " selected" : "") + '>' + c + '</option>'; }).join("") + '</select></div>' +
     '<div class="set"><div><div class="n">Objectif d\'épargne / mois</div></div><input inputmode="decimal" value="' + S.settings.monthlyGoal + '" onchange="App.setGoalAmt(this.value)" aria-label="Objectif d\'épargne"></div>' +
     '<div class="set"><div><div class="n">Alerte si reste sous</div></div><input inputmode="decimal" value="' + S.settings.alertThreshold + '" onchange="App.setAlert(this.value)" aria-label="Seuil d\'alerte"></div></div>' +
-    vAppearance() +
+    vAccount() + vAppearance() +
     '<div class="card"><div class="ttl">Données</div>' +
     '<div class="set"><div><div class="n">Exporter la sauvegarde</div><div class="d">Fichier JSON complet</div></div><button class="link" onclick="App.exportJSON()">Télécharger</button></div>' +
     '<div class="set"><div><div class="n">Restaurer une sauvegarde</div><div class="d">Depuis un fichier JSON</div></div><button class="link" onclick="App.pick(\'json\')">Choisir</button></div>' +
@@ -3044,7 +3200,8 @@ function vSet() {
   h += '<div class="card dim" style="font-size:12.5px;line-height:1.8">' +
     '<b class="ind">Raccourcis clavier</b><br>N — nouvelle opération · ← / → — changer de mois · Échap — fermer<br><br>' +
     'Tes données sont enregistrées automatiquement sur cet appareil, dans ce navigateur. ' +
-    'Ne déplace pas le fichier après le premier usage, et fais un export JSON régulier.</div></div></div>';
+    'Ne déplace pas le fichier après le premier usage, et fais un export JSON régulier.' +
+    '<br><br><a href="mentions-legales.html" target="_blank" rel="noopener">Mentions légales</a> · <a href="confidentialite.html" target="_blank" rel="noopener">Confidentialité</a> · <a href="cgv.html" target="_blank" rel="noopener">CGV / CGU</a></div></div></div>';
   h += '<input type="file" id="fileIn" style="display:none" onchange="App.onFile(event)">';
   return h;
 }
@@ -3795,6 +3952,43 @@ var App = {
     openSheet(h, { wide: true, guard: false });
   },
 
+  /* ----- Compte & Premium ----- */
+  accLogin: function () {
+    var el = document.getElementById("acc_mail"), m = el ? el.value.trim() : "";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(m)) { toast("⚠️ Adresse e-mail invalide"); return; }
+    ACC.busy = true; render();
+    apiFetch("/auth/request", { method: "POST", body: { email: m } })
+      .then(function () { ACC.busy = false; render(); toast("📬 Lien envoyé à " + m + " — ouvre-le sur cet appareil"); })
+      .catch(function (e) { ACC.busy = false; render(); accErr(e); });
+  },
+  accLogout: function () {
+    apiFetch("/logout", { method: "POST" }).catch(function () {}).then(function () {
+      LS.del(SES_KEY); LS.del(SYNC_KEY); ACC.me = null; ACC.conflict = false; render(); toast("Déconnecté — tes données restent sur cet appareil");
+    });
+  },
+  accCgv: function (v) { ACC.cgv = !!v; },
+  accBuy: function (plan) {
+    if (!ACC.cgv) { toast("⚠️ Coche l'acceptation des CGV avant de payer"); return; }
+    apiFetch("/billing/checkout", { method: "POST", body: { plan: plan, acceptCgv: true } })
+      .then(function (j) { if (j.url) location.href = j.url; }).catch(accErr);
+  },
+  accPortal: function () {
+    apiFetch("/billing/portal", { method: "POST" }).then(function (j) { if (j.url) location.href = j.url; }).catch(accErr);
+  },
+  accPush: function () { cloudPush(true); },
+  accPull: function () {
+    sheetConfirm("Récupérer la version en ligne ?", "Les données de cet appareil seront remplacées par ta dernière sauvegarde en ligne.", "Récupérer", function () { cloudPull(true); });
+  },
+  accKeepCloud: function () { cloudPull(true); },
+  accKeepLocal: function () { cloudPush(true, true); },
+  accDelete: function () {
+    sheetConfirm("Supprimer ton compte ?", "Ton compte, ta sauvegarde en ligne et ton abonnement éventuel sont supprimés définitivement. Les données de cet appareil restent.", "Supprimer", function () {
+      apiFetch("/account", { method: "DELETE" }).then(function () {
+        LS.del(SES_KEY); LS.del(SYNC_KEY); ACC.me = null; render(); toast("Compte supprimé");
+      }).catch(accErr);
+    });
+  },
+
   /* ----- Apparence ----- */
   setTheme: function (id) {
     AP.theme = id;
@@ -4372,6 +4566,7 @@ var App = {
   exportJSON: function () {
     saveNow();
     dl(JSON.stringify(S, null, 2), "arpagon-" + PID + "-" + todayISO() + ".json", "application/json");
+    LS.set("budgetv2:lastexport", String(Date.now()));
     toast("Sauvegarde exportée ✓");
   },
   exportCSV: function () {
@@ -4557,8 +4752,31 @@ function loadData() {
   }
 }
 
+/* Retours : lien de connexion (#login=…) et paiement Stripe (#premium=ok / annule) */
+function handleHash() {
+  var hash = location.hash;
+  if (/login=|premium=/.test(hash)) { try { history.replaceState(null, "", location.pathname + location.search); } catch (e) {} }
+  var lm = hash.match(/login=([A-Za-z0-9_-]+)/);
+  if (lm && API) {
+    apiFetch("/auth/verify", { method: "POST", body: { token: lm[1] } }).then(function (j) {
+      LS.set(SES_KEY, j.session); ACC.me = j.me; render(); toast("Connecté ✓");
+      cloudCheck();
+    }).catch(accErr);
+  }
+  var pm = hash.match(/premium=(\w+)/);
+  if (pm && pm[1] === "ok") {
+    setTimeout(function () { toast("🎉 Bienvenue dans Premium ! Ta sauvegarde en ligne s'active"); }, 600);
+    /* le webhook Stripe peut avoir quelques secondes de retard */
+    [1500, 5000, 12000].forEach(function (ms) {
+      setTimeout(function () { if (!isPremium()) apiFetch("/me").then(function (j) { ACC.me = j.me; render(); if (isPremium()) cloudCheck(); }).catch(function () {}); }, ms);
+    });
+  } else if (pm) setTimeout(function () { toast("Paiement annulé, rien n'a été débité"); }, 600);
+}
+
 function boot() {
   loadAppearance();
+  handleHash();
+  window.addEventListener("hashchange", handleHash);
   month = curMonth();
   try {
     var meta = JSON.parse(LS.get("budgetv2:profiles") || "null");
@@ -4615,6 +4833,17 @@ function boot() {
     else if (e.key === "ArrowRight" && !MONTHLESS[tab]) App.shift(1);
     else if (e.key === "Escape") App.closeSheet(true);
   });
+  accountInit();
+  /* Hors-ligne : seulement depuis une vraie adresse web (pas le lanceur PC) */
+  if ("serviceWorker" in navigator && location.protocol === "https:") {
+    try { navigator.serviceWorker.register("sw.js").catch(function () {}); } catch (e) {}
+  }
+  /* Rappel d'export : sans Premium, tout est sur cet appareil */
+  setTimeout(function () {
+    if (isPremium() || S.transactions.length < 10) return;
+    var le = +(LS.get("budgetv2:lastexport") || 0);
+    if (Date.now() - le > 15 * 86400000) toast("💾 Pense à exporter ta sauvegarde : tes données ne sont que sur cet appareil", "Exporter", function () { App.exportJSON(); });
+  }, 4000);
   if (!LS.set("budgetv2:test", "1")) setTimeout(function () { toast("⚠️ Le navigateur bloque l'enregistrement local"); }, 1500);
   else LS.del("budgetv2:test");
 }
