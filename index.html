@@ -67,6 +67,32 @@ html[data-theme="creme"]{
   --sh:0 1px 2px rgba(80,60,30,.08); --sh-md:0 4px 16px rgba(80,60,30,.12); --sh-lg:0 20px 50px rgba(80,60,30,.20);
 }
 
+/* Thèmes Arpagon+ (Premium) */
+html[data-theme="aurore"]{
+  --s-bg:#071419; --s-bg2:#0A1B22; --s-card:#0F232C; --s-card2:#142D38; --s-card3:#1B3946;
+  --line:#173440; --line2:#24505F; --txt:#E8FBF6; --mut:#9CC9C0; --dim:#76A39C;
+  --glow:0 0 0 1px rgba(124,245,200,.10),0 0 26px rgba(124,245,200,.10);
+}
+html[data-theme="aurore"] .hero{background-image:radial-gradient(120% 90% at 0% 0%,rgba(124,245,200,.16),transparent 60%),radial-gradient(90% 80% at 100% 0%,rgba(168,85,247,.16),transparent 60%)}
+html[data-theme="sakura"]{
+  --s-bg:#FBF1F3; --s-bg2:#FFF8F9; --s-card:#FFFBFC; --s-card2:#FCEFF2; --s-card3:#F6E1E7;
+  --line:#F0D9DF; --line2:#E2BFC9; --txt:#2A1A20; --mut:#73525C; --dim:#9A7A84;
+  --red:#D6336C; --grn:#2F855A; --amb:#B7791F; --tea:#2C7A7B; --vio:#805AD5;
+  --grn-soft:rgba(47,133,90,.10); --amb-soft:rgba(183,121,31,.12); --red-soft:rgba(214,51,108,.10);
+  --sh:0 1px 2px rgba(120,40,70,.07); --sh-md:0 4px 16px rgba(120,40,70,.10); --sh-lg:0 20px 50px rgba(120,40,70,.16);
+}
+html[data-theme="royal"]{
+  --s-bg:#0B0906; --s-bg2:#110E09; --s-card:#17130C; --s-card2:#1F1A10; --s-card3:#2A2316;
+  --line:#2C2414; --line2:#45391F; --txt:#F7EEDC; --mut:#C9B78F; --dim:#9C8A64;
+  --glow:0 0 0 1px rgba(232,197,92,.14),0 0 22px rgba(232,197,92,.08);
+}
+html[data-theme="royal"] .card,html[data-theme="royal"] .hero{border-color:rgba(232,197,92,.28)}
+html[data-theme="royal"] .brand b{background:linear-gradient(90deg,#E8C55C,#FFF1C1,#D4AF37);-webkit-background-clip:text;background-clip:text;color:transparent}
+.thc .pl,.acc .pl{position:absolute;top:6px;right:6px;font-size:10px;font-weight:800;letter-spacing:.04em;padding:2px 6px;border-radius:99px;background:var(--ind);color:#fff}
+.thc{position:relative}.acc{position:relative}
+.acc .pl{top:-6px;right:-6px;padding:1px 4px;font-size:9px}
+.thc.lock,.acc.lock{opacity:.72}
+
 /* ===================== ACCENTS ===================== */
 /* ===================== UNIVERS ===================== */
 /* Ces trois thèmes ne changent pas que les couleurs : police, arrondis,
@@ -216,6 +242,9 @@ html[data-theme="cyberpunk"] .brand b{text-shadow:0 0 8px currentColor}
 html[data-theme="cyberpunk"] .qic,html[data-theme="cyberpunk"] .spend .sic,
 html[data-theme="cyberpunk"] .lvbadge{border-radius:2px}
 
+html[data-accent="aurore"]{ --ind:#2BD4A4; --ind2:#7CF5C8; --ind-soft:rgba(43,212,164,.15) }
+html[data-accent="corail"]{ --ind:#FF6B4A; --ind2:#FF9A7E; --ind-soft:rgba(255,107,74,.14) }
+html[data-accent="platine"]{ --ind:#A7B0C0; --ind2:#D5DBE5; --ind-soft:rgba(167,176,192,.16) }
 html[data-accent="indigo"]{ --ind:#6366F1; --ind2:#818CF8; --ind-soft:rgba(99,102,241,.13) }
 html[data-accent="emeraude"]{ --ind:#10B981; --ind2:#34D399; --ind-soft:rgba(16,185,129,.14) }
 html[data-accent="ambre"]{ --ind:#F59E0B; --ind2:#FBBF24; --ind-soft:rgba(245,158,11,.15) }
@@ -816,7 +845,7 @@ html[data-theme="clair"],html[data-theme="creme"]{--trim-lg:#FFFFFF}
 @media(min-width:1500px){.wrap{padding:28px 40px}.dg{gap:16px}}
 /* Zone 960-1199 : la grille dashboard se réorganise pour éviter les colonnes trop étroites */
 @media(min-width:960px) and (max-width:1199px){
-  .c8{grid-column:span 12}.c5{grid-column:span 6}.c4{grid-column:span 6}.c3{grid-column:span 12}
+  .c8{grid-column:span 12}.c7{grid-column:span 6}.c5{grid-column:span 6}.c4{grid-column:span 6}.c3{grid-column:span 12}
   .cdefi{grid-column:span 12}.defi{height:auto}
 }
 /* Petits mobiles : la topbar reste intacte */
@@ -1308,7 +1337,10 @@ var MASCOTS = {
   synthwave: { skin: "#F8D4BC", sh: "#E6B49A", hair: "#FF2E97", hair2: "#FF6EC7", out: "#7B2CBF", out2: "#00E5FF", trim: "#FFE066", legs: "#2B1450" },
   boise:     { skin: "#EDC59B", sh: "#D8A878", hair: "#6B3F1D", hair2: "#8A5427", out: "#5C7A2E", out2: "#8FB339", trim: "#D9A441", legs: "#4A3724" },
   cyberpunk: { skin: "#EFCDB4", sh: "#DBAE92", hair: "#00E5FF", hair2: "#7DF9FF", out: "#151A21", out2: "#FCEE0A", trim: "#00FF9C", legs: "#0D1116" },
-  france:    { skin: "#F2CFAC", sh: "#DDB088", hair: "#2A2118", hair2: "#3E3124", out: "#1E3A8A", out2: "#2C4C9B", trim: "#D4AF37", legs: "#F6F2E6" }
+  france:    { skin: "#F2CFAC", sh: "#DDB088", hair: "#2A2118", hair2: "#3E3124", out: "#1E3A8A", out2: "#2C4C9B", trim: "#D4AF37", legs: "#F6F2E6" },
+  aurore:    { skin: "#F3CFB0", sh: "#DDB08E", hair: "#1E3A4A", hair2: "#2C5466", out: "#0E7C6B", out2: "#2BD4A4", trim: "#C4B5FD", legs: "#0F2A33" },
+  sakura:    { skin: "#F8D9C0", sh: "#E6BB9E", hair: "#3B2530", hair2: "#5A3846", out: "#E86A92", out2: "#F7A8C0", trim: "#FFFFFF", legs: "#6B4A57" },
+  royal:     { skin: "#F0CCA8", sh: "#D9AC84", hair: "#1A140C", hair2: "#2C2416", out: "#1F1A10", out2: "#B8932F", trim: "#E8C55C", legs: "#0F0C08" }
 };
 
 /* Coiffe / accessoire propre à chaque univers, dessiné en 3/4 */
@@ -1991,9 +2023,28 @@ function guessCat(label, isCredit) {
    Premium = sauvegarde en ligne chiffrée + synchro entre appareils.
    Tout le reste de l'app marche sans compte, en local. */
 var API = "";   /* À renseigner après déploiement, ex. "https://arpagon-api.TONCOMPTE.workers.dev" */
-var PRICES = { monthly: "3,99 €/mois", yearly: "29,99 €/an" };
-var SES_KEY = "budgetv2:session", SYNC_KEY = "budgetv2:syncAt", DIRTY_KEY = "budgetv2:dirty";
-var ACC = { me: null, busy: false, conflict: false, lastSync: 0, cgv: false };
+var PRICES = { monthly: "1,99 €/mois", yearly: "14,99 €/an" };
+var FOUNDER = { monthly: "0,99 €/mois", yearly: "9,99 €/an" };   /* doit correspondre aux prix Stripe « fondateur » */
+var SES_KEY = "budgetv2:session", SYNC_KEY = "budgetv2:syncAt", DIRTY_KEY = "budgetv2:dirty", PREM_KEY = "budgetv2:prem";
+var ACC = { me: null, busy: false, conflict: false, lastSync: 0, cgv: false, offer: null };
+/* Le statut Premium est gardé en mémoire pour que les thèmes Arpagon+ marchent aussi hors ligne */
+function premOK() { return isPremium() || LS.get(PREM_KEY) === "1"; }
+function setMe(me) {
+  var was = premOK();
+  ACC.me = me || null;
+  if (me && me.premium) LS.set(PREM_KEY, "1"); else if (me || !LS.get(SES_KEY)) LS.del(PREM_KEY);
+  if (was !== premOK()) applyAppearance();
+}
+function upsell(what) {
+  toast("✨ " + what + " fait partie d'Arpagon+", "Découvrir", function () {
+    App.go("set");
+    setTimeout(function () { var c = document.getElementById("accCard"); if (c) c.scrollIntoView({ behavior: "smooth", block: "center" }); }, 80);
+  });
+}
+function loadOffer() {
+  if (!API) return;
+  apiFetch("/offer").then(function (j) { ACC.offer = j; if (tab === "set") render(); }).catch(function () {});
+}
 var cloudT = null;
 
 function apiFetch(path, opts) {
@@ -2005,7 +2056,7 @@ function apiFetch(path, opts) {
   opts.headers = h;
   return fetch(API + path, opts).then(function (r) {
     return r.json().catch(function () { return {}; }).then(function (j) {
-      if (r.status === 401 && tok) { LS.del(SES_KEY); ACC.me = null; render(); }
+      if (r.status === 401 && tok) { LS.del(SES_KEY); setMe(null); render(); }
       if (!r.ok) { var e = new Error(j.error || "http_" + r.status); e.status = r.status; e.data = j; throw e; }
       return j;
     });
@@ -2092,34 +2143,47 @@ function cloudCheck() {
   }).catch(function () {});
 }
 function accountInit() {
+  loadOffer();
   if (!API || !LS.get(SES_KEY)) return;
-  apiFetch("/me").then(function (j) { ACC.me = j.me; render(); cloudCheck(); }).catch(function () {});
+  apiFetch("/me").then(function (j) { setMe(j.me); render(); cloudCheck(); }).catch(function () {});
 }
 
 function fmtDay(sec) { var d = new Date(sec * 1000); return d.getDate() + " " + MN[d.getMonth()] + " " + d.getFullYear(); }
+var PLUS_LIST = ["Sauvegarde en ligne chiffrée et synchro téléphone ↔ ordinateur", "3 thèmes et 3 couleurs exclusifs",
+  "Ton année Arpagon complète, à partager en story", "Tendances sur 12 mois et projections"];
+function offerHtml() {
+  var o = ACC.offer || {}, me = ACC.me || {}, f = o.founderLeft > 0;
+  var P = f ? FOUNDER : PRICES;
+  var h = '<ul style="margin:8px 0 12px;padding-left:18px;font-size:12.5px;line-height:1.7">' + PLUS_LIST.map(function (x) { return "<li>" + x + "</li>"; }).join("") + '</ul>';
+  if (f) h += '<div class="d" style="font-size:12.5px;margin-bottom:8px">🏅 <b>Prix fondateur</b>, gardé à vie : plus que <b>' + o.founderLeft + '</b> place' + (o.founderLeft > 1 ? "s" : "") + '. Ensuite ' + PRICES.monthly + ' ou ' + PRICES.yearly + '.</div>';
+  if (o.trialDays && me.canTrial !== false) h += '<div class="d" style="font-size:12.5px;margin-bottom:8px">🎁 <b>' + o.trialDays + ' jours offerts</b> : rien n\'est prélevé si tu résilies avant la fin de l\'essai.</div>';
+  h += '<label style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px;line-height:1.55;margin:8px 0 12px">' +
+    '<input type="checkbox" id="acc_cgv"' + (ACC.cgv ? " checked" : "") + ' onchange="App.accCgv(this.checked)" style="margin-top:3px;width:auto">' +
+    '<span>J\'accepte les <a href="cgv.html" target="_blank" rel="noopener">CGV/CGU</a> et je demande que le service commence dès la souscription.</span></label>' +
+    '<div class="two"><button class="btn ghost" onclick="App.accBuy(\'monthly\')">' + P.monthly + '</button>' +
+    '<button class="btn" onclick="App.accBuy(\'yearly\')">' + P.yearly + '</button></div>' +
+    '<div class="dim" style="font-size:11.5px;margin-top:8px;text-align:center">L\'annuel revient à ' + (f ? "0,83" : "1,25") + ' €/mois · sans engagement</div>';
+  return h;
+}
 function vAccount() {
-  var h = '<div class="card mb"><div class="ttl">Compte & Premium</div>';
+  var h = '<div class="card mb" id="accCard"><div class="ttl">Compte & Arpagon+</div>';
   if (!API) {
-    return h + '<div class="d" style="font-size:12.5px;color:var(--dim);line-height:1.65">Bientôt : <b>Arpagon Premium</b> — sauvegarde en ligne chiffrée et synchro entre ton téléphone et ton ordinateur. ' +
+    return h + '<div class="d" style="font-size:12.5px;color:var(--dim);line-height:1.65">Bientôt : <b>Arpagon+</b> — sauvegarde en ligne chiffrée, synchro entre ton téléphone et ton ordinateur, thèmes exclusifs et bilan annuel complet. ' +
       'En attendant, tout reste sur cet appareil : pense à exporter ta sauvegarde.</div></div>';
   }
   if (!LS.get(SES_KEY)) {
-    return h + '<div class="d" style="font-size:12.5px;color:var(--dim);line-height:1.65;margin-top:-4px">Crée un compte (gratuit) pour passer Premium : sauvegarde en ligne chiffrée et synchro entre appareils. Pas de mot de passe : tu reçois un lien par e-mail.</div>' +
+    return h + '<div class="d" style="font-size:12.5px;color:var(--dim);line-height:1.65;margin-top:-4px">Crée un compte (gratuit) pour passer à <b>Arpagon+</b> : sauvegarde en ligne, synchro entre appareils, thèmes exclusifs, bilan annuel complet. Pas de mot de passe : tu reçois un lien par e-mail.' +
+      (ACC.offer && ACC.offer.founderLeft > 0 ? ' 🏅 Prix fondateur dès ' + FOUNDER.monthly + ' pour les premiers abonnés.' : "") + '</div>' +
       '<label class="lbl" for="acc_mail">Ton e-mail</label><input id="acc_mail" type="email" inputmode="email" autocomplete="email" placeholder="toi@exemple.fr">' +
       '<button class="btn" style="margin-top:12px"' + (ACC.busy ? " disabled" : "") + ' onclick="App.accLogin()">' + (ACC.busy ? "Envoi…" : "Recevoir mon lien de connexion") + '</button>' +
       '<div class="dim" style="font-size:11.5px;margin-top:9px;line-height:1.6">Ton e-mail sert uniquement à te connecter. <a href="confidentialite.html" target="_blank" rel="noopener">Confidentialité</a></div></div>';
   }
   var me = ACC.me;
   if (!me) return h + '<div class="dim" style="font-size:12.5px">Connexion au serveur…</div></div>';
-  h += '<div class="set"><div><div class="n">' + esc(me.email) + '</div><div class="d">' + (me.premium ? "Premium" : "Compte gratuit") + '</div></div>' +
+  h += '<div class="set"><div><div class="n">' + esc(me.email) + '</div><div class="d">' + (me.premium ? (me.status === "trialing" ? "Arpagon+ · essai gratuit" : "Arpagon+") : "Compte gratuit") + '</div></div>' +
     '<button class="link" onclick="App.accLogout()">Se déconnecter</button></div>';
   if (!me.premium) {
-    h += '<div class="d" style="font-size:12.5px;line-height:1.65;margin:10px 0">Premium : sauvegarde en ligne chiffrée, synchro automatique entre tes appareils, et tu soutiens un projet étudiant indépendant. Sans engagement, résiliable en ligne à tout moment.</div>' +
-      '<label style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px;line-height:1.55;margin:8px 0 12px">' +
-      '<input type="checkbox" id="acc_cgv"' + (ACC.cgv ? " checked" : "") + ' onchange="App.accCgv(this.checked)" style="margin-top:3px;width:auto">' +
-      '<span>J\'accepte les <a href="cgv.html" target="_blank" rel="noopener">CGV/CGU</a> et je demande que le service commence dès le paiement.</span></label>' +
-      '<div class="two"><button class="btn" onclick="App.accBuy(\'monthly\')">' + PRICES.monthly + '</button>' +
-      '<button class="btn" onclick="App.accBuy(\'yearly\')">' + PRICES.yearly + '</button></div>';
+    h += '<div class="d" style="font-size:12.5px;line-height:1.65;margin:10px 0 0"><b>Arpagon+</b> — l\'app reste gratuite ; le + ajoute :</div>' + offerHtml();
   } else {
     var end = me.periodEnd ? fmtDay(me.periodEnd) : "";
     h += '<div class="d" style="font-size:12.5px;margin:8px 0">' + (me.plan === "yearly" ? "Formule annuelle" : "Formule mensuelle") +
@@ -2157,7 +2221,14 @@ var THEMES = [
   { id: "cyberpunk", n: "Cyberpunk",  p: ["#08090B", "#111419", "#FCEE0A"], acc: "acide",
     u: "Terminal, angles vifs, jaune acide" },
   { id: "france",    n: "Empire",     p: ["#2C4C9B", "#F6F2E6", "#E03B4B"], acc: "bleuroi",
-    u: "Bleu de nuit et or — Napoléon ou Jeanne d'Arc" }
+    u: "Bleu de nuit et or — Napoléon ou Jeanne d'Arc" },
+  /* Arpagon+ */
+  { id: "aurore", n: "Aurore", p: ["#071419", "#0F232C", "#7CF5C8"], acc: "aurore", prem: true,
+    u: "Nuit polaire et lueurs boréales" },
+  { id: "sakura", n: "Sakura", p: ["#FBF1F3", "#FFFBFC", "#D6336C"], acc: "corail", prem: true,
+    u: "Cerisiers en fleur, rose et douceur" },
+  { id: "royal",  n: "Or royal", p: ["#0B0906", "#17130C", "#E8C55C"], acc: "or", prem: true,
+    u: "Noir profond et dorures" }
 ];
 var ACCENTS = [
   { id: "indigo", n: "Indigo", c: "#6366F1" }, { id: "emeraude", n: "Émeraude", c: "#10B981" },
@@ -2168,7 +2239,10 @@ var ACCENTS = [
   { id: "or", n: "Or", c: "#D9A441" },
   { id: "acide", n: "Acide", c: "#FCEE0A" },
   { id: "bleuroi", n: "Bleu roi", c: "#2C4C9B" },
-  { id: "cannelle", n: "Cannelle", c: "#A85C24" }
+  { id: "cannelle", n: "Cannelle", c: "#A85C24" },
+  { id: "aurore", n: "Aurore", c: "#2BD4A4", prem: true },
+  { id: "corail", n: "Corail", c: "#FF6B4A", prem: true },
+  { id: "platine", n: "Platine", c: "#A7B0C0", prem: true }
 ];
 var AP_DEF = { theme: "taverne", accent: "cannelle", glass: 62, wpOpacity: 40, wpBlur: 0, wpVeil: 30, wpFit: "cover", gender: "f", mate: true, sound: true, peek: false };
 var AP = JSON.parse(JSON.stringify(AP_DEF));
@@ -2190,9 +2264,10 @@ function saveAppearance() { LS.set(AP_KEY, JSON.stringify(AP)); applyAppearance(
 function clamp(v, a, b) { v = +v; if (isNaN(v)) v = a; return v < a ? a : v > b ? b : v; }
 function applyAppearance() {
   var r = document.documentElement;
-  var ok = THEMES.filter(function (t) { return t.id === AP.theme; }).length;
-  if (!ok) AP.theme = AP_DEF.theme;
-  if (!ACCENTS.filter(function (a) { return a.id === AP.accent; }).length) AP.accent = AP_DEF.accent;
+  var th = THEMES.filter(function (t) { return t.id === AP.theme; })[0];
+  if (!th || (th.prem && !premOK())) AP.theme = AP_DEF.theme;
+  var acx = ACCENTS.filter(function (a) { return a.id === AP.accent; })[0];
+  if (!acx || (acx.prem && !premOK())) AP.accent = AP_DEF.accent;
   r.setAttribute("data-theme", AP.theme);
   r.setAttribute("data-accent", AP.accent);
   r.style.setProperty("--glass", clamp(AP.glass, 20, 100) + "%");
@@ -3059,6 +3134,122 @@ function vDebt() {
   return h;
 }
 
+/* ---------- TON ANNÉE ARPAGON (bilan annuel façon « Wrapped ») ----------
+   Les 2 premières révélations sont gratuites, la suite et l'image à partager
+   font partie d'Arpagon+. */
+function recapYear() { var d = new Date(); return d.getMonth() === 0 ? d.getFullYear() - 1 : d.getFullYear(); }
+function yearRecap(y) {
+  var Y = String(y), txs = S.transactions.filter(function (t) { return t.date && t.date.slice(0, 4) === Y; });
+  var spend = 0, inc = 0, saved = 0, useless = 0, byCat = {}, days = {}, big = null, byMonth = {};
+  txs.forEach(function (t) {
+    days[t.date] = 1;
+    var m = t.date.slice(0, 7);
+    if (t.type === "income") { inc += t.amount; return; }
+    if (t.categoryId === "epargne") { saved += t.amount; return; }
+    spend += t.amount; byCat[t.categoryId] = (byCat[t.categoryId] || 0) + t.amount;
+    byMonth[m] = (byMonth[m] || 0) + t.amount;
+    if (t.useful === "useless") useless += t.amount;
+    if (!big || t.amount > big.amount) big = t;
+  });
+  var top = null; for (var k in byCat) if (!top || byCat[k] > byCat[top]) top = k;
+  var months = Object.keys(byMonth).sort(function (a, b) { return byMonth[a] - byMonth[b]; });
+  var goalsDone = (S.goals || []).filter(function (g) { return g.saved >= g.target && g.target > 0; }).length;
+  return { y: y, n: txs.length, days: Object.keys(days).length, spend: spend, inc: inc, saved: saved, useless: useless,
+    top: top, topAmt: top ? byCat[top] : 0, best: months[0] || null, worst: months[months.length - 1] || null, byMonth: byMonth,
+    big: big, goalsDone: goalsDone, lv: levelOf((S.game && S.game.xp) || 0).lvl };
+}
+function monthName(m) { return MN[+m.slice(5, 7) - 1]; }
+function recapSlides(R) {
+  var c = R.top ? cat(R.top) : null, sl = [];
+  sl.push({ k: "Ton année en chiffres", big: R.n + " opération" + (R.n > 1 ? "s" : ""),
+    sub: "notées sur " + R.days + " jour" + (R.days > 1 ? "s" : "") + " différents. Chaque ligne, c'est un moment où tu as regardé ton argent en face." });
+  sl.push({ k: "Ce qui est sorti", big: money(R.spend),
+    sub: c ? "Ta catégorie n°1 : " + catE(c) + " " + c.n + ", avec " + money(R.topAmt) + " (" + Math.round(R.topAmt / (R.spend || 1) * 100) + " % du total)." : "Aucune dépense notée cette année." });
+  sl.push({ k: "Ton mois le plus sobre", big: R.best ? monthName(R.best) : "—",
+    sub: R.best ? "Seulement " + money(R.byMonth[R.best]) + " dépensés. Le plus chargé : " + monthName(R.worst) + " (" + money(R.byMonth[R.worst]) + ")." : "Pas encore assez de mois notés." });
+  sl.push({ k: "Mis de côté", big: money(R.saved),
+    sub: R.inc > 0 ? "Soit " + Math.round(R.saved / R.inc * 100) + " % de tes revenus de l'année. " + (R.goalsDone ? R.goalsDone + " objectif" + (R.goalsDone > 1 ? "s" : "") + " atteint" + (R.goalsDone > 1 ? "s" : "") + " 🎯" : "") : "Chaque euro rangé compte." });
+  sl.push({ k: "Les achats « inutiles »", big: money(R.useless),
+    sub: R.useless > 0 ? "Ce que tu as toi-même jugé inutile. Réinvesti, ça aurait fait " + money(R.useless) + " de plus vers tes objectifs." : "Rien de marqué comme inutile. Respect." });
+  sl.push({ k: "Ton rang", big: "Niveau " + R.lv.n + " · " + R.lv.t, sub: R.lv.d + "." + (R.big ? " Plus grosse dépense de l'année : " + money(R.big.amount) + (R.big.note ? " (" + R.big.note + ")" : "") + "." : "") });
+  return sl;
+}
+var recapIdx = 0;
+function sheetRecap() {
+  var R = yearRecap(recapYear()), sl = recapSlides(R), FREE = 2, prem = premOK();
+  if (recapIdx >= sl.length) recapIdx = 0;
+  var x = sl[recapIdx], locked = !prem && recapIdx >= FREE;
+  var h = sheetHead("Ton année Arpagon " + R.y, (recapIdx + 1) + " / " + sl.length) +
+    '<div style="text-align:center;padding:26px 6px 18px;min-height:210px;border-radius:var(--r-l);background:linear-gradient(160deg,var(--ind-soft),transparent 70%)">' +
+    '<div class="lbl" style="margin:0 0 14px">' + esc(x.k) + '</div>' +
+    (locked
+      ? '<div style="font-size:30px;font-weight:800;filter:blur(9px);user-select:none">' + esc(x.big) + '</div>' +
+        '<div style="font-size:13.5px;margin-top:16px;line-height:1.6">🔒 La suite de ton bilan (' + (sl.length - FREE) + ' révélations + l\'image à partager en story) fait partie d\'<b>Arpagon+</b>.</div>' +
+        '<button class="btn" style="margin-top:14px;width:auto;padding:10px 18px" onclick="App.closeSheet(true);upsell(\'Le bilan complet\')">Découvrir Arpagon+</button>'
+      : '<div style="font-size:34px;font-weight:800;line-height:1.15">' + esc(x.big) + '</div>' +
+        '<div style="font-size:13.5px;margin-top:14px;line-height:1.6" class="dim">' + esc(x.sub) + '</div>') +
+    '</div>' +
+    '<div style="display:flex;justify-content:center;gap:6px;margin:12px 0">' + sl.map(function (_, i) {
+      return '<i style="width:' + (i === recapIdx ? 18 : 6) + 'px;height:6px;border-radius:9px;background:' + (i === recapIdx ? "var(--ind)" : "var(--line2)") + '"></i>';
+    }).join("") + '</div>' +
+    '<div class="two"><button class="btn ghost"' + (recapIdx ? "" : " disabled") + ' onclick="App.recapGo(-1)">Précédent</button>' +
+    (recapIdx < sl.length - 1
+      ? '<button class="btn" onclick="App.recapGo(1)">Suivant</button>'
+      : '<button class="btn" onclick="App.recapShare()">' + (prem ? "Partager mon année" : "🔒 Partager") + '</button>') + '</div>';
+  openSheet(h, { guard: false });
+}
+/* Image 1080×1920 pour une story */
+function recapImage(R) {
+  var cv = document.createElement("canvas"); cv.width = 1080; cv.height = 1920;
+  var g = cv.getContext("2d"), cs = getComputedStyle(document.documentElement);
+  var bg = cs.getPropertyValue("--s-bg").trim() || "#111", ac = cs.getPropertyValue("--ind").trim() || "#6366F1",
+    tx = cs.getPropertyValue("--txt").trim() || "#fff", mu = cs.getPropertyValue("--mut").trim() || "#aaa";
+  var gr = g.createLinearGradient(0, 0, 1080, 1920); gr.addColorStop(0, bg); gr.addColorStop(1, ac);
+  g.fillStyle = gr; g.fillRect(0, 0, 1080, 1920);
+  g.fillStyle = "rgba(0,0,0,.18)"; g.fillRect(70, 360, 940, 1260);
+  var F = 'Georgia, "Iowan Old Style", serif';
+  g.textAlign = "center"; g.fillStyle = tx;
+  g.font = "700 64px " + F; g.fillText("Mon année Arpagon", 540, 200);
+  g.font = "800 150px " + F; g.fillText(String(R.y), 540, 330);
+  var c = R.top ? cat(R.top) : null;
+  var rows = [["Opérations notées", String(R.n)], ["Dépensé", money(R.spend)], ["Mis de côté", money(R.saved)],
+    ["Catégorie n°1", c ? c.n : "—"], ["Mois le plus sobre", R.best ? monthName(R.best) : "—"], ["Rang", "Niv. " + R.lv.n + " · " + R.lv.t]];
+  rows.forEach(function (r, i) {
+    var y = 480 + i * 190;
+    g.fillStyle = mu; g.font = "500 40px " + F; g.fillText(r[0], 540, y);
+    g.fillStyle = tx; g.font = "800 76px " + F; g.fillText(r[1], 540, y + 86);
+  });
+  g.fillStyle = tx; g.font = "600 40px " + F; g.fillText("Note tes dépenses. Prends-en conscience.", 540, 1760);
+  g.font = "500 34px " + F; g.fillStyle = mu; g.fillText("Arpagon", 540, 1830);
+  return cv;
+}
+
+/* ---------- TENDANCES 12 MOIS (Arpagon+) ---------- */
+function vTrends() {
+  var h = '<div class="card mb"><div class="ttl">Tendances — 12 mois <span class="ind" style="font-size:11px">Arpagon+</span></div>';
+  if (!premOK()) {
+    return h + '<div style="filter:blur(5px);pointer-events:none;user-select:none" aria-hidden="true">' + chartMonths(6) + '</div>' +
+      '<div style="text-align:center;font-size:13px;margin-top:10px">🔒 Ton évolution sur un an et tes projections (« à ce rythme, ton objectif est atteint en … ») sont dans Arpagon+.</div>' +
+      '<button class="btn ghost" style="margin-top:10px" onclick="upsell(\'Les tendances\')">Découvrir</button></div>';
+  }
+  var sv = 0, lf = 0, n = 0;
+  for (var i = 1; i <= 3; i++) { var st = stats(shiftM(curMonth(), -i)); if (st.income || st.expenses) { sv += st.saved; lf += st.left; n++; } }
+  var avgS = n ? sv / n : 0, avgL = n ? lf / n : 0;
+  var rest = 12 - (+curMonth().slice(5, 7)) + 1;
+  h += chartMonths(12) + '<div style="font-size:13px;line-height:1.7;margin-top:12px">' +
+    (n ? 'Sur tes 3 derniers mois, tu ranges en moyenne <b class="grn">' + money(avgS) + '</b> par mois et il te reste <b>' + money(avgL) + '</b>.<br>' +
+      'À ce rythme : <b>' + money(avgS * rest) + '</b> mis de côté d\'ici la fin de l\'année.' : "Note au moins un mois complet pour voir tes projections.") + '</div>';
+  var goals = (S.goals || []).filter(function (g) { return !g.done && g.target > (g.saved || 0); });
+  if (goals.length && avgS > 0) {
+    h += '<div style="margin-top:10px">' + goals.slice(0, 4).map(function (g) {
+      var k = Math.ceil((g.target - (g.saved || 0)) / avgS), when = shiftM(curMonth(), k);
+      return '<div class="set" style="padding:8px 0"><div class="n" style="font-size:13px">' + esc(g.name) + '</div><div class="d">' +
+        (k > 120 ? "plus de 10 ans à ce rythme" : "atteint vers " + monthName(when) + " " + when.slice(0, 4)) + '</div></div>';
+    }).join("") + '</div>';
+  }
+  return h + '</div>';
+}
+
 function vStat() {
   var s = stats(month), items = [];
   for (var k in s.spend) { var c = cat(k); items.push({ label: (c ? catE(c) + " " + c.n : k), value: s.spend[k], color: c ? c.c : "#666" }); }
@@ -3074,7 +3265,12 @@ function vStat() {
   return '<div class="dg">' +
     '<div class="c5"><div class="card"><div class="ttl">Dépenses par catégorie — ' + mLabel(month) + '</div>' + barsH(items) + '</div></div>' +
     '<div class="c4"><div class="card"><div class="ttl">Revenus vs dépenses — 6 mois</div>' + chartMonths(6) + '</div></div>' +
-    '<div class="c3">' + uH + '</div></div>';
+    '<div class="c3">' + uH + '</div></div>' +
+    '<div class="dg" style="margin-top:14px"><div class="c5"><div class="card mb" style="text-align:center">' +
+    '<div class="ttl">📜 Ton année Arpagon ' + recapYear() + '</div>' +
+    '<div class="dim" style="font-size:12.5px;margin:-2px 0 12px">Ton bilan de l\'année en quelques révélations, à partager en story.</div>' +
+    '<button class="btn" style="width:auto;padding:10px 20px" onclick="App.recapOpen()">Voir mon année</button></div></div>' +
+    '<div class="c7">' + vTrends() + '</div></div>';
 }
 
 function histResults() {
@@ -3127,14 +3323,15 @@ function vAppearance() {
     '<div class="d" style="font-size:12.5px;color:var(--dim);margin-top:-4px">Le style est propre à cet appareil et vaut pour tous tes profils.</div>' +
     '<div class="thgrid">' +
     THEMES.map(function (t) {
-      return '<button class="thc' + (AP.theme === t.id ? " on" : "") + '" onclick="App.setTheme(\'' + t.id + '\')" aria-pressed="' + (AP.theme === t.id) + '">' +
+      return '<button class="thc' + (AP.theme === t.id ? " on" : "") + (t.prem && !premOK() ? " lock" : "") + '" onclick="App.setTheme(\'' + t.id + '\')" aria-pressed="' + (AP.theme === t.id) + '">' +
+        (t.prem ? '<span class="pl">' + (premOK() ? "+" : "🔒 +") + '</span>' : "") +
         '<span class="sw"><i style="background:' + t.p[0] + '"></i><i style="background:' + t.p[1] + '"></i><i style="background:' + t.p[2] + '"></i></span>' +
         '<span class="nm">' + t.n + '</span>' +
         (t.u ? '<span class="uv">' + t.u + '</span>' : "") + '</button>';
     }).join("") + '</div>' +
     '<label class="lbl">Couleur d\'accent</label><div class="acrow">' +
     ACCENTS.map(function (a) {
-      return '<button class="acc' + (AP.accent === a.id ? " on" : "") + '" style="background:' + a.c + '" title="' + a.n + '" aria-label="' + a.n + '" onclick="App.setAccent(\'' + a.id + '\')"></button>';
+      return '<button class="acc' + (AP.accent === a.id ? " on" : "") + (a.prem && !premOK() ? " lock" : "") + '" style="background:' + a.c + '" title="' + a.n + (a.prem ? " (Arpagon+)" : "") + '" aria-label="' + a.n + '" onclick="App.setAccent(\'' + a.id + '\')">' + (a.prem && !premOK() ? '<span class="pl">+</span>' : "") + '</button>';
     }).join("") + '</div>';
 
   h += '<label class="lbl">Ton compagnon</label>' +
@@ -3952,6 +4149,29 @@ var App = {
     openSheet(h, { wide: true, guard: false });
   },
 
+  /* ----- Bilan annuel ----- */
+  recapOpen: function () { recapIdx = 0; sheetRecap(); },
+  recapGo: function (d) {
+    var n = recapSlides(yearRecap(recapYear())).length;
+    recapIdx = Math.max(0, Math.min(n - 1, recapIdx + d)); sheetRecap();
+  },
+  recapShare: function () {
+    if (!premOK()) { App.closeSheet(true); upsell("L'image à partager"); return; }
+    var R = yearRecap(recapYear()), cv = recapImage(R), name = "arpagon-" + R.y + ".png";
+    cv.toBlob(function (b) {
+      if (!b) { toast("⚠️ Image impossible à créer"); return; }
+      var f = typeof File === "function" ? new File([b], name, { type: "image/png" }) : null;
+      if (f && navigator.canShare && navigator.canShare({ files: [f] })) {
+        navigator.share({ files: [f], title: "Mon année Arpagon " + R.y }).catch(function () {});
+      } else {
+        var u = URL.createObjectURL(b), a = document.createElement("a");
+        a.href = u; a.download = name; document.body.appendChild(a); a.click();
+        setTimeout(function () { document.body.removeChild(a); URL.revokeObjectURL(u); }, 200);
+        toast("Image téléchargée — à poster en story ✓");
+      }
+    }, "image/png");
+  },
+
   /* ----- Compte & Premium ----- */
   accLogin: function () {
     var el = document.getElementById("acc_mail"), m = el ? el.value.trim() : "";
@@ -3963,7 +4183,7 @@ var App = {
   },
   accLogout: function () {
     apiFetch("/logout", { method: "POST" }).catch(function () {}).then(function () {
-      LS.del(SES_KEY); LS.del(SYNC_KEY); ACC.me = null; ACC.conflict = false; render(); toast("Déconnecté — tes données restent sur cet appareil");
+      LS.del(SES_KEY); LS.del(SYNC_KEY); setMe(null); ACC.conflict = false; render(); toast("Déconnecté — tes données restent sur cet appareil");
     });
   },
   accCgv: function (v) { ACC.cgv = !!v; },
@@ -3984,20 +4204,26 @@ var App = {
   accDelete: function () {
     sheetConfirm("Supprimer ton compte ?", "Ton compte, ta sauvegarde en ligne et ton abonnement éventuel sont supprimés définitivement. Les données de cet appareil restent.", "Supprimer", function () {
       apiFetch("/account", { method: "DELETE" }).then(function () {
-        LS.del(SES_KEY); LS.del(SYNC_KEY); ACC.me = null; render(); toast("Compte supprimé");
+        LS.del(SES_KEY); LS.del(SYNC_KEY); setMe(null); render(); toast("Compte supprimé");
       }).catch(accErr);
     });
   },
 
   /* ----- Apparence ----- */
   setTheme: function (id) {
+    var tp = THEMES.filter(function (x) { return x.id === id; })[0];
+    if (tp && tp.prem && !premOK()) { upsell("Le thème " + tp.n); return; }
     AP.theme = id;
     /* Un univers arrive avec sa couleur signature — libre à toi d'en changer ensuite. */
     var t = THEMES.filter(function (x) { return x.id === id; })[0];
     if (t && t.acc) AP.accent = t.acc;
     saveAppearance(); render();
   },
-  setAccent: function (id) { AP.accent = id; saveAppearance(); render(); },
+  setAccent: function (id) {
+    var ap = ACCENTS.filter(function (x) { return x.id === id; })[0];
+    if (ap && ap.prem && !premOK()) { upsell("La couleur " + ap.n); return; }
+    AP.accent = id; saveAppearance(); render();
+  },
   setAP: function (k, v, suf) {
     if (k === "wpFit") { AP.wpFit = v; saveAppearance(); render(); return; }
     AP[k] = +v;
@@ -4759,7 +4985,7 @@ function handleHash() {
   var lm = hash.match(/login=([A-Za-z0-9_-]+)/);
   if (lm && API) {
     apiFetch("/auth/verify", { method: "POST", body: { token: lm[1] } }).then(function (j) {
-      LS.set(SES_KEY, j.session); ACC.me = j.me; render(); toast("Connecté ✓");
+      LS.set(SES_KEY, j.session); setMe(j.me); render(); toast("Connecté ✓");
       cloudCheck();
     }).catch(accErr);
   }
@@ -4768,7 +4994,7 @@ function handleHash() {
     setTimeout(function () { toast("🎉 Bienvenue dans Premium ! Ta sauvegarde en ligne s'active"); }, 600);
     /* le webhook Stripe peut avoir quelques secondes de retard */
     [1500, 5000, 12000].forEach(function (ms) {
-      setTimeout(function () { if (!isPremium()) apiFetch("/me").then(function (j) { ACC.me = j.me; render(); if (isPremium()) cloudCheck(); }).catch(function () {}); }, ms);
+      setTimeout(function () { if (!isPremium()) apiFetch("/me").then(function (j) { setMe(j.me); render(); if (isPremium()) cloudCheck(); }).catch(function () {}); }, ms);
     });
   } else if (pm) setTimeout(function () { toast("Paiement annulé, rien n'a été débité"); }, 600);
 }

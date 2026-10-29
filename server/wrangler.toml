@@ -19,5 +19,11 @@ APP_ORIGINS = "https://mouadjabiera06-jpg.github.io"
 # Identifiants des prix Stripe (Produits > Arpagon Premium > Prix)
 PRICE_MONTHLY = "price_A_REMPLACER"
 PRICE_YEARLY = "price_A_REMPLACER"
+# Prix fondateur (0,99 €/mois et 9,99 €/an) pour les premiers abonnés ; laisser vide pour désactiver
+PRICE_FOUNDER_MONTHLY = "price_A_REMPLACER"
+PRICE_FOUNDER_YEARLY = "price_A_REMPLACER"
+FOUNDER_LIMIT = "100"
+# Jours d'essai offerts au premier abonnement (0 = pas d'essai)
+TRIAL_DAYS = "14"
 # Expéditeur des e-mails (domaine vérifié dans Resend)
 MAIL_FROM = "Arpagon <connexion@A_REMPLACER.fr>"

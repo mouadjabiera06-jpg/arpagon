@@ -16,8 +16,12 @@ IDENT = {
     "tva": "TVA non applicable, art. 293 B du CGI",
     "mediateur": "[MÉDIATEUR À CHOISIR : nom, site web et adresse du médiateur auquel tu as adhéré]",
     "maj": "29 octobre 2026",
-    "prix_mois": "3,99 €",
-    "prix_an": "29,99 €",
+    "prix_mois": "1,99 €",
+    "prix_an": "14,99 €",
+    "fond_mois": "0,99 €",
+    "fond_an": "9,99 €",
+    "fond_places": "100",
+    "essai": "14",
 }
 
 CSS = """
@@ -170,7 +174,7 @@ page("confidentialite.html", "Politique de confidentialité", "Quelles données 
 <h2>Tes droits</h2>
 <p>Tu peux demander l'accès, la rectification, l'effacement, la limitation, la portabilité de tes données ou t'opposer à un traitement fondé sur l'intérêt légitime.</p>
 <ul>
-<li><b>Effacement</b> : Paramètres → Compte &amp; Premium → Supprimer. Compte, sauvegarde et abonnement sont supprimés immédiatement.</li>
+<li><b>Effacement</b> : Paramètres → Compte &amp; Arpagon+ → Supprimer. Compte, sauvegarde et abonnement sont supprimés immédiatement.</li>
 <li><b>Portabilité</b> : Paramètres → Données → Exporter la sauvegarde (fichier JSON) ou en CSV.</li>
 <li>Pour tout le reste : {email}. Réponse sous un mois.</li>
 </ul>
@@ -197,11 +201,13 @@ page("cgv.html", "Conditions générales de vente et d'utilisation", "Règles d'
 <p>Il est interdit de tenter de perturber le service, d'accéder aux données d'autrui ou d'automatiser des requêtes abusives. En cas de manquement, l'éditeur peut suspendre le compte après en avoir informé l'utilisateur.</p>
 </div>
 <div class="card">
-<h2>4. Abonnement Premium</h2>
-<p><b>Contenu</b> : sauvegarde en ligne chiffrée des données et synchronisation automatique entre les appareils de l'utilisateur.</p>
+<h2>4. Abonnement Arpagon+ (Premium)</h2>
+<p><b>Contenu</b> : sauvegarde en ligne chiffrée des données et synchronisation automatique entre les appareils de l'utilisateur ; thèmes et couleurs exclusifs ; bilan annuel complet et image à partager ; tendances sur 12 mois et projections. Toutes les fonctions de suivi du budget restent gratuites.</p>
 <p><b>Prix</b> : {prix_mois} par mois ou {prix_an} par an, prix TTC ({tva}). Les prix applicables sont ceux affichés au moment de la souscription.</p>
+<p><b>Offre fondateur</b> : les {fond_places} premiers abonnés bénéficient de {fond_mois} par mois ou {fond_an} par an. Ce prix est conservé tant que l'abonnement n'est pas résilié ; après une résiliation, une nouvelle souscription se fait au prix normal. Le nombre de places restantes est affiché dans l'app.</p>
+<p><b>Essai gratuit</b> : lors du tout premier abonnement, les {essai} premiers jours sont offerts. La carte bancaire est demandée à la souscription mais rien n'est prélevé si l'abonnement est résilié avant la fin de l'essai ; sinon, le premier paiement a lieu à la fin de l'essai. Un seul essai par personne.</p>
 <p><b>Paiement</b> : par carte bancaire, via Stripe, au début de chaque période. L'abonnement est reconduit automatiquement pour la même durée jusqu'à résiliation.</p>
-<p><b>Résiliation</b> : à tout moment, en ligne, depuis Paramètres → Compte &amp; Premium → « Gérer ou résilier mon abonnement ». La résiliation prend effet à la fin de la période déjà payée ; aucun remboursement au prorata n'est dû hors droit de rétractation. Sans abonnement actif, la sauvegarde en ligne n'est plus accessible ; les données restent sur les appareils de l'utilisateur.</p>
+<p><b>Résiliation</b> : à tout moment, en ligne, depuis Paramètres → Compte &amp; Arpagon+ → « Gérer ou résilier mon abonnement ». La résiliation prend effet à la fin de la période déjà payée ; aucun remboursement au prorata n'est dû hors droit de rétractation. Sans abonnement actif, la sauvegarde en ligne n'est plus accessible ; les données restent sur les appareils de l'utilisateur.</p>
 <p><b>Défaut de paiement</b> : si un paiement échoue, Stripe réessaie pendant quelques jours ; sans régularisation, l'abonnement prend fin.</p>
 </div>
 <div class="card">
@@ -227,7 +233,7 @@ page("cgv.html", "Conditions générales de vente et d'utilisation", "Règles d'
 <div class="card">
 <h2>Annexe — formulaire de rétractation</h2>
 <p>À l'attention de {nom}, {adresse}, {email} :<br>
-Je notifie par la présente ma rétractation du contrat portant sur l'abonnement Arpagon Premium.<br>
+Je notifie par la présente ma rétractation du contrat portant sur l'abonnement Arpagon+.<br>
 Souscrit le : …………<br>
 Nom : …………<br>
 Adresse e-mail du compte : …………<br>
@@ -250,12 +256,12 @@ page("presentation.html", "Reprends la main sur ton argent", "Arpagon, l'app de 
 </div>
 <h2 style="margin-top:28px">Deux formules</h2>
 <div class="plans">
-<div class="card"><h2>Gratuit</h2><div class="price">0 €</div><ul><li>Toute l'app, sans limite</li><li>Données sur ton appareil uniquement</li><li>Fonctionne hors ligne</li><li>Export JSON et CSV</li></ul></div>
-<div class="card"><h2>Premium <span style="font-size:14px;font-weight:400;color:var(--dim)">— bientôt disponible</span></h2><div class="price">{prix_mois}<span style="font-size:15px;font-weight:400"> / mois</span></div><p style="margin-top:0">ou {prix_an} / an</p><ul><li>Sauvegarde en ligne chiffrée</li><li>Synchro téléphone ↔ ordinateur</li><li>Sans engagement, résiliable en ligne</li></ul></div>
+<div class="card"><h2>Gratuit</h2><div class="price">0 €</div><p style="margin-top:0">pour toujours</p><ul><li>Opérations, budgets, quêtes, courses, objectifs et dettes, sans limite</li><li>Stats du mois et aperçu de ton année</li><li>Fonctionne hors ligne, données sur ton appareil</li><li>Export JSON et CSV</li></ul></div>
+<div class="card"><h2>Arpagon+ <span style="font-size:14px;font-weight:400;color:var(--dim)">— bientôt disponible</span></h2><div class="price">{prix_mois}<span style="font-size:15px;font-weight:400"> / mois</span></div><p style="margin-top:0">ou {prix_an} / an, soit 1,25 €/mois · {essai} jours offerts</p><ul><li>Sauvegarde en ligne chiffrée</li><li>Synchro téléphone ↔ ordinateur</li><li>3 thèmes et 3 couleurs exclusifs</li><li>Ton année Arpagon complète, à partager en story</li><li>Tendances sur 12 mois et projections</li></ul><p style="font-size:14px">🏅 <b>Prix fondateur</b> : {fond_mois}/mois ou {fond_an}/an, à vie, pour les {fond_places} premiers abonnés.</p></div>
 </div>
 <div class="card">
 <h2>Tes données</h2>
-<p>Pas de pub, pas de revente, pas de mesure d'audience. Sans compte, rien ne quitte ton appareil. Avec Premium, ta sauvegarde est chiffrée. <a href="confidentialite.html">En savoir plus</a></p>
+<p>Pas de pub, pas de revente, pas de mesure d'audience. Sans compte, rien ne quitte ton appareil. Avec Arpagon+, ta sauvegarde est chiffrée. <a href="confidentialite.html">En savoir plus</a></p>
 </div>
 <p style="text-align:center;margin-top:24px"><a class="btn" href="index.html">Commencer maintenant</a></p>
 """)

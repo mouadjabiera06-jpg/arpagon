@@ -15,6 +15,10 @@
      APP_ORIGINS            origines autorisées, séparées par des virgules
      PRICE_MONTHLY          identifiant du prix mensuel Stripe (price_…)
      PRICE_YEARLY           identifiant du prix annuel Stripe (price_…)
+     PRICE_FOUNDER_MONTHLY  prix « fondateur » mensuel (facultatif)
+     PRICE_FOUNDER_YEARLY   prix « fondateur » annuel (facultatif)
+     FOUNDER_LIMIT          nombre de places au prix fondateur (ex. 100)
+     TRIAL_DAYS             jours d'essai offerts au premier abonnement (ex. 14, 0 = aucun)
      MAIL_FROM              expéditeur, ex. "Arpagon <connexion@ton-domaine.fr>"
    ===================================================================== */
 
@@ -129,6 +133,8 @@ function meOf(u) {
     plan: u.plan || null,
     periodEnd: u.period_end || null,
     cancelAtEnd: !!u.cancel_at_end,
+    canTrial: !u.stripe_customer,
+    founder: !!u.founder,
   };
 }
 
@@ -173,7 +179,22 @@ function periodEndOf(sub) {
 function planOf(env, sub) {
   const it = sub.items && sub.items.data && sub.items.data[0];
   const price = it && it.price && it.price.id;
-  return price === env.PRICE_YEARLY ? "yearly" : price === env.PRICE_MONTHLY ? "monthly" : null;
+  if (!price) return null;
+  if (price === env.PRICE_YEARLY || price === env.PRICE_FOUNDER_YEARLY) return "yearly";
+  if (price === env.PRICE_MONTHLY || price === env.PRICE_FOUNDER_MONTHLY) return "monthly";
+  return null;
+}
+function isFounderPrice(env, sub) {
+  const it = sub.items && sub.items.data && sub.items.data[0];
+  const price = it && it.price && it.price.id;
+  return !!price && (price === env.PRICE_FOUNDER_MONTHLY || price === env.PRICE_FOUNDER_YEARLY);
+}
+/* Places restantes au prix fondateur (0 si l'offre n'est pas configurée) */
+async function founderLeft(env) {
+  const limit = Number(env.FOUNDER_LIMIT || 0);
+  if (!limit || !env.PRICE_FOUNDER_MONTHLY || !env.PRICE_FOUNDER_YEARLY) return 0;
+  const row = await env.DB.prepare("SELECT COUNT(*) AS n FROM users WHERE founder = 1").first();
+  return Math.max(0, limit - ((row && row.n) || 0));
 }
 async function applySubscription(env, sub, userIdHint) {
   let user = null;
@@ -182,8 +203,9 @@ async function applySubscription(env, sub, userIdHint) {
   if (!user && sub.customer) user = await env.DB.prepare("SELECT id FROM users WHERE stripe_customer = ?").bind(sub.customer).first();
   if (!user) return;
   await env.DB.prepare(
-    "UPDATE users SET stripe_customer = ?, sub_id = ?, sub_status = ?, plan = ?, period_end = ?, cancel_at_end = ? WHERE id = ?"
-  ).bind(sub.customer || null, sub.id, sub.status, planOf(env, sub), periodEndOf(sub), sub.cancel_at_period_end ? 1 : 0, user.id).run();
+    "UPDATE users SET stripe_customer = ?, sub_id = ?, sub_status = ?, plan = ?, period_end = ?, cancel_at_end = ?, founder = MAX(founder, ?) WHERE id = ?"
+  ).bind(sub.customer || null, sub.id, sub.status, planOf(env, sub), periodEndOf(sub), sub.cancel_at_period_end ? 1 : 0,
+    isFounderPrice(env, sub) ? 1 : 0, user.id).run();
 }
 
 /* ---------- e-mail ---------- */
@@ -239,6 +261,11 @@ async function route(req, env) {
 
   /* Toutes les autres routes viennent de l'app : origine obligatoire */
   if (!allowedOrigin(req, env)) return new Response("origin not allowed", { status: 403 });
+
+  /* --- Offre affichée dans l'app (public) --- */
+  if (p === "/offer" && M === "GET") {
+    return json(req, env, { founderLeft: await founderLeft(env), trialDays: Number(env.TRIAL_DAYS || 0) });
+  }
 
   /* --- Connexion par lien magique --- */
   if (p === "/auth/request" && M === "POST") {
@@ -300,7 +327,10 @@ async function route(req, env) {
     const b = await readJson(req);
     if (!b.acceptCgv) return fail(req, env, "cgv_non_acceptees", 400);
     if (isPremium(user)) return fail(req, env, "deja_premium", 409);
-    const price = b.plan === "yearly" ? env.PRICE_YEARLY : env.PRICE_MONTHLY;
+    const founder = (await founderLeft(env)) > 0;
+    const yearly = b.plan === "yearly";
+    const price = founder ? (yearly ? env.PRICE_FOUNDER_YEARLY : env.PRICE_FOUNDER_MONTHLY) : (yearly ? env.PRICE_YEARLY : env.PRICE_MONTHLY);
+    const trial = !user.stripe_customer && Number(env.TRIAL_DAYS || 0) > 0 ? Number(env.TRIAL_DAYS) : undefined;
     await env.DB.prepare("UPDATE users SET cgv_at = ? WHERE id = ?").bind(now(), user.id).run();
     const s = await stripe(env, "POST", "/checkout/sessions", {
       mode: "subscription",
@@ -310,7 +340,7 @@ async function route(req, env) {
       client_reference_id: user.id,
       customer: user.stripe_customer || undefined,
       customer_email: user.stripe_customer ? undefined : user.email,
-      subscription_data: { metadata: { user_id: user.id } },
+      subscription_data: { metadata: { user_id: user.id }, trial_period_days: trial },
       allow_promotion_codes: "true",
       locale: "fr",
     });

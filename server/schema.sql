@@ -11,7 +11,8 @@ CREATE TABLE IF NOT EXISTS users (
   plan            TEXT,             -- monthly | yearly
   period_end      INTEGER,          -- fin de la période payée (secondes)
   cancel_at_end   INTEGER DEFAULT 0,
-  cgv_at          INTEGER           -- date d'acceptation des CGV avant paiement
+  cgv_at          INTEGER,          -- date d'acceptation des CGV avant paiement
+  founder         INTEGER DEFAULT 0 -- abonné au prix fondateur
 );
 CREATE INDEX IF NOT EXISTS users_customer ON users (stripe_customer);
 

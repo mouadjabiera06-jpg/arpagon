@@ -3,7 +3,7 @@
 App de budget personnel où l'on **note soi-même chaque dépense** pour en prendre conscience. Pas de connexion bancaire, exprès. Quêtes, niveaux et compagnon pour tenir dans la durée.
 
 - **Gratuit** : toute l'app, données uniquement dans le navigateur, fonctionne hors ligne, export JSON/CSV.
-- **Premium (3,99 €/mois ou 29,99 €/an)** : sauvegarde en ligne chiffrée + synchro entre appareils.
+- **Arpagon+ (1,99 €/mois ou 14,99 €/an, 14 jours offerts ; 0,99 €/mois ou 9,99 €/an pour les 100 premiers)** : sauvegarde en ligne chiffrée, synchro entre appareils, thèmes exclusifs, bilan annuel complet, tendances 12 mois.
 
 App : https://mouadjabiera06-jpg.github.io/arpagon/ · Présentation : `presentation.html`
 
@@ -42,7 +42,7 @@ npx wrangler d1 execute arpagon --remote --file=schema.sql
 
 ### 2. Stripe (d'abord en mode test)
 
-1. Produits → créer **Arpagon Premium** avec deux prix récurrents : 3,99 €/mois et 29,99 €/an. Copier les deux `price_…` dans `wrangler.toml`.
+1. Produits → créer **Arpagon+** avec quatre prix récurrents : 1,99 €/mois, 14,99 €/an, et les prix fondateur 0,99 €/mois et 9,99 €/an. Copier les quatre `price_…` dans `wrangler.toml` (laisser les prix fondateur vides pour désactiver l'offre).
 2. Paramètres → Portail client : autoriser la résiliation et la mise à jour de la carte.
 3. Après le déploiement (étape 4) : Développeurs → Webhooks → ajouter `https://<ton-worker>/stripe/webhook` avec les événements `checkout.session.completed`, `customer.subscription.created`, `customer.subscription.updated`, `customer.subscription.deleted`. Copier le secret `whsec_…`.
 

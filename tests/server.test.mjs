@@ -169,3 +169,32 @@ test("sauvegarde chiffrée, conflit entre appareils, suppression du compte", asy
   assert.equal(env.DB.raw.prepare("SELECT COUNT(*) n FROM backups").get().n, 0);
   assert.ok(stripeCalls.some((c) => c.method === "DELETE" && c.url.endsWith("/subscriptions/sub_1")), "abonnement résilié chez Stripe");
 });
+
+test("offre : essai 14 jours et prix fondateur jusqu'à épuisement des places", async () => {
+  const env = { ...makeEnv(), PRICE_FOUNDER_MONTHLY: "price_fm", PRICE_FOUNDER_YEARLY: "price_fy", FOUNDER_LIMIT: "1", TRIAL_DAYS: "14" };
+  const o1 = await (await call(env, "GET", "/offer")).json();
+  assert.deepEqual(o1, { founderLeft: 1, trialDays: 14 });
+
+  const a = await login(env, "a@example.com");
+  assert.equal(a.me.canTrial, true);
+  stripeCalls.length = 0;
+  await call(env, "POST", "/billing/checkout", { token: a.session, body: { plan: "monthly", acceptCgv: true } });
+  assert.match(stripeCalls[0].body, /price%5D=price_fm/, "prix fondateur utilisé");
+  assert.match(stripeCalls[0].body, /trial_period_days%5D=14/, "essai offert au premier abonnement");
+
+  const uid = env.DB.raw.prepare("SELECT id FROM users WHERE email = 'a@example.com'").get().id;
+  await signedWebhook(env, { id: "evt_f1", type: "customer.subscription.created",
+    data: { object: { id: "sub_a", customer: "cus_a", status: "trialing", metadata: { user_id: uid }, cancel_at_period_end: false,
+      items: { data: [{ price: { id: "price_fm" }, current_period_end: 1900000000 }] } } } });
+  const me = (await (await call(env, "GET", "/me", { token: a.session })).json()).me;
+  assert.equal(me.premium, true, "l'essai donne accès au premium");
+  assert.equal(me.founder, true);
+  assert.equal(me.plan, "monthly");
+  assert.equal(me.canTrial, false, "pas de 2e essai");
+  assert.equal((await (await call(env, "GET", "/offer")).json()).founderLeft, 0);
+
+  const b = await login(env, "b@example.com");
+  stripeCalls.length = 0;
+  await call(env, "POST", "/billing/checkout", { token: b.session, body: { plan: "yearly", acceptCgv: true } });
+  assert.match(stripeCalls[0].body, /price%5D=price_y/, "places épuisées : prix normal");
+});
