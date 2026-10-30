@@ -792,6 +792,17 @@ html.wp #reward{backdrop-filter:blur(var(--glass-blur)) saturate(1.4);-webkit-ba
 .rng label{flex:1;font-size:13.5px;font-weight:600}
 .rng input[type=range]{flex:1.4;width:auto;padding:0;background:none;border:none;accent-color:var(--ind)}
 .rng .v{width:52px;text-align:right;font-size:12.5px;color:var(--mut);font-variant-numeric:tabular-nums}
+.pltag{display:inline-block;font-size:9.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:99px;background:var(--ind-soft);color:var(--ind);vertical-align:1px}
+.perso{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:12px;padding:13px 14px;border:1px dashed var(--line2);border-radius:var(--r-m);background:var(--card2)}
+.perso.on{border-style:solid;border-color:var(--ind)}
+.perso b{display:block;font-size:13.5px}
+.perso span{font-size:12px;color:var(--dim)}
+.perso .btn{width:auto;padding:8px 14px}
+.perso .pnm{margin:8px 0 2px;padding:7px 10px;font-size:13px;width:100%;max-width:260px}
+.cpks{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:8px}
+.cpk{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer}
+.cpk input{width:100%;height:38px;padding:2px;border:1px solid var(--line2);border-radius:var(--r-s);background:var(--card);cursor:pointer}
+.cpk span{font-size:11px;font-weight:700;color:var(--mut)}
 .wpprev{height:96px;border-radius:var(--r-m);border:1px solid var(--line2);background-size:cover;background-position:center;
   display:flex;align-items:center;justify-content:center;color:var(--dim);font-size:12.5px;margin-top:10px;background-color:var(--bg2)}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -2484,7 +2495,9 @@ var THEMES = [
   { id: "sakura", n: "Sakura", p: ["#FBF1F3", "#FFFBFC", "#D6336C"], acc: "corail", prem: true,
     u: "Cerisiers en fleur, rose et douceur" },
   { id: "royal",  n: "Or royal", p: ["#0B0906", "#17130C", "#E8C55C"], acc: "or", prem: true,
-    u: "Noir profond et dorures" }
+    u: "Noir profond et dorures" },
+  { id: "perso",  n: "Thème perso", p: null, prem: true,
+    u: "Tes couleurs, à importer ou partager" }
 ];
 var ACCENTS = [
   { id: "indigo", n: "Indigo", c: "#6366F1" }, { id: "emeraude", n: "Émeraude", c: "#10B981" },
@@ -2500,7 +2513,7 @@ var ACCENTS = [
   { id: "corail", n: "Corail", c: "#FF6B4A", prem: true },
   { id: "platine", n: "Platine", c: "#A7B0C0", prem: true }
 ];
-var AP_DEF = { theme: "taverne", accent: "cannelle", glass: 62, wpOpacity: 40, wpBlur: 0, wpVeil: 30, wpFit: "cover", gender: "f", mate: true, sound: true, peek: false };
+var AP_DEF = { theme: "taverne", accent: "cannelle", custom: { name: "Mon thème", bg: "#1A1423", card: "#261C31", txt: "#F4ECF9", acc: "#C084FC" }, glass: 62, wpOpacity: 40, wpBlur: 0, wpVeil: 30, wpFit: "cover", gender: "f", mate: true, sound: true, peek: false };
 var AP = JSON.parse(JSON.stringify(AP_DEF));
 var WP = "";
 var AP_KEY = "budgetv2:appearance", WP_KEY = "budgetv2:wallpaper";
@@ -2516,6 +2529,46 @@ function loadAppearance() {
   WP = LS.get(WP_KEY) || "";
   applyAppearance();
 }
+/* ---------- Thème perso (Arpagon+) : 4 couleurs, le reste en découle ---------- */
+var CUSTOM_VARS = ["--s-bg", "--s-bg2", "--s-card", "--s-card2", "--s-card3", "--line", "--line2",
+  "--txt", "--mut", "--dim", "--ind", "--ind2", "--ind-soft", "--topbar"];
+function hexOK(v) { return /^#[0-9a-f]{6}$/i.test(String(v || "")); }
+function lum(hex) {
+  var n = parseInt(hex.slice(1), 16), c = [n >> 16 & 255, n >> 8 & 255, n & 255].map(function (x) {
+    x /= 255; return x <= .03928 ? x / 12.92 : Math.pow((x + .055) / 1.055, 2.4); });
+  return .2126 * c[0] + .7152 * c[1] + .0722 * c[2];
+}
+function customTheme(c) {
+  var d = AP_DEF.custom; c = c || {};
+  var bg = hexOK(c.bg) ? c.bg : d.bg, cd = hexOK(c.card) ? c.card : d.card,
+      tx = hexOK(c.txt) ? c.txt : d.txt, ac = hexOK(c.acc) ? c.acc : d.acc;
+  var mix = function (a, b, p) { return "color-mix(in srgb, " + a + " " + p + "%, " + b + ")"; };
+  return { light: lum(bg) > .45, bg: bg, card: cd, txt: tx, acc: ac, vars: {
+    "--s-bg": bg, "--s-bg2": mix(bg, cd, 55), "--s-card": cd, "--s-card2": mix(cd, tx, 94), "--s-card3": mix(cd, tx, 88),
+    "--line": mix(cd, tx, 86), "--line2": mix(cd, tx, 74), "--txt": tx, "--mut": mix(tx, cd, 72), "--dim": mix(tx, cd, 55),
+    "--ind": ac, "--ind2": mix(ac, "white", 72), "--ind-soft": mix(ac, "transparent", 15), "--topbar": bg } };
+}
+function themeFile() {
+  var c = customTheme(AP.custom);
+  return JSON.stringify({ arpagonTheme: 1, name: (AP.custom && AP.custom.name) || "Mon thème",
+    bg: c.bg, card: c.card, txt: c.txt, acc: c.acc }, null, 2);
+}
+function readThemeFile(file) {
+  if (!file) return;
+  if (file.size > 20000) { toast("⚠️ Ce fichier n'est pas un thème Arpagon"); return; }
+  var fr = new FileReader();
+  fr.onerror = function () { toast("⚠️ Lecture du fichier impossible"); };
+  fr.onload = function () {
+    var t; try { t = JSON.parse(fr.result); } catch (e) { t = null; }
+    if (!t || !t.arpagonTheme || !["bg", "card", "txt", "acc"].every(function (k) { return hexOK(t[k]); })) {
+      toast("⚠️ Ce fichier n'est pas un thème Arpagon"); return;
+    }
+    AP.custom = { name: String(t.name || "Thème importé").slice(0, 40), bg: t.bg, card: t.card, txt: t.txt, acc: t.acc };
+    AP.theme = "perso"; saveAppearance(); render();
+    toast("Thème « " + AP.custom.name + " » appliqué ✓");
+  };
+  fr.readAsText(file);
+}
 function saveAppearance() { LS.set(AP_KEY, JSON.stringify(AP)); applyAppearance(); }
 function clamp(v, a, b) { v = +v; if (isNaN(v)) v = a; return v < a ? a : v > b ? b : v; }
 function applyAppearance() {
@@ -2524,8 +2577,12 @@ function applyAppearance() {
   if (!th || (th.prem && !premOK())) AP.theme = AP_DEF.theme;
   var acx = ACCENTS.filter(function (a) { return a.id === AP.accent; })[0];
   if (!acx || (acx.prem && !premOK())) AP.accent = AP_DEF.accent;
-  r.setAttribute("data-theme", AP.theme);
+  var cu = AP.theme === "perso" ? customTheme(AP.custom) : null;
+  r.setAttribute("data-theme", cu ? (cu.light ? "clair" : "nuit") : AP.theme);
   r.setAttribute("data-accent", AP.accent);
+  CUSTOM_VARS.forEach(function (k) { r.style.removeProperty(k); });
+  if (cu) Object.keys(cu.vars).forEach(function (k) { r.style.setProperty(k, cu.vars[k]); });
+  var wpOn = !!WP && premOK();
   r.style.setProperty("--glass", clamp(AP.glass, 20, 100) + "%");
   r.style.setProperty("--wp-op", clamp(AP.wpOpacity, 0, 100) / 100);
   r.style.setProperty("--wp-blur", clamp(AP.wpBlur, 0, 40) + "px");
@@ -2533,10 +2590,10 @@ function applyAppearance() {
   r.style.setProperty("--wp-fit", AP.wpFit === "contain" ? "contain" : AP.wpFit === "tile" ? "auto" : "cover");
   var el = document.getElementById("wp");
   if (el) {
-    el.style.backgroundImage = WP ? 'url("' + WP + '")' : "none";
+    el.style.backgroundImage = wpOn ? 'url("' + WP + '")' : "none";
     el.style.backgroundRepeat = AP.wpFit === "tile" ? "repeat" : "no-repeat";
   }
-  r.classList.toggle("wp", !!WP);
+  r.classList.toggle("wp", wpOn);
   renderMate();
   var m = document.querySelector('meta[name="theme-color"]');
   if (m) {
@@ -2858,7 +2915,7 @@ function vDash() {
     setTimeout(function () { rewardPop(G.gained, G.names); levelUps(before); }, 350);
   }
   setTimeout(checkBadges, G.gained ? 900 : 300);
-  var scol = DS.score >= 75 ? "var(--grn)" : DS.score >= 45 ? "var(--amb)" : "var(--red)";
+  var scol = DS.score >= 75 ? "var(--ind)" : DS.score >= 45 ? "var(--amb)" : "var(--red)";
   var chapNo = +month.split("-")[1];
   h += '<div class="c12">' + chapter("Chapitre " + chapNo + " — " + mLabel(month)) +
     '<div class="qhead" onclick="App.openProgress()" role="button" tabindex="0" aria-label="Voir la progression">' +
@@ -3597,6 +3654,30 @@ function wearPicker() {
       '<span class="wn">' + esc(a.n) + '</span><span class="wl">' + (lock ? "🔒 Niveau " + a.lv : on ? "Porté" : "Niveau " + a.lv) + '</span></button>';
   }).join("") + '</div>';
 }
+/* Thème perso : réservé à Arpagon+ (choisir ses couleurs, importer ou partager un thème) */
+function persoPanel() {
+  var imp = '<input type="file" id="thIn" accept=".json,application/json" style="display:none" onchange="App.onTheme(event)">';
+  if (!premOK()) {
+    return '<div class="perso lockd"><div><b>🎨 Crée ton propre thème</b>' +
+      '<span>Choisis tes 4 couleurs, importe un thème ou partage le tien. <span class="pltag">Arpagon+</span></span></div>' +
+      '<button class="btn ghost" onclick="upsell(\'Le thème perso\')">Découvrir</button></div>';
+  }
+  if (AP.theme !== "perso") {
+    return '<div class="perso"><div><b>🎨 Ton thème perso</b><span>Tes couleurs, ou un thème qu\'on t\'a envoyé.</span></div>' +
+      '<div class="two" style="margin:0"><button class="btn ghost" onclick="App.setTheme(\'perso\')">Créer</button>' +
+      '<button class="btn ghost" onclick="App.pickTheme()">Importer</button></div>' + imp + '</div>';
+  }
+  var c = customTheme(AP.custom), nm = (AP.custom && AP.custom.name) || "Mon thème";
+  var pick = function (k, label) {
+    return '<label class="cpk"><input type="color" value="' + c[k] + '" oninput="App.setCustom(\'' + k + '\',this.value)" onchange="App.setCustom(\'' + k + '\',this.value,1)">' +
+      '<span>' + label + '</span></label>';
+  };
+  return '<div class="perso on"><div style="width:100%"><b>🎨 Ton thème perso</b>' +
+    '<input class="pnm" value="' + esc(nm) + '" maxlength="40" aria-label="Nom du thème" onchange="App.setCustom(\'name\',this.value,1)">' +
+    '<div class="cpks">' + pick("bg", "Fond") + pick("card", "Cartes") + pick("txt", "Texte") + pick("acc", "Accent") + '</div>' +
+    '<div class="two" style="margin-top:10px"><button class="btn ghost" onclick="App.exportTheme()">Partager (fichier)</button>' +
+    '<button class="btn ghost" onclick="App.pickTheme()">Importer un thème</button></div>' + imp + '</div></div>';
+}
 function vAppearance() {
   var h = '<div class="card mb"><div class="ttl">Apparence</div>' +
     '<div class="d" style="font-size:12.5px;color:var(--dim);margin-top:-4px">Le style est propre à cet appareil et vaut pour tous tes profils.</div>' +
@@ -3604,10 +3685,11 @@ function vAppearance() {
     THEMES.map(function (t) {
       return '<button class="thc' + (AP.theme === t.id ? " on" : "") + (t.prem && !premOK() ? " lock" : "") + '" onclick="App.setTheme(\'' + t.id + '\')" aria-pressed="' + (AP.theme === t.id) + '">' +
         (t.prem ? '<span class="pl">' + (premOK() ? "+" : "🔒 +") + '</span>' : "") +
-        '<span class="sw"><i style="background:' + t.p[0] + '"></i><i style="background:' + t.p[1] + '"></i><i style="background:' + t.p[2] + '"></i></span>' +
+        (function () { var q = t.p; if (!q) { var c = customTheme(AP.custom); q = [c.bg, c.card, c.acc]; }
+          return '<span class="sw"><i style="background:' + q[0] + '"></i><i style="background:' + q[1] + '"></i><i style="background:' + q[2] + '"></i></span>'; })() +
         '<span class="nm">' + t.n + '</span>' +
         (t.u ? '<span class="uv">' + t.u + '</span>' : "") + '</button>';
-    }).join("") + '</div>' +
+    }).join("") + '</div>' + persoPanel() +
     '<label class="lbl">Couleur d\'accent</label><div class="acrow">' +
     ACCENTS.map(function (a) {
       return '<button class="acc' + (AP.accent === a.id ? " on" : "") + (a.prem && !premOK() ? " lock" : "") + '" style="background:' + a.c + '" title="' + a.n + (a.prem ? " (Arpagon+)" : "") + '" aria-label="' + a.n + '" onclick="App.setAccent(\'' + a.id + '\')">' + (a.prem && !premOK() ? '<span class="pl">+</span>' : "") + '</button>';
@@ -3629,6 +3711,11 @@ function vAppearance() {
     '<button class="sw' + (AP.sound !== false ? " on" : "") + '" onclick="App.toggleSound()" role="switch" ' +
     'aria-checked="' + (AP.sound !== false) + '"><i></i></button></div>';
 
+  if (!premOK()) {
+    h += '<label class="lbl">Fond d\'écran <span class="pltag">Arpagon+</span></label>' +
+      '<div class="wpprev">🔒 Mets ta propre image en fond avec Arpagon+</div>' +
+      '<button class="btn ghost" style="margin-top:10px" onclick="upsell(\'Le fond d\\\'écran perso\')">Découvrir Arpagon+</button>';
+  } else {
   h += '<label class="lbl">Fond d\'écran</label>' +
     '<div class="wpprev" style="' + (WP ? 'background-image:url(&quot;' + WP + '&quot;)' : "") + '">' + (WP ? "" : "Aucun fond d'écran") + '</div>' +
     '<div class="two" style="margin-top:10px">' +
@@ -3649,6 +3736,7 @@ function vAppearance() {
         var n = f === "cover" ? "Remplir" : f === "contain" ? "Entier" : "Mosaïque";
         return '<button class="' + (AP.wpFit === f ? "on a" : "") + '" onclick="App.setAP(\'wpFit\',\'' + f + '\')">' + n + '</button>';
       }).join("") + '</div>';
+  }
   }
   h += '<div class="set" style="border-bottom:none"><div><div class="n">Réinitialiser l\'apparence</div><div class="d">Thème, accent et fond par défaut</div></div>' +
     '<button class="link" onclick="App.resetAP()">Réinitialiser</button></div>';
@@ -4406,7 +4494,7 @@ var App = {
   /* ----- Progression ----- */
   openProgress: function () {
     var DS = discipline(month), LV = levelOf(S.game.xp), ms = missionsFor(month);
-    var scol = DS.score >= 75 ? "var(--grn)" : DS.score >= 45 ? "var(--amb)" : "var(--red)";
+    var scol = DS.score >= 75 ? "var(--ind)" : DS.score >= 45 ? "var(--amb)" : "var(--red)";
     var h = sheetHead("Niveau " + LV.lvl.n + " · " + LV.lvl.t, mLabel(month));
 
     h += '<div style="display:flex;align-items:baseline;gap:10px;margin-top:14px">' +
@@ -4541,7 +4629,26 @@ var App = {
     var el = document.getElementById("apv_" + k);
     if (el) el.textContent = AP[k] + (suf ? suf.replace(/&#32;/g, " ") : "");
   },
-  pickWP: function () { var i = document.getElementById("wpIn"); if (i) { i.value = ""; i.click(); } },
+  pickWP: function () { if (!premOK()) { upsell("Le fond d'écran perso"); return; } var i = document.getElementById("wpIn"); if (i) { i.value = ""; i.click(); } },
+  setCustom: function (k, v, done) {
+    if (!premOK()) { upsell("Le thème perso"); return; }
+    AP.custom = Object.assign({}, AP_DEF.custom, AP.custom || {});
+    if (k === "name") AP.custom.name = String(v || "").trim().slice(0, 40) || "Mon thème";
+    else if (hexOK(v)) AP.custom[k] = v; else return;
+    AP.theme = "perso"; saveAppearance();
+    if (done) render();
+  },
+  pickTheme: function () {
+    if (!premOK()) { upsell("L'import de thème"); return; }
+    var i = document.getElementById("thIn"); if (i) { i.value = ""; i.click(); }
+  },
+  onTheme: function (e) { var f = e.target.files && e.target.files[0]; e.target.value = ""; if (premOK()) readThemeFile(f); },
+  exportTheme: function () {
+    if (!premOK()) { upsell("Le partage de thème"); return; }
+    var nm = ((AP.custom && AP.custom.name) || "mon-theme").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "mon-theme";
+    dl(themeFile(), "arpagon-theme-" + nm + ".json", "application/json");
+    toast("Thème exporté ✓ — envoie le fichier à qui tu veux");
+  },
   onWP: function (e) { var f = e.target.files && e.target.files[0]; e.target.value = ""; setWallpaper(f); },
   clearWP: function () {
     LS.del(WP_KEY); WP = ""; applyAppearance(); render(); toast("Fond d'écran retiré");
