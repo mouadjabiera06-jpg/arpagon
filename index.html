@@ -699,6 +699,43 @@ html.wp #reward{backdrop-filter:blur(var(--glass-blur)) saturate(1.4);-webkit-ba
 @keyframes rpop{0%{transform:scale(.6);opacity:0}60%{transform:scale(1.18)}100%{transform:scale(1);opacity:1}}
 #reward.on .rx{animation:rpop .5s cubic-bezier(.16,1,.3,1)}
 
+
+/* ----- Série, badges, tenues ----- */
+.streak{display:flex;align-items:center;gap:11px;margin-top:12px;padding:10px 12px;border-radius:14px;
+  background:var(--card2);border:1px solid var(--line)}
+.streak .fl{font-size:24px;line-height:1;filter:grayscale(1);opacity:.55;transition:filter .3s,opacity .3s}
+.streak.ok .fl,.streak.risk .fl{filter:none;opacity:1}
+.streak.ok .fl{animation:flick 1.6s ease-in-out infinite}
+.streak.risk{border-color:var(--amb)}
+.streak.ok{border-color:rgba(255,140,60,.55);box-shadow:0 0 18px rgba(255,140,60,.15)}
+.streak .sk{flex:1;min-width:0}
+.streak .sk b{display:block;font-size:14px;font-weight:800;letter-spacing:-.01em}
+.streak .sk span{display:block;font-size:11.5px;color:var(--dim);margin-top:1px}
+.streak .qgo{flex-shrink:0;font-size:12px}
+@keyframes flick{0%,100%{transform:scale(1) rotate(-3deg)}50%{transform:scale(1.12) rotate(3deg)}}
+#reward.fire{border-color:#FF8C3C;box-shadow:var(--sh-lg),0 0 26px rgba(255,140,60,.35)}
+#reward.fire .rx{background:rgba(255,140,60,.18);border-color:#FF8C3C;color:#FF8C3C;font-size:17px}
+#reward.badge .rx{font-size:18px;border-color:var(--amb);background:rgba(242,193,78,.18)}
+#reward.lvl{border-color:var(--amb);box-shadow:var(--sh-lg),0 0 30px rgba(242,193,78,.35)}
+.bgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px}
+.bdg{display:flex;flex-direction:column;align-items:center;text-align:center;gap:3px;padding:12px 8px;
+  border-radius:14px;background:var(--card2);border:1px solid var(--line);opacity:.55}
+.bdg.on{opacity:1;border-color:var(--amb);box-shadow:0 0 14px rgba(242,193,78,.12)}
+.bdg .be{font-size:26px;line-height:1.1}
+.bdg b{font-size:12.5px;font-weight:750}
+.bdg span{font-size:10.5px;color:var(--dim);line-height:1.35}
+.wgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px;margin-bottom:6px}
+.wear{display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 6px;border-radius:14px;
+  background:var(--card2);border:1.5px solid var(--line);color:var(--txt);cursor:pointer;font:inherit}
+.wear svg{width:46px;height:40px}
+.wear .wn{font-size:11.5px;font-weight:700;line-height:1.2;text-align:center}
+.wear .wl{font-size:10.5px;color:var(--dim)}
+.wear.on{border-color:var(--ind);background:var(--ind-soft)}
+.wear.lock{opacity:.5;cursor:default}
+.wear.lock svg{filter:grayscale(1) brightness(.6)}
+.maura{animation:aura 3.2s ease-in-out infinite;transform-origin:60px 70px}
+@keyframes aura{0%,100%{opacity:.7;transform:scale(.96)}50%{opacity:1;transform:scale(1.04)}}
+@media (prefers-reduced-motion:reduce){.streak.ok .fl,.maura{animation:none}}
 /* Animations du personnage */
 .masc .mbody{animation:mbob 3.6s ease-in-out infinite;transform-origin:60px 145px}
 .masc .mhair{animation:msway 4.8s ease-in-out infinite;transform-origin:58px 20px}
@@ -1564,7 +1601,7 @@ function mascotSvg(themeId, score, gender) {
     'aria-label="' + label + '. Clique pour le replier." onclick="App.mateTap()" ' +
     'onmouseenter="App.mateHover()" ' +
     'onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();App.mateTap()}">' +
-    '<g class="mbody">' + g.back + feet + torso +
+    '<g class="mbody">' + accLayer("back") + g.back + feet + torso + accLayer("body") +
     /* bras éloigné */
     '<rect x="' + (m ? 37 : 38) + '" y="60" width="' + (m ? 7.5 : 7) + '" height="24" rx="3.6" fill="' + c.out2 + '" opacity=".75"/>' +
     '<circle cx="' + (m ? 40.7 : 41.5) + '" cy="85" r="4.2" fill="' + c.sh + '"/>' +
@@ -1578,7 +1615,7 @@ function mascotSvg(themeId, score, gender) {
     '<path d="M40 34 Q42 20 52 16 Q46 26 44 40 Z" fill="' + c.sh + '" opacity=".45"/>' +
     hairFront +
     '<ellipse cx="79" cy="38" rx="3" ry="4.4" fill="' + c.skin + '"/>' +
-    mascotFace(mood, c, !m) + g.head +
+    mascotFace(mood, c, !m) + accLayer("face") + g.head + accLayer("head", !!g.head) +
     '</g></svg>';
 }
 
@@ -1649,26 +1686,91 @@ function mateSay(html, action, fn, ms) {
 }
 
 /* ----- Bandeau de récompense, en haut ----- */
-var rewT = null;
-function rewardPop(xp, names) {
-  var el = document.getElementById("reward");
-  if (!el) return;
-  el.innerHTML = '<span class="rx">+' + xp + '</span><span class="rt">' +
-    '<b>Quête accomplie</b><span>' + esc(names.join(" · ")) + '</span></span>';
+/* Les annonces passent l'une après l'autre (quête, niveau, badge, série)
+   au lieu de s'écraser quand plusieurs tombent en même temps. */
+var rewQ = [], rewBusy = false;
+function celebrate(badge, title, sub, sfx, ms, cls) {
+  rewQ.push({ b: badge, t: title, s: sub, f: sfx, ms: ms || 4200, c: cls || "" });
+  if (!rewBusy) rewNext();
+}
+function rewNext() {
+  var el = document.getElementById("reward"), x = rewQ.shift();
+  if (!el || !x) { rewBusy = false; return; }
+  rewBusy = true;
+  el.className = x.c;
+  el.innerHTML = '<span class="rx">' + x.b + '</span><span class="rt">' +
+    '<b>' + x.t + '</b><span>' + x.s + '</span></span>';
+  void el.offsetWidth;
   el.classList.add("on");
-  sfxReward();
-  clearTimeout(rewT);
-  rewT = setTimeout(function () { el.classList.remove("on"); }, 4200);
+  if (x.f) x.f();
+  setTimeout(function () {
+    el.classList.remove("on");
+    setTimeout(rewNext, 380);
+  }, x.ms);
+}
+function rewardPop(xp, names) {
+  celebrate("+" + xp, "Quête accomplie", esc(names.join(" · ")), sfxReward);
 }
 function levelUpPop(lv) {
-  var el = document.getElementById("reward");
-  if (!el) return;
-  el.innerHTML = '<span class="rx">' + lv.n + '</span><span class="rt">' +
-    '<b>Niveau ' + lv.n + " — " + esc(lv.t) + '</b><span>' + esc(lv.d) + '</span></span>';
-  el.classList.add("on");
-  sfxLevel();
-  clearTimeout(rewT);
-  rewT = setTimeout(function () { el.classList.remove("on"); }, 5200);
+  var gift = ACCS.filter(function (a) { return a.lv === lv.n; })[0];
+  if (gift) {
+    var w = S.game.wear || (S.game.wear = []);
+    if (w.indexOf(gift.id) < 0) { w.push(gift.id); saveNow(); renderMate(); }
+  }
+  celebrate(lv.n, "Niveau " + lv.n + " — " + esc(lv.t),
+    gift ? "Débloqué pour ton compagnon : <b>" + esc(gift.n) + "</b>" : esc(lv.d), sfxLevel, 5200, "lvl");
+}
+function sfxStreak() {
+  [659.25, 880, 1174.66].forEach(function (f, i) { tone({ w: "triangle", f: f, d: 0.12, v: 0.05, at: i * 0.06 }); });
+}
+
+/* ---------- TENUES DU COMPAGNON (une par niveau) ---------- */
+/* slot : back = derrière le corps · body = sur le buste · face · head.
+   Un accessoire de tête se cache si le thème coiffe déjà le compagnon. */
+var ACCS = [
+  { id: "echarpe", vb: "39 49 40 30", lv: 2, n: "Écharpe", slot: "body", svg: function () {
+    return '<path d="M43.5 53 Q58 61 74.5 53 L75.5 58.5 Q58 67 42.5 58.5 Z" fill="#C8463D"/>' +
+      '<path d="M45 58 L41.5 75 L47.5 74 L50 60 Z" fill="#A93730"/>' +
+      '<path d="M44 66 h5 M43 70 h5" stroke="#F2E2C8" stroke-width="1.1" opacity=".7"/>'; } },
+  { id: "lunettes", vb: "38 27 36 18", lv: 3, n: "Lunettes de comptable", slot: "face", svg: function () {
+    return '<g fill="#fff" fill-opacity=".14" stroke="#2A2320" stroke-width="1.7">' +
+      '<circle cx="50.5" cy="36.5" r="5.4"/><circle cx="67.2" cy="36" r="6"/></g>' +
+      '<path d="M55.9 36 Q58.8 34 61.2 35.6 M45.2 35.6 L40.6 33.6" stroke="#2A2320" stroke-width="1.6" fill="none" stroke-linecap="round"/>'; } },
+  { id: "piece", vb: "59 63 16 16", lv: 4, n: "Pin's pièce d'or", slot: "body", svg: function () {
+    return '<circle cx="67" cy="71" r="4.6" fill="#E8B33A" stroke="#A87A16" stroke-width="1.2"/>' +
+      '<path d="M68.6 69 Q66.2 67.6 65 70 Q64.4 72.6 66.8 73.2 Q68 73.4 68.8 72.6 M63.6 70.4 h3.6 M63.6 71.8 h3.6" stroke="#8A6210" stroke-width=".9" fill="none" stroke-linecap="round"/>'; } },
+  { id: "cape", vb: "26 50 66 82", lv: 5, n: "Cape de voyage", slot: "back", svg: function () {
+    return '<path d="M45 54 Q28 96 31 130 L86 130 Q90 96 72 54 Q58 62 45 54 Z" fill="#6E2233"/>' +
+      '<path d="M45 54 Q34 92 36 130 L44 130 Q42 92 49 58 Z" fill="#000" opacity=".18"/>'; } },
+  { id: "sacoche", vb: "44 50 46 54", lv: 6, n: "Sacoche du stratège", slot: "body", svg: function () {
+    return '<path d="M47 53 L76 93" stroke="#5B3A22" stroke-width="2.6" stroke-linecap="round"/>' +
+      '<rect x="69" y="88" width="17" height="13" rx="3" fill="#7A4E2D"/>' +
+      '<path d="M69 92 h17" stroke="#5B3A22" stroke-width="1.4"/><circle cx="77.5" cy="94.5" r="1.4" fill="#E8B33A"/>'; } },
+  { id: "medaille", vb: "47 51 22 30", lv: 7, n: "Médaille de discipline", slot: "body", svg: function () {
+    return '<path d="M51 54 L58 70 L65 54" stroke="#2C4C9B" stroke-width="3.2" fill="none"/>' +
+      '<path d="M54 54 L58 63 L62 54" stroke="#E03B4B" stroke-width="1.4" fill="none"/>' +
+      '<circle cx="58" cy="73" r="5.4" fill="#F2C14E" stroke="#B8860B" stroke-width="1.2"/>' +
+      '<path d="M58 70 l1 2 2.2 .3 -1.6 1.5 .4 2.2 -2 -1 -2 1 .4 -2.2 -1.6 -1.5 2.2 -.3 Z" fill="#B8860B"/>'; } },
+  { id: "laurier", vb: "34 4 52 26", lv: 8, n: "Couronne de laurier", slot: "head", svg: function () {
+    var h = "";
+    [[40, 24, -50], [43, 18, -35], [48, 13.5, -20], [54, 11, -8], [66, 11, 8], [72, 13.5, 20], [77, 18, 35], [80, 24, 50]]
+      .forEach(function (l) { h += '<ellipse cx="' + l[0] + '" cy="' + l[1] + '" rx="4.2" ry="2" fill="#5E8C3A" transform="rotate(' + l[2] + ' ' + l[0] + ' ' + l[1] + ')"/>'; });
+    return '<path d="M40 26 Q60 2 80 26" stroke="#3F6626" stroke-width="1.4" fill="none"/>' + h; } },
+  { id: "aura", vb: "4 -2 112 146", lv: 9, n: "Aura dorée", slot: "back", svg: function () {
+    return '<defs><radialGradient id="arpAura"><stop offset="0" stop-color="#FFD76A" stop-opacity=".55"/>' +
+      '<stop offset="1" stop-color="#FFD76A" stop-opacity="0"/></radialGradient></defs>' +
+      '<ellipse class="maura" cx="60" cy="70" rx="58" ry="76" fill="url(#arpAura)"/>'; } },
+  { id: "couronne", vb: "42 -1 36 23", lv: 10, n: "Couronne du Souverain", slot: "head", svg: function () {
+    return '<path d="M45 18 L46.5 4 L53 11.5 L59.5 1.5 L66 11.5 L72.5 4 L74 18 Z" fill="#F2C14E" stroke="#B8860B" stroke-width="1.2" stroke-linejoin="round"/>' +
+      '<rect x="45" y="15.5" width="29" height="4" rx="1.5" fill="#D9A632"/>' +
+      '<circle cx="59.5" cy="10" r="2" fill="#E03B4B"/><circle cx="51" cy="13" r="1.3" fill="#2C4C9B"/><circle cx="68" cy="13" r="1.3" fill="#2C4C9B"/>'; } }
+];
+function accLayer(slot, hatOn) {
+  if (typeof S === "undefined" || !S || !S.game) return "";
+  var w = S.game.wear || [], lv = levelOf(S.game.xp).lvl.n;
+  return ACCS.filter(function (a) {
+    return a.slot === slot && w.indexOf(a.id) >= 0 && lv >= a.lv && !(slot === "head" && hatOn);
+  }).map(function (a) { return a.svg(); }).join("");
 }
 
 /* ---------- PROGRESSION : score, niveaux, missions ---------- */
@@ -1702,7 +1804,9 @@ function levelOf(xp) {
 /* Nombre de jours distincts avec au moins une opération saisie, sur le mois */
 function activeDays(m) {
   var d = {};
-  S.transactions.forEach(function (t) { if (monthOf(t.date) === m) d[t.date] = 1; });
+  var today = todayISO();
+  /* une opération datée dans le futur ne prouve pas qu'on a tenu le carnet ce jour-là */
+  S.transactions.forEach(function (t) { if (monthOf(t.date) === m && t.date <= today) d[t.date] = 1; });
   return Object.keys(d).length;
 }
 function daysInMonth(m) {
@@ -1725,18 +1829,24 @@ function discipline(m) {
 
   /* 2. Régularité de suivi (25 pts) — un budget non tenu à jour ne vaut rien */
   var ad = activeDays(m), dim = daysInMonth(m);
-  var p2 = Math.min(25, ad / Math.max(1, dim) * 50);
+  /* plancher à 10 jours : une seule saisie le 1er ne vaut plus 25/25 */
+  var p2 = Math.min(25, ad / Math.max(10, dim) * 50);
   parts.push({ k: "Régularité de suivi", v: p2, max: 25, d: ad + " jour" + (ad > 1 ? "s" : "") + " sur " + dim });
 
   /* 3. Taux d'épargne (25 pts) */
   var p3 = st.income > 0 ? Math.min(25, st.rate / 20 * 25) : 0;
   parts.push({ k: "Taux d'épargne", v: p3, max: 25, d: st.rate.toFixed(1) + " % des revenus" });
 
-  /* 4. Dépenses réfléchies (20 pts) — part des achats marqués « inutiles » */
+  /* 4. Dépenses réfléchies (20 pts) — part des achats marqués « inutiles ».
+     Les points ne tombent que si tu tries tes achats (utile / inutile) :
+     ne rien trier ne doit pas rapporter plus qu'être honnête. */
   var share = st.expenses > 0 ? st.useless / st.expenses : 0;
-  var p4 = st.expenses > 0 ? Math.max(0, 20 - share * 100) : 0;
+  var ex = st.txs.filter(function (t) { return t.type === "expense" && t.categoryId !== "epargne"; });
+  var rated = ex.filter(function (t) { return t.useful === "useful" || t.useful === "useless"; }).length;
+  var rs = ex.length ? rated / ex.length : 0;
+  var p4 = st.expenses > 0 ? Math.max(0, 20 - share * 100) * Math.min(1, rs / 0.5) : 0;
   parts.push({ k: "Dépenses réfléchies", v: p4, max: 20,
-    d: st.expenses > 0 ? (share * 100).toFixed(0) + " % marqués inutiles" : "rien à évaluer" });
+    d: st.expenses > 0 ? (share * 100).toFixed(0) + " % marqués inutiles · " + Math.round(rs * 100) + " % des achats triés" : "rien à évaluer" });
 
   var total = parts.reduce(function (a, x) { return a + x.v; }, 0);
   return { score: Math.round(total), parts: parts, stats: st, tot: T };
@@ -1848,7 +1958,7 @@ function missionPool(m) {
   var prev = stats(shiftM(m, -1)), pr = prev.income > 0 ? prev.rate : -1;
   var tgt = pr < 0 ? (lv < 3 ? 5 : 10) : pr < 5 ? 5 : pr < 10 ? 10 : pr < 15 ? 15 : 20;
   var need = Math.round(st.income * tgt / 100);
-  add({ id: "save" + tgt, ico: "coins", xp: tgt >= 15 ? 70 : 45, prio: 55, rel: st.income > 0,
+  add({ id: "save", ico: "coins", xp: tgt >= 15 ? 70 : 45, prio: 55, rel: st.income > 0,
     t: "Mettre " + tgt + " % de côté", d: "Épargner " + money(need) + " sur tes " + money(st.income) + " de revenus",
     why: pr >= 0 ? "Le mois dernier : <b>" + pr.toFixed(0) + " %</b>. Un cran de plus suffit."
       : "Mise de côté dès la paie, l'épargne ne se négocie plus en fin de mois.",
@@ -1910,6 +2020,8 @@ function missionsFor(m) {
   var cl = S.game.claimed;
   var all = missionPool(m).map(function (x) {
     var key = m + ":" + x.id, done = x.kind === "act" ? !!cl[key] : x.done != null ? x.done : x.cur >= x.goal;
+    /* anciennes clés « save5 », « save10 »… : une seule quête épargne par mois */
+    if (x.id === "save" && !cl[key]) for (var ck in cl) if (ck.indexOf(m + ":save") === 0) { cl[key] = 1; break; }
     if (x.kind === "auto" && cl[key]) done = true;
     return {
       id: x.id, kind: x.kind, ico: x.ico, t: x.t, d: x.d, why: x.why, xp: x.xp, prio: x.prio, rel: x.rel,
@@ -1948,6 +2060,150 @@ function grantXp(m) {
   });
   if (gained) { saveNow(); }
   return { gained: gained, names: names };
+}
+
+/* Solde tous les mois finis depuis la dernière visite (au plus 12), pas
+   seulement le précédent : un mois sauté ne fait plus perdre ses quêtes. */
+function settleMonths() {
+  var cur = curMonth(), from = S.game.settled || shiftM(cur, -2), out = { gained: 0, names: [] };
+  if (monthsBetween(from, cur) > 13) from = shiftM(cur, -13);
+  for (var m = shiftM(from, 1); m < cur; m = shiftM(m, 1)) {
+    var g = grantXp(m); out.gained += g.gained; out.names = out.names.concat(g.names);
+  }
+  if (S.game.settled !== shiftM(cur, -1)) { S.game.settled = shiftM(cur, -1); saveNow(); }
+  return out;
+}
+
+/* Annonce chaque niveau franchi (on peut en passer deux d'un coup) */
+function levelUps(before) {
+  var now = levelOf(S.game.xp).lvl.n;
+  for (var n = before + 1; n <= now; n++) levelUpPop(LEVELS[n - 1]);
+}
+
+/* ---------- SÉRIE DE JOURS 🔥 ----------
+   Un jour compte quand tu ouvres le carnet pour de vrai : une opération
+   saisie ce jour-là (quelle que soit sa date) ou « rien dépensé aujourd'hui ».
+   Joker : un seul jour manqué est pardonné par tranche de 7 jours. */
+var STREAK_STEPS = [[3, 10], [7, 25], [14, 40], [30, 80], [60, 120], [100, 200], [200, 300], [365, 500]];
+function isoShift(iso, n) {
+  var d = new Date(iso + "T12:00:00"); d.setDate(d.getDate() + n);
+  return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
+}
+function gameDays() {
+  if (!S.game.days) {
+    /* première fois : on reprend les 60 derniers jours d'opérations */
+    S.game.days = {};
+    var t = todayISO(), lim = isoShift(t, -60);
+    S.transactions.forEach(function (x) { if (x.date <= t && x.date >= lim) S.game.days[x.date] = 1; });
+  }
+  return S.game.days;
+}
+function streak() {
+  var D = gameDays(), t = todayISO(), today = !!D[t];
+  var d = today ? t : isoShift(t, -1), n = 0, joker = null, jokers = [];
+  for (var i = 0; i < 2000; i++) {
+    if (D[d]) n++;
+    else if (D[isoShift(d, -1)] && (!joker || (new Date(joker) - new Date(d)) / 864e5 >= 7)) {
+      joker = d; jokers.push(d);
+    } else break;
+    d = isoShift(d, -1);
+  }
+  /* le joker est-il encore dispo pour les 7 prochains jours ? */
+  var used = jokers.filter(function (j) { return (new Date(t) - new Date(j)) / 864e5 < 7; }).length > 0;
+  return { n: n, today: today, joker: !used, best: Math.max(n, S.game.best || 0) };
+}
+/* Marque aujourd'hui. Renvoie vrai si c'est la première fois de la journée. */
+function markToday() {
+  var D = gameDays(), t = todayISO();
+  if (D[t]) return false;
+  D[t] = 1;
+  /* on ne garde qu'un peu plus d'un an d'historique */
+  var lim = isoShift(t, -400);
+  Object.keys(D).forEach(function (k) { if (k < lim) delete D[k]; });
+  return true;
+}
+/* Récompense du geste quotidien : +5 XP la première fois du jour,
+   bonus aux paliers de série. */
+function dailyReward() {
+  if (!markToday()) { sfxTap(); return; }
+  var t = todayISO(), st = streak(), before = levelOf(S.game.xp).lvl.n, xp = 0;
+  if (!S.game.claimed["d:" + t]) { S.game.claimed["d:" + t] = 1; xp += 5; }
+  S.game.xp += xp;
+  if (st.n > (S.game.best || 0)) S.game.best = st.n;
+  var step = STREAK_STEPS.filter(function (x) { return x[0] === st.n && !S.game.claimed["s:" + x[0]]; })[0];
+  saveNow(); render();
+  celebrate("🔥", "Série : " + st.n + " jour" + (st.n > 1 ? "s" : ""),
+    (xp ? "+" + xp + " XP · " : "") + (st.n === 1 ? "Reviens demain pour la faire grandir" : "Carnet tenu aujourd'hui"), sfxStreak, 2600, "fire");
+  if (step) {
+    S.game.claimed["s:" + step[0]] = 1; S.game.xp += step[1]; saveNow(); render();
+    celebrate("+" + step[1], step[0] + " jours d'affilée !", "Bonus de série", sfxReward, 4200, "fire");
+  }
+  levelUps(before);
+  setTimeout(checkBadges, 400);
+}
+
+/* ---------- BADGES ----------
+   Gagnés une fois pour toutes. Chaque test relit tes vraies données. */
+function finishedMonths() {
+  var seen = {}, cur = curMonth();
+  S.transactions.forEach(function (t) { var m = monthOf(t.date); if (m < cur) seen[m] = 1; });
+  return Object.keys(seen).sort().slice(-24);
+}
+var BADGES = [
+  { id: "premier", e: "✍️", n: "Premier pas", d: "Noter ta toute première opération",
+    ok: function () { return S.transactions.length > 0; } },
+  { id: "cent", e: "📒", n: "Carnet bien rempli", d: "100 opérations notées",
+    ok: function () { return S.transactions.length >= 100; } },
+  { id: "serie7", e: "🔥", n: "Une semaine pile", d: "7 jours de série",
+    ok: function (c) { return c.best >= 7; } },
+  { id: "serie30", e: "☄️", n: "Le mois sans trou", d: "30 jours de série",
+    ok: function (c) { return c.best >= 30; } },
+  { id: "serie100", e: "🌋", n: "Inarrêtable", d: "100 jours de série",
+    ok: function (c) { return c.best >= 100; } },
+  { id: "tenu", e: "🛡️", n: "Mur porteur", d: "Finir un mois avec au moins 3 enveloppes, aucune dépassée",
+    ok: function (c) { return c.months.some(function (m) {
+      var st = stats(m), bs = S.budgets.filter(function (b) { return b.month === m; });
+      return bs.length >= 3 && bs.every(function (b) { return (st.byCat[b.categoryId] || 0) <= b.amount; });
+    }); } },
+  { id: "zero", e: "🧊", n: "Tête froide", d: "Un mois fini avec 10 achats triés et zéro inutile",
+    ok: function (c) { return c.months.some(function (m) {
+      var st = stats(m), r = st.txs.filter(function (t) { return t.type === "expense" && (t.useful === "useful" || t.useful === "useless"); });
+      return r.length >= 10 && st.useless === 0;
+    }); } },
+  { id: "ep20", e: "🐿️", n: "Écureuil", d: "Épargner 20 % de tes revenus sur un mois fini",
+    ok: function (c) { return c.months.some(function (m) { var st = stats(m); return st.income > 0 && st.rate >= 20; }); } },
+  { id: "quetes", e: "🗡️", n: "Chapitre bouclé", d: "Finir un mois avec toutes ses quêtes (au moins 4)",
+    ok: function (c) { return c.months.some(function (m) {
+      var ms = missionsFor(m).filter(function (x) { return x.kind === "auto"; });
+      return ms.length >= 4 && ms.every(function (x) { return x.done; });
+    }); } },
+  { id: "objectif", e: "🏁", n: "Cap atteint", d: "Atteindre un objectif d'épargne",
+    ok: function () { return (S.goals || []).some(function (g) { return g.done || (g.target > 0 && g.saved >= g.target); }); } },
+  { id: "dette", e: "⛓️", n: "Libéré", d: "Rembourser entièrement une dette",
+    ok: function () { return (S.debts || []).some(function (d) { return d.kind === "owed" && d.remaining <= 0; }); } },
+  { id: "niv5", e: "⭐", n: "Solide", d: "Atteindre le niveau 5",
+    ok: function () { return levelOf(S.game.xp).lvl.n >= 5; } },
+  { id: "niv10", e: "👑", n: "Souverain", d: "Atteindre le niveau 10",
+    ok: function () { return levelOf(S.game.xp).lvl.n >= 10; } }
+];
+var badgeBusy = false;
+function checkBadges() {
+  if (badgeBusy || !S || !S.game) return;
+  badgeBusy = true;
+  try {
+    var got = S.game.badges || (S.game.badges = {}), st = streak(), news = [];
+    var ctx = { best: Math.max(st.best, st.n), months: finishedMonths() };
+    BADGES.forEach(function (b) {
+      if (got[b.id]) return;
+      var ok = false;
+      try { ok = b.ok(ctx); } catch (e) {}
+      if (ok) { got[b.id] = todayISO(); news.push(b); }
+    });
+    if (news.length) {
+      saveNow();
+      news.forEach(function (b) { celebrate(b.e, "Badge : " + esc(b.n), esc(b.d), sfxReward, 4200, "badge"); });
+    }
+  } finally { badgeBusy = false; }
 }
 
 /* ----- Défi de la semaine ----- */
@@ -2517,6 +2773,11 @@ var MOBILE_TABS = ["dash", "tx", "shop", "bud", "goal"];
 var MORE_TABS = ["debt", "stat", "hist", "set"];
 var FAB_LABELS = { dash: "Nouvelle opération", tx: "Nouvelle opération", shop: "Noter des courses", bud: "Nouvelle opération", stat: "Nouvelle opération", hist: "Nouvelle opération", goal: "Nouvel objectif ou achat", debt: "Nouvelle dette ou prêt" };
 function render() {
+  /* une vieille sauvegarde restaurée peut arriver sans partie de jeu */
+  if (!S.game) S.game = { xp: 0, claimed: {}, seen: {}, skip: {} };
+  if (!S.game.claimed) S.game.claimed = {};
+  if (!S.game.badges) S.game.badges = {};
+  if (!(S.game.wear instanceof Array)) S.game.wear = [];
   fixSavingsCats();
   syncFixed();
   document.getElementById("mlabel").textContent = mLabel(month);
@@ -2590,13 +2851,13 @@ function vDash() {
   var before = levelOf(S.game.xp).lvl.n;
   /* un plafond (« freiner sur… ») ne se juge qu'une fois le mois fini :
      on solde le mois précédent en arrivant sur le mois en cours */
-  var G0 = month === curMonth() ? grantXp(shiftM(month, -1)) : { gained: 0, names: [] };
+  var G0 = month === curMonth() ? settleMonths() : { gained: 0, names: [] };
   var G = grantXp(month), DS = discipline(month), LV = levelOf(S.game.xp);
   G.gained += G0.gained; G.names = G0.names.concat(G.names);
   if (G.gained) {
-    setTimeout(function () { rewardPop(G.gained, G.names); }, 350);
-    if (LV.lvl.n > before) setTimeout(function () { levelUpPop(LV.lvl); }, 4600);
+    setTimeout(function () { rewardPop(G.gained, G.names); levelUps(before); }, 350);
   }
+  setTimeout(checkBadges, G.gained ? 900 : 300);
   var scol = DS.score >= 75 ? "var(--grn)" : DS.score >= 45 ? "var(--amb)" : "var(--red)";
   var chapNo = +month.split("-")[1];
   h += '<div class="c12">' + chapter("Chapitre " + chapNo + " — " + mLabel(month)) +
@@ -2609,7 +2870,16 @@ function vDash() {
     '<div class="qxp"><i style="width:' + LV.pct + '%"></i></div>' +
     '<div class="qxpi"><span>' + S.game.xp + ' XP</span><span>' +
     (LV.next ? (LV.next.xp - S.game.xp) + ' XP → ' + LV.next.t : 'palier maximum') + '</span></div>' +
-    '</div></div></div>';
+    '</div></div>';
+  var SK = streak();
+  h += '<div class="streak' + (SK.today ? " ok" : SK.n ? " risk" : "") + '">' +
+    '<span class="fl" aria-hidden="true">🔥</span>' +
+    '<div class="sk"><b>' + (SK.n ? SK.n + " jour" + (SK.n > 1 ? "s" : "") + " de série" : "Lance ta série") + '</b>' +
+    '<span>' + (SK.today ? "Carnet tenu aujourd'hui ✓" + (SK.joker ? " · joker dispo" : "")
+      : SK.n ? "Note une opération aujourd'hui pour la garder" + (SK.joker ? " (joker dispo)" : "")
+      : "Note une opération chaque jour, même petite") + '</span></div>' +
+    (SK.today ? "" : '<button class="qgo" onclick="event.stopPropagation();App.noSpend()">Rien dépensé aujourd\'hui</button>') +
+    '</div></div>';
 
   /* --- Quêtes actives, directement sur l'accueil --- */
   var ms = missionsFor(month);
@@ -3318,6 +3588,15 @@ function rng(lbl, key, min, max, step, suffix, hint) {
     'oninput="App.setAP(\'' + key + '\',this.value,\'' + suffix.replace(/ /g, "&#32;") + '\')">' +
     '<span class="v" id="apv_' + key + '">' + v + suffix + '</span></div>';
 }
+function wearPicker() {
+  var lv = levelOf(S.game.xp).lvl.n, w = S.game.wear || [];
+  return '<div class="wgrid">' + ACCS.map(function (a) {
+    var lock = lv < a.lv, on = !lock && w.indexOf(a.id) >= 0;
+    return '<button class="wear' + (on ? " on" : "") + (lock ? " lock" : "") + '" onclick="App.toggleWear(\'' + a.id + '\')" aria-pressed="' + on + '">' +
+      '<svg viewBox="' + a.vb + '" aria-hidden="true">' + a.svg() + '</svg>' +
+      '<span class="wn">' + esc(a.n) + '</span><span class="wl">' + (lock ? "🔒 Niveau " + a.lv : on ? "Porté" : "Niveau " + a.lv) + '</span></button>';
+  }).join("") + '</div>';
+}
 function vAppearance() {
   var h = '<div class="card mb"><div class="ttl">Apparence</div>' +
     '<div class="d" style="font-size:12.5px;color:var(--dim);margin-top:-4px">Le style est propre à cet appareil et vaut pour tous tes profils.</div>' +
@@ -3343,6 +3622,8 @@ function vAppearance() {
     '<div class="d">Il donne les quêtes et annonce les récompenses</div></div>' +
     '<button class="sw' + (AP.mate !== false ? " on" : "") + '" onclick="App.toggleMate()" role="switch" ' +
     'aria-checked="' + (AP.mate !== false) + '"><i></i></button></div>' +
+    '<label class="lbl">Tenues du compagnon <span class="dim" style="font-weight:500;text-transform:none;letter-spacing:0">— une nouvelle à chaque niveau</span></label>' +
+    wearPicker() +
     '<div class="set" style="border-bottom:none"><div><div class="n">Sons</div>' +
     '<div class="d">Voix du compagnon et fanfare des récompenses</div></div>' +
     '<button class="sw' + (AP.sound !== false ? " on" : "") + '" onclick="App.toggleSound()" role="switch" ' +
@@ -4089,6 +4370,18 @@ var App = {
     if (!x || S.game.claimed[x.key]) return;
     App.claim(x.key, x.xp, x.t);
   },
+  noSpend: function () {
+    if (streak().today) return;
+    dailyReward();
+  },
+  toggleWear: function (id) {
+    var a = ACCS.filter(function (x) { return x.id === id; })[0];
+    if (!a) return;
+    if (levelOf(S.game.xp).lvl.n < a.lv) { toast("🔒 Se débloque au niveau " + a.lv); return; }
+    var w = S.game.wear || (S.game.wear = []), i = w.indexOf(id);
+    if (i >= 0) w.splice(i, 1); else w.push(id);
+    saveNow(); renderMate(); render(); sfxTap();
+  },
   defiDo: function () {
     var D = defiOfWeek();
     if (D.done) return;
@@ -4107,8 +4400,7 @@ var App = {
     var inSheet = document.getElementById("ov").classList.contains("on");
     render();
     if (inSheet) App.openProgress();
-    setTimeout(function () { rewardPop(xp, [name]); }, 120);
-    if (lv.lvl.n > before) setTimeout(function () { levelUpPop(lv.lvl); }, 4400);
+    setTimeout(function () { rewardPop(xp, [name]); levelUps(before); checkBadges(); }, 120);
   },
 
   /* ----- Progression ----- */
@@ -4129,6 +4421,23 @@ var App = {
         '<span class="b"><i style="width:' + pc + '%;background:' + c + '"></i></span>' +
         '<span class="p" style="color:' + c + '">' + Math.round(p.v) + '/' + p.max + '</span></div>';
     });
+
+    var SK = streak(), got = S.game.badges || {};
+    h += '<label class="lbl">Série</label><div class="streak' + (SK.today ? " ok" : SK.n ? " risk" : "") + '" style="margin-top:0">' +
+      '<span class="fl" aria-hidden="true">🔥</span><div class="sk"><b>' + SK.n + ' jour' + (SK.n > 1 ? "s" : "") + '</b>' +
+      '<span>Record : ' + SK.best + ' · ' + (SK.joker ? "joker disponible" : "joker utilisé cette semaine") + '</span></div></div>' +
+      '<div class="dim" style="font-size:11.5px;margin-top:6px">Prochain bonus : ' +
+      ((STREAK_STEPS.filter(function (x) { return x[0] > SK.n; })[0]) || [0, 0]).map(function (v, i) { return i ? "+" + v + " XP" : v + " jours"; }).join(" → ") +
+      '. Un jour manqué par semaine est pardonné.</div>';
+
+    var nb = BADGES.filter(function (b) { return got[b.id]; }).length;
+    h += '<label class="lbl">Badges — ' + nb + ' / ' + BADGES.length + '</label><div class="bgrid">' +
+      BADGES.map(function (b) {
+        return '<div class="bdg' + (got[b.id] ? " on" : "") + '" title="' + esc(b.d) + '"><span class="be">' + (got[b.id] ? b.e : "🔒") + '</span>' +
+          '<b>' + esc(b.n) + '</b><span>' + (got[b.id] ? "Obtenu le " + frDate(got[b.id]) : esc(b.d)) + '</span></div>';
+      }).join("") + '</div>';
+
+    h += '<label class="lbl">Tenues du compagnon</label>' + wearPicker();
 
     h += '<label class="lbl">Quêtes du mois</label><div class="qlist">';
     ms.forEach(function (x) { h += questCard(x, false); });
@@ -4389,9 +4698,11 @@ var App = {
       fx.end = shiftM(tm, -1);
       S.transactions = S.transactions.filter(function (x) { return !(x.fixedId === fx.id && monthOf(x.date) > tm); });
     }
+    var isNew = !tmp.id;
     if (tmp.id) S.transactions = S.transactions.map(function (x) { return x.id === tx.id ? tx : x; });
     else S.transactions.push(tx);
     save(); App.closeSheet(true); render();
+    if (isNew) dailyReward();
     if (tx.type === "expense") {
       var b = budgetOf(monthOf(tx.date), tx.categoryId);
       if (b) {
@@ -4529,7 +4840,7 @@ var App = {
     var w = S.wishlist.filter(function (x) { return x.id === id; })[0]; if (!w) return;
     S.transactions.push({ id: uid(), type: "expense", amount: w.amount, categoryId: "divers", date: todayISO(), payMethod: "Carte", note: w.name, useful: "useful" });
     S.wishlist = S.wishlist.map(function (x) { return x.id === id ? Object.assign({}, x, { status: "achete" }) : x; });
-    save(); render(); toast("Acheté → dépense créée ✓");
+    save(); render(); dailyReward(); toast("Acheté → dépense créée ✓");
   },
   delWish: function (id) {
     var w = S.wishlist.filter(function (x) { return x.id === id; })[0]; if (!w) return;
@@ -4582,6 +4893,7 @@ var App = {
         payMethod: "Virement", note: (d.kind === "owed" ? "Remboursement — " : "Remb. reçu — ") + d.name, useful: "useful" });
     }
     save(); App.closeSheet(true); render();
+    if (mkTx) dailyReward();
     toast(d.remaining <= 0 ? "🎉 « " + d.name + " » est soldé !" : "−" + money(v) + " · reste " + money(d.remaining));
   },
   delDebt: function (id) {
@@ -4733,6 +5045,7 @@ var App = {
     if (wasEdit) S.transactions = S.transactions.map(function (x) { return x.id === tx.id ? tx : x; });
     else S.transactions.push(tx);
     save(); App.closeSheet(true); render();
+    if (!wasEdit) dailyReward();
     var m = monthOf(tx.date), lim = shopLimit(m), sp = shopSum(shopTrips(m + "-01", m + "-" + pad(daysIn(m))));
     if (lim > 0 && sp > lim) toast("⚠️ Tes courses du mois dépassent ta limite de " + money(sp - lim));
     else toast((wasEdit ? "Ticket modifié ✓" : "Ticket noté ✓") + (lim > 0 ? " · " + money(sp) + " / " + money(lim) + " ce mois" : ""));
@@ -4961,6 +5274,13 @@ function normalize(d) {
   if (!o.game) o.game = { xp: 0, claimed: {}, seen: {} };
   if (!o.game.claimed) o.game.claimed = {};
   if (!o.game.seen) o.game.seen = {};
+  if (!o.game.badges) o.game.badges = {};
+  /* première ouverture après la mise à jour : on habille d'office le compagnon
+     avec ce que ton niveau a déjà débloqué */
+  if (!(o.game.wear instanceof Array)) {
+    var lvn = levelOf(o.game.xp || 0).lvl.n;
+    o.game.wear = ACCS.filter(function (x) { return x.lv <= lvn; }).map(function (x) { return x.id; });
+  }
   return o;
 }
 function loadData() {

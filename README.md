@@ -23,7 +23,7 @@ App : https://mouadjabiera06-jpg.github.io/arpagon/ · Présentation : `presenta
 ## Règles de travail
 
 - On travaille sur la branche **`dev`**. `main` = ce que voient les utilisateurs : on n'y fusionne qu'après test.
-- Avant chaque fusion : `npm test` (serveur) et `python3 tests/app_test.py` (app, nécessite Playwright).
+- Avant chaque fusion : `npm test` (serveur), `python3 tests/app_test.py` et `python3 tests/game_test.py` (app et jeu, nécessitent Playwright).
 - Pages légales : modifier le texte ou les infos dans `tools/pages.py`, puis `python3 tools/pages.py`. Ne pas éditer les `.html` générés à la main.
 
 ## Mise en ligne du Premium (une seule fois)
